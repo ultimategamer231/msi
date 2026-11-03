@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390"><title>MSI mock-up: Cashier: receive payment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif;color:#0F172A}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.seg{flex:1;min-height:44px;border-radius:10px;font-family:inherit;font-weight:600;font-size:13px;border:1px solid #CBD5E1;background:#fff;color:#0F172A}
+.seg-on{background:#32207E;color:#fff;border-color:#32207E}
+.lbl{font-size:12px;font-weight:600;color:#475569}
+.row{display:flex;justify-content:space-between;align-items:baseline;font-size:14px}
+.inp{min-height:48px;border-radius:10px;border:1px solid #CBD5E1;padding:0 12px;font-family:inherit;font-size:15px;background:#fff;color:#0F172A}
+</style>
+</head><body style="margin:0">
+<div style="width:390px;height:844px;box-sizing:border-box;background:#F1F5F9;display:flex;flex-direction:column;overflow:hidden">
+  <div style="background:#32207E;color:#fff;padding:16px;display:flex;align-items:center;gap:12px">
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:12px;color:#E6E1F7">Grace Flomo · Cashier · Branch 2</div>
+    <div style="font-size:20px;font-weight:700">Receive payment</div></div>
+    <img src="./assets/msi-logo-480.png" alt="Method Solutions Inc." style="width:40px;height:40px;object-fit:contain;background:#fff;border-radius:10px;padding:3px;box-sizing:border-box;flex:none">
+  </div>
+  <div style="flex:1;min-height:0;padding:12px;display:flex;flex-direction:column;gap:11px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <label class="lbl" for="q">Find loan or customer</label>
+      <input id="q" class="inp" value="Mariama Kollie">
+    </div>
+    <div class="card" style="padding:12px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div style="font-size:15px;font-weight:700">Mariama Kollie</div><div style="font-size:12px;color:#475569">LN-BR2-00009 · 7 days overdue</div></div>
+        <div style="text-align:right"><div style="font-size:12px;color:#475569">Owes</div><div style="font-size:17px;font-weight:700">$1,440.00</div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px"><label class="lbl" for="a">Amount (USD)</label><input id="a" class="inp" value="500.00" style="width:100%;min-width:0;box-sizing:border-box;font-weight:700;font-size:18px"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px"><label class="lbl" for="d">Date</label><input id="d" class="inp" value="12 Feb 2026" disabled style="width:100%;min-width:0;box-sizing:border-box;background:#E2E8F0;color:#334155"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span class="lbl" id="m">Method</span>
+      <div style="display:flex;gap:8px" role="group" aria-labelledby="m"><button class="seg">Cash</button><button class="seg seg-on">Mobile money</button><button class="seg">Bank</button></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <label class="lbl" for="r">Transaction reference (required)</label>
+      <input id="r" class="inp" value="OM-7731904">
+    </div>
+    <div class="card" style="padding:12px">
+      <div style="font-size:13px;font-weight:700">Allocation preview</div>
+      <div class="row"><span>Penalty</span><span style="font-weight:600">$240.00</span></div>
+      <div class="row"><span>Interest</span><span style="font-weight:600">$200.00</span></div>
+      <div class="row"><span>Amount lent</span><span style="font-weight:600">$60.00</span></div>
+      <div style="height:1px;background:#E2E8F0"></div>
+      <div class="row"><span style="color:#475569">Still owed after payment</span><span style="font-size:17px;font-weight:700">$940.00</span></div>
+    </div>
+  </div>
+  <div style="padding:12px 12px 20px;background:#fff;border-top:1px solid #E2E8F0;display:flex;gap:10px">
+    <button style="flex:1;min-height:52px;border-radius:12px;border:1px solid #CBD5E1;background:#fff;color:#0F172A;font-family:inherit;font-size:15px;font-weight:600">Cancel</button>
+    <button style="flex:2;min-height:52px;border-radius:12px;border:0;background:#32207E;color:#fff;font-family:inherit;font-size:16px;font-weight:700">Receive payment</button>
+  </div>
+</div>
+</body></html>

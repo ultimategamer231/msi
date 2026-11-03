@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=390"><title>MSI mock-up: Field officer: collect payment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif;color:#0F172A}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.seg{flex:1;min-height:44px;border-radius:10px;font-family:inherit;font-weight:600;font-size:14px;border:1px solid #CBD5E1;background:#fff;color:#0F172A}
+.seg-on{background:#32207E;color:#fff;border-color:#32207E}
+.lbl{font-size:12px;font-weight:600;color:#475569}
+.row{display:flex;justify-content:space-between;align-items:baseline;font-size:14px}
+</style>
+</head><body style="margin:0">
+<div style="width:390px;height:844px;box-sizing:border-box;background:#F1F5F9;display:flex;flex-direction:column;overflow:hidden">
+  <div style="background:#32207E;color:#fff;padding:16px;display:flex;align-items:center;gap:10px">
+    <button aria-label="Back" style="width:44px;height:44px;border-radius:10px;border:0;background:rgba(255,255,255,0.14);color:#fff;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div style="font-size:20px;font-weight:700;flex:1">Collect payment</div>
+    <img src="./assets/msi-logo-480.png" alt="Method Solutions Inc." style="width:40px;height:40px;object-fit:contain;background:#fff;border-radius:10px;padding:3px;box-sizing:border-box;flex:none">
+  </div>
+  <div style="flex:1;min-height:0;padding:12px;display:flex;flex-direction:column;gap:12px">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div style="font-size:16px;font-weight:700">Mariama Kollie</div><div style="font-size:12px;color:#475569">LN-BR2-00009 · due 05 Feb 2026</div></div>
+        <span style="font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:#FFEDD5;color:#7C2D12">7 days overdue</span>
+      </div>
+      <div class="row"><span style="color:#475569">Total owed now</span><span style="font-size:18px;font-weight:700">$1,440.00</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <label class="lbl" for="amt">Amount received (USD)</label>
+      <input id="amt" value="500.00" inputmode="decimal" style="min-height:56px;border-radius:12px;border:2px solid #32207E;padding:0 14px;font-family:inherit;font-size:26px;font-weight:700;background:#fff;color:#0F172A">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span class="lbl" id="m">Payment method</span>
+      <div style="display:flex;gap:8px" role="group" aria-labelledby="m">
+        <button class="seg seg-on">Cash</button><button class="seg">Mobile money</button><button class="seg">Bank</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700">Where this payment goes</div>
+      <div class="row"><span>1. Penalty</span><span style="font-weight:600">$240.00</span></div>
+      <div class="row"><span>2. Interest</span><span style="font-weight:600">$200.00</span></div>
+      <div class="row"><span>3. Amount lent</span><span style="font-weight:600">$60.00</span></div>
+      <div style="height:1px;background:#E2E8F0"></div>
+      <div class="row"><span style="color:#475569">Still owed after this</span><span style="font-size:18px;font-weight:700">$940.00</span></div>
+    </div>
+    <div style="background:#FFF7ED;border:1px solid #FDBA74;border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.45;color:#7C2D12">The borrower gets a receipt now. The cash shows as "with you" until the cashier confirms the handover.</div>
+  </div>
+  <div style="padding:12px 12px 20px;background:#fff;border-top:1px solid #E2E8F0">
+    <button style="width:100%;min-height:52px;border-radius:12px;border:0;background:#32207E;color:#fff;font-family:inherit;font-size:16px;font-weight:700">Save payment and issue receipt</button>
+  </div>
+</div>
+</body></html>

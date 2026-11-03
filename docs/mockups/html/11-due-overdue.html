@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=1280"><title>MSI mock-up: Due and overdue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif;color:#0F172A}
+a{color:#32207E}a:hover{color:#241660}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:14px}
+.pad{padding:18px}
+.h2{font-size:15px;font-weight:700;margin:0}
+.muted{color:#475569}
+.t{width:100%;border-collapse:collapse}
+.t th{font-size:12px;text-align:left;color:#475569;font-weight:600;padding:10px 12px;border-bottom:1px solid #E2E8F0;background:#F8FAFC;white-space:nowrap}
+.t td{padding:12px;border-bottom:1px solid #F1F5F9;font-size:13px;vertical-align:middle}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.t td:first-child{white-space:nowrap}
+.badge{font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;display:inline-block}
+.b-active{background:#DCFCE7;color:#166534}.b-over{background:#FFEDD5;color:#7C2D12}.b-due{background:#DBEAFE;color:#1E3A8A}
+.b-rec{background:#0F172A;color:#fff}.b-pend{background:#E2E8F0;color:#334155}.b-closed{background:#F8FAFC;color:#334155;border:1px solid #CBD5E1}
+.btn{min-height:40px;padding:0 16px;border-radius:10px;font-family:inherit;font-weight:600;font-size:14px;border:1px solid #CBD5E1;background:#fff;color:#0F172A;cursor:pointer;white-space:nowrap}
+.btn-p{background:#32207E;border-color:#32207E;color:#fff}.btn-o{background:#C2410C;border-color:#C2410C;color:#fff}
+.btn-d{background:#F1F5F9;border-color:#E2E8F0;color:#475569;cursor:not-allowed}
+.btn-s{min-height:34px;padding:0 12px;font-size:13px}
+.inp{min-height:40px;border:1px solid #CBD5E1;border-radius:10px;padding:0 12px;font-family:inherit;font-size:14px;background:#fff;color:#0F172A;box-sizing:border-box}
+.lbl{display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:#475569}
+.lbl + .inp{width:100%;display:block}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;color:#DCD6F5;font-size:14px;font-weight:500;text-decoration:none}
+.nav:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-on{background:rgba(255,255,255,0.16);color:#fff;font-weight:600}
+.cnt{background:#FFE103;color:#241660;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px}
+.kv{display:flex;flex-direction:column;gap:2px}.kv .k{font-size:12px;color:#475569;font-weight:500}.kv .v{font-size:14px;font-weight:600}
+.big{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+.ph{background:#E2E8F0;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#475569;font-size:12px;font-weight:600}
+</style>
+</head><body style="margin:0">
+<div style="width:100%;min-height:900px;display:flex;flex-wrap:wrap;background:#F1F5F9">
+  <aside style="flex:0 0 232px;box-sizing:border-box;background:#241660;color:#fff;padding:20px 12px;display:flex;flex-direction:column;gap:4px">
+    <div style="padding:0 4px 16px">
+      <div style="background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px">
+        <img src="./assets/msi-logo-480.png" alt="Method Solutions Inc. logo" style="width:44px;height:40px;object-fit:contain;flex:none">
+        <div style="line-height:1.15"><div style="font-size:14px;font-weight:800;color:#32207E">Method Solutions</div><div style="font-size:11px;font-weight:600;color:#475569">Loan management</div></div>
+      </div>
+    </div>
+    <nav aria-label="Main" style="display:flex;flex-direction:column;gap:2px">
+      <a href="#" class="nav"><span>Dashboard</span></a>
+      <a href="#" class="nav"><span>Customers</span></a>
+      <a href="#" class="nav"><span>Loans</span></a>
+      <a href="#" class="nav"><span>Payments</span></a>
+      <a href="#" class="nav nav-on" aria-current="page"><span>Due and overdue</span></a>
+      <a href="#" class="nav"><span>Collateral</span></a>
+      <a href="#" class="nav"><span>Recovery</span></a>
+      <a href="#" class="nav"><span>Approvals</span><span class="cnt">3</span></a>
+      <a href="#" class="nav"><span>Day close</span></a>
+      <a href="#" class="nav"><span>Expenses</span></a>
+      <a href="#" class="nav"><span>Reports</span></a>
+      <a href="#" class="nav"><span>Ledger</span></a>
+    </nav>
+    <div style="margin-top:auto;padding:14px 8px 0;border-top:1px solid rgba(255,255,255,0.18);display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#E6E1F7;color:#241660;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center">RW</div>
+      <div><div style="font-size:13px;font-weight:600">Rebecca Wolo</div><div style="font-size:12px;color:#C8BFEE">Manager</div></div>
+    </div>
+  </aside>
+  <main style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column">
+    <header style="background:#fff;border-bottom:1px solid #E2E8F0;padding:14px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px">
+      <h1 style="margin:0;font-size:20px;font-weight:700">Due and overdue</h1>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <input class="inp" aria-label="Search" placeholder="Search customer, loan, receipt, item" style="width:260px">
+        <button class="btn">All branches</button>
+        <button class="btn" aria-label="Approvals waiting: 3" style="position:relative">Approvals <span class="cnt">3</span></button>
+      </div>
+    </header>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
+
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:22px;font-weight:700"></span><span style="font-size:14px" class="muted">As at 12 Feb 2026</span></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn">Print list</button><button class="btn">Export CSV</button></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px"><div class="card pad" style="flex:1 1 160px;"><div class="lbl" style="">Overdue</div><div style="font-size:22px;font-weight:700;margin:4px 0 2px;font-variant-numeric:tabular-nums;">$2,476.80</div><div style="font-size:12px;" class="muted">2 loans</div></div><div class="card pad" style="flex:1 1 160px;"><div class="lbl" style="">Due today</div><div style="font-size:22px;font-weight:700;margin:4px 0 2px;font-variant-numeric:tabular-nums;">$720.00</div><div style="font-size:12px;" class="muted">1 loan</div></div><div class="card pad" style="flex:1 1 160px;"><div class="lbl" style="">Due in 14 days</div><div style="font-size:22px;font-weight:700;margin:4px 0 2px;font-variant-numeric:tabular-nums;">$480.00</div><div style="font-size:12px;" class="muted">1 loan</div></div><div class="card pad" style="flex:1 1 160px;"><div class="lbl" style="">In recovery</div><div style="font-size:22px;font-weight:700;margin:4px 0 2px;font-variant-numeric:tabular-nums;">$3,732.48</div><div style="font-size:12px;" class="muted">1 loan</div></div></div>
+      <section class="card" style="overflow:hidden">
+        <div style="padding:14px 18px;display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid #E2E8F0"><button class="btn btn-s" style="background:#32207E;color:#fff;border-color:#32207E">All 4</button><button class="btn btn-s" style="">Overdue 2</button><button class="btn btn-s" style="">Due today 1</button><button class="btn btn-s" style="">Due this week 1</button></div>
+        <div style="overflow-x:auto"><table class="t"><thead><tr><th>Loan</th><th>Borrower</th><th>Phone</th><th>Officer</th><th>Due date</th><th>Days</th><th class="num">Penalty</th><th class="num">Owes</th><th>Next penalty</th><th></th></tr></thead><tbody>
+        <tr><td>LN-BR2-00008</td><td>Esther Toe</td><td>0770 555 021</td><td>Emmanuel Tarpeh</td><td>22 Jan 2026</td><td><span class="badge b-over">21 days overdue</span></td><td class="num">$436.80</td><td class="num">$1,036.80</td><td>19 Feb 2026 (last)</td><td><button class="btn btn-s">Call</button></td></tr><tr><td>LN-BR2-00009</td><td>Mariama Kollie</td><td>0770 555 010</td><td>Emmanuel Tarpeh</td><td>05 Feb 2026</td><td><span class="badge b-over">7 days overdue</span></td><td class="num">$240.00</td><td class="num">$1,440.00</td><td>19 Feb 2026</td><td><button class="btn btn-s">Call</button></td></tr><tr><td>LN-BR2-00007</td><td>Joseph B. Gbessay</td><td>0770 555 033</td><td>Emmanuel Tarpeh</td><td>12 Feb 2026</td><td><span class="badge b-due">Due today</span></td><td class="num">$0.00</td><td class="num">$720.00</td><td>19 Feb 2026</td><td><button class="btn btn-s">Call</button></td></tr><tr><td>LN-BR3-00005</td><td>Fatu Kamara</td><td>0770 555 047</td><td>David Kerkula</td><td>20 Feb 2026</td><td><span class="badge b-due">In 8 days</span></td><td class="num">$0.00</td><td class="num">$480.00</td><td>27 Feb 2026</td><td><button class="btn btn-s">Call</button></td></tr>
+        </tbody></table></div>
+      </section>
+      <div style="font-size:13px" class="muted">Mohammed Sheriff (LN-BR3-00004, $3,732.48) is in recovery and is listed on the Recovery screen.</div>
+
+    </div>
+  </main>
+</div>
+</body></html>

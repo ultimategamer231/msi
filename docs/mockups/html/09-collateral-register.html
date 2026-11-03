@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=1280"><title>MSI mock-up: Collateral register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif;color:#0F172A}
+a{color:#32207E}a:hover{color:#241660}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:14px}
+.pad{padding:18px}
+.h2{font-size:15px;font-weight:700;margin:0}
+.muted{color:#475569}
+.t{width:100%;border-collapse:collapse}
+.t th{font-size:12px;text-align:left;color:#475569;font-weight:600;padding:10px 12px;border-bottom:1px solid #E2E8F0;background:#F8FAFC;white-space:nowrap}
+.t td{padding:12px;border-bottom:1px solid #F1F5F9;font-size:13px;vertical-align:middle}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.t td:first-child{white-space:nowrap}
+.badge{font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;display:inline-block}
+.b-active{background:#DCFCE7;color:#166534}.b-over{background:#FFEDD5;color:#7C2D12}.b-due{background:#DBEAFE;color:#1E3A8A}
+.b-rec{background:#0F172A;color:#fff}.b-pend{background:#E2E8F0;color:#334155}.b-closed{background:#F8FAFC;color:#334155;border:1px solid #CBD5E1}
+.btn{min-height:40px;padding:0 16px;border-radius:10px;font-family:inherit;font-weight:600;font-size:14px;border:1px solid #CBD5E1;background:#fff;color:#0F172A;cursor:pointer;white-space:nowrap}
+.btn-p{background:#32207E;border-color:#32207E;color:#fff}.btn-o{background:#C2410C;border-color:#C2410C;color:#fff}
+.btn-d{background:#F1F5F9;border-color:#E2E8F0;color:#475569;cursor:not-allowed}
+.btn-s{min-height:34px;padding:0 12px;font-size:13px}
+.inp{min-height:40px;border:1px solid #CBD5E1;border-radius:10px;padding:0 12px;font-family:inherit;font-size:14px;background:#fff;color:#0F172A;box-sizing:border-box}
+.lbl{display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:#475569}
+.lbl + .inp{width:100%;display:block}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;color:#DCD6F5;font-size:14px;font-weight:500;text-decoration:none}
+.nav:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-on{background:rgba(255,255,255,0.16);color:#fff;font-weight:600}
+.cnt{background:#FFE103;color:#241660;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px}
+.kv{display:flex;flex-direction:column;gap:2px}.kv .k{font-size:12px;color:#475569;font-weight:500}.kv .v{font-size:14px;font-weight:600}
+.big{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+.ph{background:#E2E8F0;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#475569;font-size:12px;font-weight:600}
+</style>
+</head><body style="margin:0">
+<div style="width:100%;min-height:1040px;display:flex;flex-wrap:wrap;background:#F1F5F9">
+  <aside style="flex:0 0 232px;box-sizing:border-box;background:#241660;color:#fff;padding:20px 12px;display:flex;flex-direction:column;gap:4px">
+    <div style="padding:0 4px 16px">
+      <div style="background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px">
+        <img src="./assets/msi-logo-480.png" alt="Method Solutions Inc. logo" style="width:44px;height:40px;object-fit:contain;flex:none">
+        <div style="line-height:1.15"><div style="font-size:14px;font-weight:800;color:#32207E">Method Solutions</div><div style="font-size:11px;font-weight:600;color:#475569">Loan management</div></div>
+      </div>
+    </div>
+    <nav aria-label="Main" style="display:flex;flex-direction:column;gap:2px">
+      <a href="#" class="nav"><span>Dashboard</span></a>
+      <a href="#" class="nav"><span>Customers</span></a>
+      <a href="#" class="nav"><span>Loans</span></a>
+      <a href="#" class="nav"><span>Payments</span></a>
+      <a href="#" class="nav"><span>Due and overdue</span></a>
+      <a href="#" class="nav nav-on" aria-current="page"><span>Collateral</span></a>
+      <a href="#" class="nav"><span>Recovery</span></a>
+      <a href="#" class="nav"><span>Approvals</span><span class="cnt">3</span></a>
+      <a href="#" class="nav"><span>Day close</span></a>
+      <a href="#" class="nav"><span>Expenses</span></a>
+      <a href="#" class="nav"><span>Reports</span></a>
+      <a href="#" class="nav"><span>Ledger</span></a>
+    </nav>
+    <div style="margin-top:auto;padding:14px 8px 0;border-top:1px solid rgba(255,255,255,0.18);display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#E6E1F7;color:#241660;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center">RW</div>
+      <div><div style="font-size:13px;font-weight:600">Rebecca Wolo</div><div style="font-size:12px;color:#C8BFEE">Manager</div></div>
+    </div>
+  </aside>
+  <main style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column">
+    <header style="background:#fff;border-bottom:1px solid #E2E8F0;padding:14px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px">
+      <h1 style="margin:0;font-size:20px;font-weight:700">Collateral</h1>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <input class="inp" aria-label="Search" placeholder="Search customer, loan, receipt, item" style="width:260px">
+        <button class="btn">All branches</button>
+        <button class="btn" aria-label="Approvals waiting: 3" style="position:relative">Approvals <span class="cnt">3</span></button>
+      </div>
+    </header>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px">
+
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between">
+        <div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn btn-s" style="background:#32207E;color:#fff;border-color:#32207E">All 12</button><button class="btn btn-s" style="">Held 7</button><button class="btn btn-s" style="">In recovery 1</button><button class="btn btn-s" style="">To return 1</button><button class="btn btn-s" style="">Released 3</button></div>
+        <button class="btn btn-p">Register collateral</button>
+      </div>
+      <section class="card" style="overflow:hidden">
+        <div style="padding:14px 18px;display:flex;flex-wrap:wrap;gap:10px;border-bottom:1px solid #E2E8F0">
+          <input class="inp" aria-label="Search collateral" placeholder="Search serial, plate, chassis, deed no., borrower or loan" style="flex:1 1 320px">
+          <button class="btn">All types</button><button class="btn">All locations</button><button class="btn">Export CSV</button>
+        </div>
+        <div style="overflow-x:auto"><table class="t"><thead><tr><th>Item</th><th>Description</th><th>Identifier</th><th>Owner</th><th>Loan</th><th>Location</th><th class="num">Value</th><th>Status</th></tr></thead><tbody>
+        <tr><td>COL-000034</td><td>Land deed</td><td>Deed no. D-4410</td><td>Kpanah Mulbah</td><td>LN-BR1-00014</td><td>Main vault</td><td class="num">$5,500.00</td><td><span class="badge b-active">Held</span></td></tr><tr><td>COL-000033</td><td>Sewing machine</td><td>S/N SM-7712</td><td>Hawa Dukuly</td><td>LN-BR2-00010</td><td>Branch 2 safe</td><td class="num">$700.00</td><td><span class="badge b-active">Held</span></td></tr><tr><td>COL-000032</td><td>Rice, 40 bags</td><td>None</td><td>Joseph B. Gbessay</td><td>LN-BR2-00007</td><td>Branch 2 store</td><td class="num">$1,100.00</td><td><span class="badge b-active">Held</span></td></tr><tr><td>COL-000031</td><td>Honda EU22i generator</td><td>S/N GA-1000231</td><td>Mariama Kollie</td><td>LN-BR2-00009</td><td>Branch 2 safe</td><td class="num">$1,400.00</td><td><span class="badge b-active">Held</span></td></tr><tr><td>COL-000030</td><td>Toyota Corolla 2008</td><td>Plate BRK 4821</td><td>Mohammed Sheriff</td><td>LN-BR3-00004</td><td>Branch 3 yard</td><td class="num">$4,200.00</td><td><span class="badge b-rec">In recovery</span></td></tr><tr><td>COL-000029</td><td>Land deed</td><td>Deed no. D-2217</td><td>Dolo &amp; Sons Trading</td><td>LN-BR1-00013</td><td>Main vault</td><td class="num">$6,000.00</td><td><span class="badge b-active">Held</span></td></tr><tr><td>COL-000028</td><td>Flat-screen TV, 55 in</td><td>S/N TV-55-80412</td><td>Esther Toe</td><td>LN-BR2-00008</td><td>Branch 2 safe</td><td class="num">$450.00</td><td><span class="badge b-active">Held</span></td></tr><tr><td>COL-000027</td><td>Motorbike</td><td>Plate MB 3307</td><td>Fatu Kamara</td><td>LN-BR3-00005</td><td>Branch 3 office</td><td class="num">$900.00</td><td><span class="badge b-active">Held</span></td></tr><tr><td>COL-000026</td><td>Laptop</td><td>S/N LT-5521-9</td><td>Prince Karmo</td><td>Loan closed</td><td>Returned 20 Jan 2026</td><td class="num">$600.00</td><td><span class="badge b-closed">Released</span></td></tr><tr><td>COL-000025</td><td>Chest freezer</td><td>S/N CF-20931</td><td>Alieu Sesay</td><td>Loan closed</td><td>Returned 11 Feb 2026</td><td class="num">$400.00</td><td><span class="badge b-closed">Released</span></td></tr><tr><td>COL-000024</td><td>Mobile phone</td><td>IMEI 3561 0902 7781</td><td>Comfort Weah</td><td>Loan closed</td><td>Returned 11 Feb 2026</td><td class="num">$200.00</td><td><span class="badge b-closed">Released</span></td></tr><tr><td>COL-000022</td><td>Sewing machine</td><td>S/N SM-4410</td><td>Musu Freeman</td><td>Loan closed</td><td>Branch 2 safe</td><td class="num">$650.00</td><td><span class="badge b-pend">Ready to return</span></td></tr>
+        </tbody></table></div>
+        <div style="padding:12px 18px;font-size:13px" class="muted">Showing items held now and items released in the last 30 days. Esther Toe's TV ($450.00) is worth less than the $1,036.80 owed on LN-BR2-00008. The system shows value against balance on every loan.</div>
+      </section>
+
+    </div>
+  </main>
+</div>
+</body></html>
