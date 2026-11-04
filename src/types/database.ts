@@ -290,6 +290,141 @@ export type Database = {
           },
         ];
       };
+      collateral_events: {
+        Row: {
+          actor_id: string;
+          at: string;
+          collateral_id: string;
+          event_type: string;
+          from_location: string | null;
+          id: string;
+          note: string | null;
+          photo_path: string | null;
+          to_location: string | null;
+          witness_name: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          actor_id: string;
+          at?: string;
+          collateral_id: string;
+          event_type: string;
+          from_location?: string | null;
+          id?: string;
+          note?: string | null;
+          photo_path?: string | null;
+          to_location?: string | null;
+          witness_name?: string | null;
+        };
+        Update: {
+          actor_id?: string;
+          at?: string;
+          collateral_id?: string;
+          event_type?: string;
+          from_location?: string | null;
+          id?: string;
+          note?: string | null;
+          photo_path?: string | null;
+          to_location?: string | null;
+          witness_name?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "collateral_events_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "collateral_events_collateral_id_fkey";
+            columns: ["collateral_id"];
+            isOneToOne: false;
+            referencedRelation: "collaterals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      collaterals: {
+        Row: {
+          branch_id: string;
+          chassis_no: string | null;
+          code: string;
+          created_at: string;
+          created_by: string;
+          currency: string;
+          description: string;
+          document_no: string | null;
+          estimated_value_cents: number;
+          id: string;
+          location_note: string | null;
+          owner_customer_id: string;
+          plate_no: string | null;
+          serial_no: string | null;
+          status: string;
+          type: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          branch_id: string;
+          chassis_no?: string | null;
+          code: string;
+          created_at?: string;
+          created_by: string;
+          currency?: string;
+          description: string;
+          document_no?: string | null;
+          estimated_value_cents: number;
+          id?: string;
+          location_note?: string | null;
+          owner_customer_id: string;
+          plate_no?: string | null;
+          serial_no?: string | null;
+          status?: string;
+          type: string;
+        };
+        Update: {
+          branch_id?: string;
+          chassis_no?: string | null;
+          code?: string;
+          created_at?: string;
+          created_by?: string;
+          currency?: string;
+          description?: string;
+          document_no?: string | null;
+          estimated_value_cents?: number;
+          id?: string;
+          location_note?: string | null;
+          owner_customer_id?: string;
+          plate_no?: string | null;
+          serial_no?: string | null;
+          status?: string;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "collaterals_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "collaterals_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "collaterals_owner_customer_id_fkey";
+            columns: ["owner_customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       customers: {
         Row: {
           address: string | null;
@@ -671,6 +806,62 @@ export type Database = {
             columns: ["reversal_of"];
             isOneToOne: true;
             referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      loan_collaterals: {
+        Row: {
+          collateral_id: string;
+          created_at: string;
+          created_by: string;
+          id: string;
+          loan_id: string;
+          pledged_on: string;
+          released_on: string | null;
+          status: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          collateral_id: string;
+          created_at?: string;
+          created_by: string;
+          id?: string;
+          loan_id: string;
+          pledged_on: string;
+          released_on?: string | null;
+          status?: string;
+        };
+        Update: {
+          collateral_id?: string;
+          created_at?: string;
+          created_by?: string;
+          id?: string;
+          loan_id?: string;
+          pledged_on?: string;
+          released_on?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loan_collaterals_collateral_id_fkey";
+            columns: ["collateral_id"];
+            isOneToOne: false;
+            referencedRelation: "collaterals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_collaterals_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_collaterals_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
             referencedColumns: ["id"];
           },
         ];
@@ -1082,6 +1273,7 @@ export type Database = {
       };
     };
     Functions: {
+      account_balance: { Args: { p_account_id: string }; Returns: number };
       account_component: { Args: { p_code: string }; Returns: string };
       add_customer_documents: { Args: { p_customer_id: string; p_files: Json }; Returns: undefined };
       add_months_clamped: { Args: { p_date: string; p_months: number }; Returns: string };
@@ -1153,6 +1345,10 @@ export type Database = {
       };
       customer_editable_fields: { Args: Record<PropertyKey, never>; Returns: string[] };
       decide_approval: { Args: { p_decision: string; p_id: string; p_note: string }; Returns: Json };
+      disburse_loan: {
+        Args: { p_account_id: string; p_disbursed_on: string; p_loan_id: string; p_method: string };
+        Returns: Json;
+      };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
       find_duplicate_customers: {
         Args: { p_exclude?: string; p_id_number: string; p_phone: string; p_phone_alt: string };
@@ -1196,6 +1392,7 @@ export type Database = {
         Args: { p_entity_id: string; p_entity_type: string; p_files: Json };
         Returns: Json;
       };
+      link_collateral: { Args: { p_collateral_id: string; p_loan_id: string }; Returns: undefined };
       loan_balance_rows: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -1233,12 +1430,14 @@ export type Database = {
         Returns: Json;
       };
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
+      register_collateral: { Args: { p_item: Json }; Returns: string };
       request_capital_in: { Args: { p_request: Json }; Returns: string };
       request_customer_edit: {
         Args: { p_customer_id: string; p_patch: Json; p_reason: string };
         Returns: string;
       };
       request_manual_journal: { Args: { p_request: Json }; Returns: string };
+      require_entry_date: { Args: { p_date: string }; Returns: string };
       require_posting_date: { Args: { p_date: string }; Returns: undefined };
       require_role: {
         Args: { p_roles: Database["public"]["Enums"]["app_role"][] };
