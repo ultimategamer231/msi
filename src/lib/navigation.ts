@@ -43,7 +43,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { key: "expenses", href: "/expenses", route: "/expenses", built: false },
   { key: "reports", href: "/reports", route: "/reports", built: false },
   { key: "ledger", href: "/ledger", route: "/ledger", built: false },
-  { key: "audit", href: "/audit", route: "/audit", built: false },
+  { key: "audit", href: "/audit", route: "/audit", built: true },
   { key: "settings", href: "/settings", route: "/settings", built: true },
 ];
 

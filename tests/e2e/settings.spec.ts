@@ -7,6 +7,7 @@ import { fixtureUser } from "./fixtures";
 import {
   expectNoHorizontalScroll,
   expectNoSeriousA11yIssues,
+  fillExactly,
   signIn,
   signInAs,
   signOutThroughUi,
@@ -56,7 +57,7 @@ test.describe("settings (FR-02; M0 acceptance: audit rows on settings change)", 
   test("changing the company header writes one audit row with before and after", async ({ page }) => {
     const footer = `Thank you. Ref ${unique()}`;
     await openSettings(page);
-    await page.getByLabel("Receipt footer").fill(footer);
+    await fillExactly(page.getByLabel("Receipt footer"), footer);
     await page.getByRole("button", { name: "Save changes" }).first().click();
     await expect(page.getByRole("status").filter({ hasText: "Saved." })).toBeVisible();
 
@@ -85,11 +86,11 @@ test.describe("settings (FR-02; M0 acceptance: audit rows on settings change)", 
     await openSettings(page, "rules");
     const field = page.getByLabel("Expenses recorded without manager approval, up to (A-20)");
 
-    await field.fill("12.345");
+    await fillExactly(field, "12.345");
     await page.getByRole("button", { name: "Save changes" }).click();
     await expect(page.getByText("Enter an amount in dollars, for example 2,000.00.")).toBeVisible();
 
-    await field.fill(dollars);
+    await fillExactly(field, dollars);
     await page.getByRole("button", { name: "Save changes" }).click();
     await expect(page.getByRole("status").filter({ hasText: "Saved." })).toBeVisible();
     const rows = await latestAudit("setting.updated", "approvals.expense_limit_cents");
@@ -180,7 +181,7 @@ test.describe("settings (FR-02; M0 acceptance: audit rows on settings change)", 
     test.skip(isMobile, "the clock is shared; one run changes it");
     await openSettings(page, "rules");
     try {
-      await page.getByLabel("Date and time (Monrovia)").fill("2026-02-12T09:10");
+      await fillExactly(page.getByLabel("Date and time (Monrovia)"), "2026-02-12T09:10");
       await page.getByRole("button", { name: "Set clock" }).click();
       await expect(page.getByTestId("clock-now")).toHaveText("System time now: 12 Feb 2026, 09:10");
       await page.goto("/dashboard");

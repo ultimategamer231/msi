@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 /** Fail on serious or critical WCAG 2.2 AA violations (master prompt section 5). */
 export async function expectNoSeriousA11yIssues(page: Page): Promise<void> {
@@ -47,4 +47,15 @@ export async function signInAs(page: Page, user: { email: string; password: stri
   await page.goto("/login");
   await signIn(page, user.email, user.password);
   await expect(page).toHaveURL(/\/dashboard$/);
+}
+
+/**
+ * Fills an input and confirms it holds exactly that value. A fill that lands before React has
+ * hydrated the form can be merged with the server-rendered value, so it is retried until it sticks.
+ */
+export async function fillExactly(field: Locator, value: string): Promise<void> {
+  await expect(async () => {
+    await field.fill(value);
+    await expect(field).toHaveValue(value, { timeout: 500 });
+  }).toPass({ timeout: 10_000 });
 }

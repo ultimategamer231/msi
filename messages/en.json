@@ -233,5 +233,55 @@
       "selfNote": "You cannot change your own role or deactivate yourself.",
       "empty": "No users yet."
     }
+  },
+  "audit": {
+    "title": "Audit log",
+    "loading": "Loading the audit log",
+    "intro": "Every change in the system, newest first. Entries cannot be edited or deleted.",
+    "filters": {
+      "label": "Filter the audit log",
+      "user": "Person",
+      "anyUser": "Anyone",
+      "entity": "Record type",
+      "anyEntity": "Any type",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply filters",
+      "clear": "Clear"
+    },
+    "columns": {
+      "when": "When",
+      "who": "Who",
+      "action": "What happened",
+      "record": "Record",
+      "changes": "Changes"
+    },
+    "system": "System",
+    "showChanges": "Show changes",
+    "noChanges": "No field values recorded.",
+    "field": "Field",
+    "before": "Before",
+    "after": "After",
+    "empty": "No audit entries match these filters.",
+    "count": "{count, plural, one {# entry} other {# entries}}",
+    "page": "Page {page} of {pages}",
+    "previous": "Previous page",
+    "next": "Next page",
+    "entities": {
+      "setting": "Setting",
+      "branch": "Branch",
+      "profile": "User",
+      "app_environment": "Environment"
+    },
+    "actions": {
+      "setting_updated": "Setting changed",
+      "branch_created": "Branch added",
+      "branch_updated": "Branch changed",
+      "profile_created": "User created",
+      "profile_updated": "User changed",
+      "profile_password_reset": "Password reset",
+      "environment_changed": "Environment changed"
+    },
+    "none": "none"
   }
 }

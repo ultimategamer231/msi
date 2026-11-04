@@ -19,6 +19,7 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "env:local": "node scripts/write-env-local.mjs",
+    "seed:demo": "tsx scripts/seed-demo.ts",
     "types": "supabase gen types typescript --local --schema public > src/types/database.ts && prettier --write --log-level warn src/types/database.ts",
     "screenshots": "tsx scripts/screenshots.ts"
   },
