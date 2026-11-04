@@ -485,6 +485,13 @@ export type Database = {
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
+          {
+            foreignKeyName: "guarantors_loan_fk";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
         ];
       };
       hash_chains: {
@@ -562,10 +569,24 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "journal_lines_customer_fk";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "journal_lines_journal_id_fkey";
             columns: ["journal_id"];
             isOneToOne: false;
             referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_loan_fk";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
             referencedColumns: ["id"];
           },
           {
@@ -720,6 +741,182 @@ export type Database = {
           },
         ];
       };
+      loans: {
+        Row: {
+          approved_at: string | null;
+          approved_by: string | null;
+          branch_id: string;
+          closed_on: string | null;
+          collateral_required: boolean | null;
+          created_at: string;
+          created_by: string;
+          currency: string;
+          customer_id: string;
+          disbursed_by: string | null;
+          disbursed_on: string | null;
+          disbursement_account_id: string | null;
+          disbursement_method: string | null;
+          due_date: string | null;
+          due_date_version: number;
+          id: string;
+          interest_cents: number | null;
+          interest_rate_bps: number | null;
+          loan_no: string;
+          officer_id: string | null;
+          parent_loan_id: string | null;
+          penalty_base: string | null;
+          penalty_max_periods: number | null;
+          penalty_period_days: number | null;
+          penalty_rate_bps: number | null;
+          principal_cents: number;
+          product_id: string;
+          purpose: string | null;
+          recovery_after_days: number | null;
+          recovery_eligible: boolean;
+          status: string;
+          submitted_at: string | null;
+          term_months: number;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          branch_id: string;
+          closed_on?: string | null;
+          collateral_required?: boolean | null;
+          created_at?: string;
+          created_by: string;
+          currency?: string;
+          customer_id: string;
+          disbursed_by?: string | null;
+          disbursed_on?: string | null;
+          disbursement_account_id?: string | null;
+          disbursement_method?: string | null;
+          due_date?: string | null;
+          due_date_version?: number;
+          id?: string;
+          interest_cents?: number | null;
+          interest_rate_bps?: number | null;
+          loan_no: string;
+          officer_id?: string | null;
+          parent_loan_id?: string | null;
+          penalty_base?: string | null;
+          penalty_max_periods?: number | null;
+          penalty_period_days?: number | null;
+          penalty_rate_bps?: number | null;
+          principal_cents: number;
+          product_id: string;
+          purpose?: string | null;
+          recovery_after_days?: number | null;
+          recovery_eligible?: boolean;
+          status?: string;
+          submitted_at?: string | null;
+          term_months: number;
+          updated_at?: string;
+        };
+        Update: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          branch_id?: string;
+          closed_on?: string | null;
+          collateral_required?: boolean | null;
+          created_at?: string;
+          created_by?: string;
+          currency?: string;
+          customer_id?: string;
+          disbursed_by?: string | null;
+          disbursed_on?: string | null;
+          disbursement_account_id?: string | null;
+          disbursement_method?: string | null;
+          due_date?: string | null;
+          due_date_version?: number;
+          id?: string;
+          interest_cents?: number | null;
+          interest_rate_bps?: number | null;
+          loan_no?: string;
+          officer_id?: string | null;
+          parent_loan_id?: string | null;
+          penalty_base?: string | null;
+          penalty_max_periods?: number | null;
+          penalty_period_days?: number | null;
+          penalty_rate_bps?: number | null;
+          principal_cents?: number;
+          product_id?: string;
+          purpose?: string | null;
+          recovery_after_days?: number | null;
+          recovery_eligible?: boolean;
+          status?: string;
+          submitted_at?: string | null;
+          term_months?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loans_approved_by_fkey";
+            columns: ["approved_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_disbursed_by_fkey";
+            columns: ["disbursed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_disbursement_account_id_fkey";
+            columns: ["disbursement_account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_officer_id_fkey";
+            columns: ["officer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_parent_loan_id_fkey";
+            columns: ["parent_loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "loan_products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       period_locks: {
         Row: {
           branch_id: string;
@@ -851,11 +1048,43 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      customer_balances: {
+        Row: {
+          customer_id: string;
+          loans_active: number | null;
+          loans_overdue: number | null;
+          total_out: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "loans_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      loan_balances: {
+        Row: {
+          days_overdue: number | null;
+          interest_out: number | null;
+          last_payment_on: string | null;
+          loan_id: string | null;
+          next_penalty_on: string | null;
+          penalty_out: number | null;
+          principal_out: number | null;
+          total_out: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
     };
     Functions: {
       account_component: { Args: { p_code: string }; Returns: string };
       add_customer_documents: { Args: { p_customer_id: string; p_files: Json }; Returns: undefined };
+      add_months_clamped: { Args: { p_date: string; p_months: number }; Returns: string };
       admin_record_password_reset: { Args: { p_user_id: string }; Returns: undefined };
       admin_set_profile: {
         Args: {
@@ -912,6 +1141,10 @@ export type Database = {
         Args: { p_exclude?: string; p_id_number: string; p_phone: string; p_phone_alt: string };
         Returns: Json;
       };
+      flat_interest: {
+        Args: { p_principal_cents: number; p_rate_bps: number; p_term_months: number };
+        Returns: number;
+      };
       global_sequence_branch: { Args: Record<PropertyKey, never>; Returns: string };
       guard_duplicate_customer: {
         Args: {
@@ -946,7 +1179,21 @@ export type Database = {
         Args: { p_entity_id: string; p_entity_type: string; p_files: Json };
         Returns: Json;
       };
+      loan_balance_rows: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          days_overdue: number;
+          interest_out: number;
+          last_payment_on: string;
+          loan_id: string;
+          next_penalty_on: string;
+          penalty_out: number;
+          principal_out: number;
+          total_out: number;
+        }[];
+      };
       next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
+      pct: { Args: { p_amount_cents: number; p_bps: number }; Returns: number };
       phone_key: { Args: { p_phone: string }; Returns: string };
       post_journal: {
         Args: {
@@ -958,6 +1205,15 @@ export type Database = {
           p_source_type: string;
         };
         Returns: string;
+      };
+      preview_loan_terms: {
+        Args: {
+          p_disbursed_on?: string;
+          p_principal_cents: number;
+          p_product_id: string;
+          p_term_months: number;
+        };
+        Returns: Json;
       };
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
       request_capital_in: { Args: { p_request: Json }; Returns: string };
@@ -971,6 +1227,7 @@ export type Database = {
         Args: { p_roles: Database["public"]["Enums"]["app_role"][] };
         Returns: Database["public"]["Enums"]["app_role"];
       };
+      round_half_up: { Args: { p_d: number; p_n: number }; Returns: number };
       sequence_scope: { Args: { p_branch: string; p_kind: string }; Returns: string };
       set_sequence_start: {
         Args: { p_branch_id: string; p_kind: string; p_last_value: number };

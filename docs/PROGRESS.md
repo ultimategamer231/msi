@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M3 Loans (approved by Foday 2026-11-04); M0, M1 and M2 in review on PR #1 |
-| Current block | M3.1 Loan products |
+| Current block | M3.2 Money helpers, loans, balances, preview |
 | Last approved block | M3 phase start (Foday 2026-11-04, "Start M3"); blocks continue automatically once pushed and CI is green |
 | State | Working on M3 |
-| Next step | M3.2 Loans table, money helpers, preview, loan_balances |
+| Next step | M3.3 Draft, submit and approval routing |
 
 ## M3 plan (Loans: FR-06, FR-07, FR-08, FR-09; T-01, T-02, T-17, T-18, T-19, T-23, T-35)
 
@@ -63,3 +63,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-04 | M2.5 | guarantors table and clean_guarantors, guarantor form section, demo seed customers and pending phone change, M2 phase report |
 | 2026-11-04 | M3 | Phase approved by Foday ("Start M3"); B-24, B-25 and the M2 mock-up differences not answered, defaults stay |
 | 2026-11-04 | M3.1 | loan_products, upsert_loan_product (admin, audited), seeded standard product, Loan products tab in /settings with percent input; 246 database tests |
+| 2026-11-04 | M3.2 | round_half_up, pct, flat_interest, add_months_clamped (T-01, T-02, T-09), loans table with snapshot columns, loan_balances and customer_balances, preview_loan_terms; 265 database tests |
