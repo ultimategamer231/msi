@@ -1346,7 +1346,7 @@ export type Database = {
       customer_editable_fields: { Args: Record<PropertyKey, never>; Returns: string[] };
       decide_approval: { Args: { p_decision: string; p_id: string; p_note: string }; Returns: Json };
       disburse_loan: {
-        Args: { p_account_id: string; p_disbursed_on: string; p_loan_id: string; p_method: string };
+        Args: { p_account_id?: string; p_disbursed_on?: string; p_loan_id: string; p_method: string };
         Returns: Json;
       };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
@@ -1393,6 +1393,20 @@ export type Database = {
         Returns: Json;
       };
       link_collateral: { Args: { p_collateral_id: string; p_loan_id: string }; Returns: undefined };
+      loan_activity: {
+        Args: { p_loan_id: string };
+        Returns: {
+          amount_cents: number;
+          component: string;
+          entry_date: string;
+          journal_id: string;
+          journal_no: string;
+          posted_at: string;
+          posted_by: string;
+          reversal_of: string;
+          source_type: string;
+        }[];
+      };
       loan_balance_rows: {
         Args: Record<PropertyKey, never>;
         Returns: {

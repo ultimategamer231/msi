@@ -661,7 +661,20 @@
         "sending": "Sending…",
         "sent": "Sent for approval."
       },
-      "openApprovals": "Decide it in Approvals"
+      "openApprovals": "Decide it in Approvals",
+      "newLoan": "New loan",
+      "totalOwed": "Total owed",
+      "loans": "Loans",
+      "noLoans": "No loans yet.",
+      "notSet": "Not yet set",
+      "loanColumns": {
+        "loan": "Loan",
+        "lent": "Lent",
+        "due": "Due date",
+        "owes": "Owes",
+        "status": "Status"
+      },
+      "loansTable": "Loans table"
     }
   },
   "when": {
@@ -876,6 +889,170 @@
       "submit": "Send for approval",
       "saveDraft": "Save as draft",
       "sending": "Sending…"
+    },
+    "title": "Loans",
+    "loading": "Loading loans",
+    "allLoans": "All loans",
+    "new": "New loan",
+    "tabsLabel": "Loan status",
+    "tabs": {
+      "all": "All",
+      "active": "Active",
+      "dueToday": "Due today",
+      "overdue": "Overdue",
+      "recovery": "Recovery",
+      "pending": "Pending",
+      "closed": "Closed"
+    },
+    "filters": {
+      "label": "Find loans",
+      "q": "Search",
+      "qPlaceholder": "Loan number or customer",
+      "branch": "Branch",
+      "anyBranch": "All branches",
+      "officer": "Loan officer",
+      "anyOfficer": "All officers",
+      "apply": "Search",
+      "clear": "Clear"
+    },
+    "columns": {
+      "loan": "Loan",
+      "customer": "Customer",
+      "branch": "Branch",
+      "officer": "Officer",
+      "lent": "Lent",
+      "due": "Due date",
+      "owes": "Owes",
+      "status": "Status"
+    },
+    "tableLabel": "Loan list",
+    "empty": "No loans match.",
+    "notSet": "Not yet set",
+    "lent": "lent {amount}",
+    "owes": "owes {amount}",
+    "count": "{count, plural, =0 {No loans} one {# loan} other {# loans}}",
+    "windowed": "{count, plural, =0 {No loans} one {# loan} other {# loans}}, open or issued or closed since {date}.",
+    "includeOlder": "Include older",
+    "hideOlder": "Hide older",
+    "openTotal": "{count} open, total owed {amount}",
+    "page": "Page {page} of {pages}",
+    "previous": "Previous",
+    "next": "Next",
+    "pill": {
+      "draft": "Draft",
+      "pendingApproval": "Pending approval",
+      "pendingCeo": "Pending CEO approval",
+      "approved": "Approved, not paid out",
+      "active": "Active",
+      "dueToday": "Due today",
+      "overdue": "{count, plural, one {# day overdue} other {# days overdue}}",
+      "recovery": "Recovery",
+      "closed": "Closed",
+      "closedOn": "Closed {date}",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "writtenOff": "Written off"
+    },
+    "detail": {
+      "title": "Loan {loan}",
+      "loading": "Loading the loan",
+      "none": "None",
+      "notYet": "Not yet",
+      "submittedNotice": "The application was sent for approval.",
+      "savedNotice": "Saved as a draft. Send it for approval when it is complete.",
+      "waitingManager": "Waiting for a manager's approval (sent by {name} on {date}).",
+      "waitingCeo": "Waiting for the CEO's approval (sent by {name} on {date}); the amount is above the manager limit.",
+      "rejectedNotice": "Rejected by {name}: {note}",
+      "approvedNotice": "Approved. A cashier pays it out from this page.",
+      "decideHeading": "Decide this application",
+      "cashAccount": "{branch} cash",
+      "methods": {
+        "cash": "Cash",
+        "mobile_money": "Mobile money",
+        "bank": "Bank"
+      },
+      "cards": {
+        "lent": "Amount lent",
+        "paidOut": "{method}, {date}",
+        "notPaidOut": "Not paid out yet",
+        "interest": "Interest",
+        "interestRule": "{rate} flat × {months, plural, one {# month} other {# months}}",
+        "interestLater": "Set when the application is sent",
+        "penalties": "Penalties",
+        "noPenalties": "No penalties",
+        "penaltyRule": "At most {max} weekly charges",
+        "paid": "Paid so far",
+        "noPayments": "No payments yet"
+      },
+      "outstanding": "Outstanding",
+      "components": "Principal {principal} · interest {interest} · penalties {penalty}",
+      "fields": {
+        "disbursed": "Paid out",
+        "due": "Due date",
+        "daysOverdue": "Days overdue",
+        "officer": "Loan officer",
+        "branch": "Branch",
+        "product": "Product",
+        "term": "Term",
+        "purpose": "Purpose",
+        "approvedBy": "Approved by",
+        "createdBy": "Application by"
+      },
+      "activity": {
+        "heading": "Activity",
+        "empty": "Nothing has been posted for this loan yet.",
+        "date": "Date",
+        "event": "Event",
+        "by": "By",
+        "amount": "Amount",
+        "paidOut": "Loan paid out by {method}",
+        "interest": "Interest charged ({rate} × {months, plural, one {# month} other {# months}})",
+        "other": "{source}: {component}",
+        "system": "System",
+        "note": "Balances are calculated from the ledger. No entry can be edited; mistakes are reversed with approval.",
+        "table": "Activity table"
+      },
+      "collateral": {
+        "heading": "Collateral",
+        "none": "No collateral pledged.",
+        "value": "Estimated value <strong>{value}</strong> against {owed} owed",
+        "status": {
+          "held": "Held",
+          "released": "Released",
+          "in_recovery": "In recovery",
+          "sold": "Sold",
+          "lost": "Lost"
+        }
+      },
+      "guarantors": {
+        "heading": "Guarantors",
+        "none": "No guarantors.",
+        "scan": "ID scan"
+      },
+      "actions": {
+        "submit": "Send for approval",
+        "sending": "Saving…",
+        "cancel": "Cancel loan",
+        "cancelConfirm": "Cancel {loan}? It cannot be paid out afterwards.",
+        "cancelReason": "Reason",
+        "cancelReasonOptional": "Reason (optional)",
+        "reasonRequired": "Give the reason.",
+        "yesCancel": "Yes, cancel",
+        "keep": "No, keep it",
+        "disburseHeading": "Pay out this loan",
+        "method": "Paid out by",
+        "paidFrom": "Paid from: {account}. Dated today.",
+        "bankAccount": "1020 Bank",
+        "momoAccount": "1030 Mobile Money",
+        "disburse": "Pay out",
+        "disburseConfirm": "Pay out {amount} from {account}?",
+        "yesDisburse": "Yes, pay out",
+        "methods": {
+          "cash": "Cash",
+          "mobile_money": "Mobile money",
+          "bank": "Bank"
+        }
+      }
     }
   }
 }

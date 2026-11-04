@@ -214,7 +214,8 @@ revoke execute on function public.account_balance(uuid) from public, anon, authe
 -- branch cash account (B-10); bank 1020; mobile money 1030. Checks: approved, pledged collateral
 -- when required (T-23), funds when disbursement.check_funds (T-35), today's date, open day (post_journal
 -- refuses a locked period). Sets the due date (A-02) and returns the journal number and due date.
-create or replace function public.disburse_loan(p_loan_id uuid, p_method text, p_account_id uuid, p_disbursed_on date)
+create or replace function public.disburse_loan(
+  p_loan_id uuid, p_method text, p_account_id uuid default null, p_disbursed_on date default null)
 returns jsonb
 language plpgsql
 security definer

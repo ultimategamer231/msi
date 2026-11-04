@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 
 import { createClient } from "@supabase/supabase-js";
 
+import { fixtureUser } from "./fixtures";
 import { localSupabaseEnv } from "./supabase-env";
 
 /* Service-role client for test assertions on the LOCAL stack only (e.g. reading audit rows). */
@@ -82,4 +83,30 @@ export async function submitTestLoan(
   const { data: loan, error: readError } = await client.from("loans").select("loan_no").eq("id", id).single();
   if (readError !== null) throw readError;
   return { id, loanNo: loan.loan_no };
+}
+
+/** Puts money in a cash account the way the app does: capital in requested and approved (R10). */
+export async function fundCash(account: string, amountCents: number): Promise<void> {
+  const accountant = await userClient(fixtureUser("accountant"));
+  const manager = await userClient(fixtureUser("manager"));
+  const { data: today } = await accountant.rpc("business_today");
+  const memo = `E2E cash ${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
+  const { error } = await accountant.rpc("request_capital_in", {
+    p_request: { entry_date: today, account, amount_cents: amountCents, memo },
+  });
+  if (error !== null) throw error;
+  const { data: request, error: readError } = await manager
+    .from("approval_requests")
+    .select("id")
+    .eq("type", "capital_in")
+    .eq("status", "pending")
+    .contains("payload", { memo })
+    .single();
+  if (readError !== null) throw readError;
+  const { error: decideError } = await manager.rpc("decide_approval", {
+    p_id: request.id,
+    p_decision: "approve",
+    p_note: "",
+  });
+  if (decideError !== null) throw decideError;
 }

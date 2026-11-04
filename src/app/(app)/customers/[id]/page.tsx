@@ -7,10 +7,12 @@ import { PageSkeleton } from "@/components/layout/page-skeleton";
 import { TopBar } from "@/components/layout/top-bar";
 import { buttonVariants } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import { CUSTOMER_STATUS_TONE, StatusBadge } from "@/components/ui/status-badge";
 import { requirePageAccess } from "@/lib/auth/staff";
 import { customerName } from "@/lib/customers";
-import { businessDateOf, formatDate } from "@/lib/format";
+import { businessDateOf, formatDate, formatMoney } from "@/lib/format";
+import { loanPill } from "@/lib/loans";
 import { canAccess } from "@/lib/permissions";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
@@ -19,6 +21,8 @@ import { ageOf } from "@/lib/when";
 import { CustomerForm } from "../customer-form";
 import { changesOf, describeCustomerValue, type Lookups } from "../describe";
 import { ID_TYPES, valuesFromRow } from "../schemas";
+
+import { LoanPillText } from "../../loans/loan-pill";
 
 import { AddDocumentForm, StatusRequestForm } from "./profile-forms";
 
@@ -51,26 +55,41 @@ async function CustomerContent({ params, searchParams }: PageProps<"/customers/[
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
 
   const supabase = await createSupabaseServerClient();
-  const [customerResult, filesResult, pendingResult, branchesResult, peopleResult, nowResult] =
-    await Promise.all([
-      supabase.from("customers").select("*").eq("id", id).maybeSingle(),
-      supabase
-        .from("attachments")
-        .select("id, kind, storage_path, file_name, mime, created_at, created_by")
-        .eq("entity_type", "customer")
-        .eq("entity_id", id)
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("approval_requests")
-        .select("id, type, payload, reason, requested_by, requested_at")
-        .eq("entity_id", id)
-        .in("type", ["customer_edit", "customer_blacklist"])
-        .eq("status", "pending")
-        .maybeSingle(),
-      supabase.from("branches").select("id, code, name").order("code"),
-      supabase.from("profiles").select("id, full_name, role, branch_id, active").order("full_name"),
-      supabase.rpc("app_now"),
-    ]);
+  const [
+    customerResult,
+    filesResult,
+    pendingResult,
+    branchesResult,
+    peopleResult,
+    nowResult,
+    loansResult,
+    owedResult,
+  ] = await Promise.all([
+    supabase.from("customers").select("*").eq("id", id).maybeSingle(),
+    supabase
+      .from("attachments")
+      .select("id, kind, storage_path, file_name, mime, created_at, created_by")
+      .eq("entity_type", "customer")
+      .eq("entity_id", id)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("approval_requests")
+      .select("id, type, payload, reason, requested_by, requested_at")
+      .eq("entity_id", id)
+      .in("type", ["customer_edit", "customer_blacklist"])
+      .eq("status", "pending")
+      .maybeSingle(),
+    supabase.from("branches").select("id, code, name").order("code"),
+    supabase.from("profiles").select("id, full_name, role, branch_id, active").order("full_name"),
+    supabase.rpc("app_now"),
+    supabase
+      .from("loans")
+      .select("id, loan_no, status, principal_cents, due_date, closed_on")
+      .eq("customer_id", id)
+      .neq("status", "cancelled")
+      .order("created_at", { ascending: false }),
+    supabase.from("customer_balances").select("total_out").eq("customer_id", id).maybeSingle(),
+  ]);
   if (customerResult.error !== null || filesResult.error !== null || branchesResult.error !== null) {
     throw new Error("Could not read the customer");
   }
@@ -78,6 +97,15 @@ async function CustomerContent({ params, searchParams }: PageProps<"/customers/[
   const customer = customerResult.data;
   if (customer === null) notFound();
   const files = filesResult.data;
+  const loanIds = (loansResult.data ?? []).map((loan) => loan.id);
+  const { data: balanceRows } =
+    loanIds.length === 0
+      ? { data: [] }
+      : await supabase
+          .from("loan_balances")
+          .select("loan_id, total_out, days_overdue")
+          .in("loan_id", loanIds);
+  const loanBalances = new Map((balanceRows ?? []).map((row) => [row.loan_id, row]));
   // Requests are readable by managers, the CEO and the requester (RLS); others simply see none.
   const pending = pendingResult.data;
 
@@ -220,17 +248,24 @@ async function CustomerContent({ params, searchParams }: PageProps<"/customers/[
               </StatusBadge>
             </div>
           </div>
-          {canEdit && !editing && pending === null ? (
-            <Link
-              href={`/customers/${customer.id}?edit=1`}
-              className={cn(
-                buttonVariants({ variant: "secondary" }),
-                "self-start hover:text-ink sm:self-auto",
-              )}
-            >
-              {t("requestEdit")}
-            </Link>
-          ) : null}
+          <div className="flex flex-wrap gap-2 self-start sm:self-auto">
+            {(staff.role === "loan_officer" || staff.role === "manager") && customer.status === "active" ? (
+              <Link
+                href={`/loans/new?customer=${customer.id}`}
+                className={cn(buttonVariants({ variant: "primary" }), "hover:text-white")}
+              >
+                {t("newLoan")}
+              </Link>
+            ) : null}
+            {canEdit && !editing && pending === null ? (
+              <Link
+                href={`/customers/${customer.id}?edit=1`}
+                className={cn(buttonVariants({ variant: "secondary" }), "hover:text-ink")}
+              >
+                {t("requestEdit")}
+              </Link>
+            ) : null}
+          </div>
         </div>
 
         {query.created === "1" ? <Callout>{t("created", { code: customer.code })}</Callout> : null}
@@ -293,6 +328,17 @@ async function CustomerContent({ params, searchParams }: PageProps<"/customers/[
                     {t("noPhoto")}
                   </span>
                 )}
+                <div>
+                  <p className="text-sm text-ink-muted">{t("totalOwed")}</p>
+                  <p
+                    className={cn(
+                      "tabular text-3xl font-bold",
+                      BigInt(owedResult.data?.total_out ?? 0) > 0n ? "text-status-overdue-fg" : "text-ink",
+                    )}
+                  >
+                    {formatMoney(owedResult.data?.total_out ?? 0)}
+                  </p>
+                </div>
               </div>
               <dl className="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
                 {details.map((detail) => (
@@ -311,6 +357,77 @@ async function CustomerContent({ params, searchParams }: PageProps<"/customers/[
             </section>
 
             <div className="grid min-w-0 gap-4 lg:gap-5">
+              <section
+                aria-labelledby="loans-heading"
+                className="min-w-0 rounded-card border border-line bg-surface"
+              >
+                <h2 id="loans-heading" className="px-4 pt-4 text-base font-bold text-ink sm:px-6 sm:pt-6">
+                  {t("loans")}
+                </h2>
+                {(loansResult.data ?? []).length === 0 ? (
+                  <p className="px-4 py-4 text-sm text-ink-muted sm:px-6">{t("noLoans")}</p>
+                ) : (
+                  <ScrollRegion label={t("loansTable")} className="mt-3">
+                    <table className="w-full min-w-[520px] border-collapse text-sm">
+                      <thead className="bg-subtle text-left text-xs text-ink-muted">
+                        <tr>
+                          <th scope="col" className="px-4 py-2.5 font-semibold">
+                            {t("loanColumns.loan")}
+                          </th>
+                          <th scope="col" className="px-4 py-2.5 text-right font-semibold">
+                            {t("loanColumns.lent")}
+                          </th>
+                          <th scope="col" className="px-4 py-2.5 font-semibold">
+                            {t("loanColumns.due")}
+                          </th>
+                          <th scope="col" className="px-4 py-2.5 text-right font-semibold">
+                            {t("loanColumns.owes")}
+                          </th>
+                          <th scope="col" className="px-4 py-2.5 font-semibold">
+                            {t("loanColumns.status")}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(loansResult.data ?? []).map((loan) => {
+                          const balance = loanBalances.get(loan.id);
+                          const pill = loanPill({
+                            status: loan.status,
+                            dueDate: loan.due_date,
+                            daysOverdue: balance?.days_overdue ?? 0,
+                            totalOutCents: BigInt(balance?.total_out ?? 0),
+                            closedOn: loan.closed_on,
+                            today: businessDateOf(nowResult.data),
+                          });
+                          return (
+                            <tr key={loan.id} className="border-t border-page">
+                              <td className="tabular px-4 py-3">
+                                <Link href={`/loans/${loan.id}`} className="font-semibold">
+                                  {loan.loan_no}
+                                </Link>
+                              </td>
+                              <td className="tabular px-4 py-3 text-right">
+                                {formatMoney(loan.principal_cents)}
+                              </td>
+                              <td className="tabular px-4 py-3 whitespace-nowrap">
+                                {loan.due_date === null ? t("notSet") : formatDate(loan.due_date)}
+                              </td>
+                              <td className="tabular px-4 py-3 text-right">
+                                {formatMoney(balance?.total_out ?? 0)}
+                              </td>
+                              <td className="px-4 py-3">
+                                <StatusBadge tone={pill.tone}>
+                                  <LoanPillText pill={pill} />
+                                </StatusBadge>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </ScrollRegion>
+                )}
+              </section>
               <section
                 aria-labelledby="documents-heading"
                 className="min-w-0 rounded-card border border-line bg-surface p-4 sm:p-6"

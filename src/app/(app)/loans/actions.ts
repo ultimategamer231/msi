@@ -221,3 +221,65 @@ export async function applyForLoan(values: ApplicationValues, submit: boolean): 
   revalidatePath("/approvals");
   return { ok: true, loanId };
 }
+
+export type LoanActionResult = { ok: true } | { ok: false; code: ErrorCode };
+
+async function loanRpc(
+  where: string,
+  roles: readonly Role[],
+  call: (supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>) => PromiseLike<{
+    error: { code?: string; message?: string } | null;
+  }>,
+  loanId: string,
+): Promise<LoanActionResult> {
+  const result = await getCurrentStaff();
+  if (result.status !== "ok" || !roles.includes(result.staff.role)) return { ok: false, code: "FORBIDDEN" };
+  if (!uuid.test(loanId)) return { ok: false, code: "INVALID_INPUT" };
+  const supabase = await createSupabaseServerClient();
+  const { error } = await call(supabase);
+  if (error !== null) {
+    const code = errorCodeFrom(error);
+    if (code === "UNKNOWN")
+      logServerError({ code: `RPC_${error.code ?? ""}`, userId: result.staff.id, where });
+    return { ok: false, code };
+  }
+  revalidatePath(`/loans/${loanId}`);
+  revalidatePath("/loans");
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+/* submit_loan: the draft's creator sends it for approval. */
+export async function submitDraft(loanId: string): Promise<LoanActionResult> {
+  return loanRpc(
+    "loans.submitDraft",
+    APPLY_ROLES,
+    (supabase) => supabase.rpc("submit_loan", { p_loan_id: loanId }),
+    loanId,
+  );
+}
+
+/* cancel_loan: a draft by its creator; an approved, unpaid loan by its creator or a manager. */
+export async function cancelLoan(loanId: string, reason: string): Promise<LoanActionResult> {
+  const trimmed = reason.trim().slice(0, 300);
+  return loanRpc(
+    "loans.cancelLoan",
+    ["loan_officer", "manager", "ceo"],
+    (supabase) => supabase.rpc("cancel_loan", { p_loan_id: loanId, p_reason: trimmed }),
+    loanId,
+  );
+}
+
+/* disburse_loan (cashier, R1): today's date; the account follows the method (B-10, SPEC 5.4.5). */
+export async function disburseLoan(
+  loanId: string,
+  method: "cash" | "mobile_money" | "bank",
+): Promise<LoanActionResult> {
+  if (!["cash", "mobile_money", "bank"].includes(method)) return { ok: false, code: "INVALID_INPUT" };
+  return loanRpc(
+    "loans.disburseLoan",
+    ["cashier"],
+    (supabase) => supabase.rpc("disburse_loan", { p_loan_id: loanId, p_method: method }),
+    loanId,
+  );
+}

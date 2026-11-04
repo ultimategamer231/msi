@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M3 Loans (approved by Foday 2026-11-04); M0, M1 and M2 in review on PR #1 |
-| Current block | M3.5 New loan wizard |
+| Current block | M3.6 Loans list and detail |
 | Last approved block | M3 phase start (Foday 2026-11-04, "Start M3"); blocks continue automatically once pushed and CI is green |
 | State | Working on M3 |
-| Next step | M3.6 Loans list and loan detail |
+| Next step | M3.7 Loan agreement PDF, demo seed, M3 report |
 
 ## M3 plan (Loans: FR-06, FR-07, FR-08, FR-09; T-01, T-02, T-17, T-18, T-19, T-23, T-35)
 
@@ -67,3 +67,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-04 | M3.3 | create_loan_draft, update_loan_draft, submit_loan (routing by limit), cancel_loan, loan decisions in decide_approval, loan cards in the inbox; T-17, T-18, T-19; 292 database tests |
 | 2026-11-04 | M3.4 | collaterals, loan_collaterals, collateral_events (append-only), register_collateral, link_collateral, disburse_loan (R1) with collateral, funds, date and lock checks; T-23, T-35; 315 database tests |
 | 2026-11-04 | M3.5 | /loans/new wizard (customer search, product, amount and term with live preview, collateral pick or add, guarantors with ID scan, send or save draft); 4 e2e checks |
+| 2026-11-04 | M3.6 | /loans (tabs, search, filters, open total), /loans/[id] (cards, outstanding, details, activity, collateral, guarantors; submit, decide, pay out, cancel), loans and total owed on the customer profile; ledger trigger rights fix; 317 database tests, 140 e2e |
