@@ -300,6 +300,7 @@ export type Database = {
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       jsonb_is_short_text: { Args: { p: Json; p_max: number }; Returns: boolean };
       jsonb_is_whole_number: { Args: { p: Json }; Returns: boolean };
+      public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
       require_role: {
         Args: { p_roles: Database["public"]["Enums"]["app_role"][] };
         Returns: Database["public"]["Enums"]["app_role"];

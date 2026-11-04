@@ -1,7 +1,7 @@
 -- RLS and privileges on every table (SPEC 6.4; CLAUDE.md rule 5).
 begin;
 \ir _helpers.psql
-select plan(9);
+select plan(11);
 
 select is(
   (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
@@ -29,10 +29,11 @@ select is(
       and not exists (select 1 from unnest(coalesce(p.proconfig, '{}')) c where c like 'search_path=%')),
   0, 'every security definer function pins its search_path');
 
-select is(
-  (select count(*)::int from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-    where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'EXECUTE')),
-  0, 'the anonymous role cannot execute any function');
+select set_eq(
+  $$select p.proname::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'EXECUTE')$$,
+  array['public_branding'],
+  'the anonymous role can call only public_branding (sign-in page header)');
 
 select ok(
   not has_function_privilege('authenticated', 'public.write_audit(text,text,text,jsonb,jsonb)', 'EXECUTE'),
@@ -42,7 +43,7 @@ select set_eq(
   $$select p.proname::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'EXECUTE')$$,
   array['app_now', 'business_today', 'environment_kind', 'auth_role', 'auth_branch', 'is_staff',
-        'update_setting', 'upsert_branch', 'admin_set_profile'],
+        'update_setting', 'upsert_branch', 'admin_set_profile', 'public_branding'],
   'clients can call exactly the M0 RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).
@@ -50,6 +51,12 @@ select ok(
   tests.try_as('authenticated', tests.create_staff('Cashier One', 'cashier', 'BR2'),
     $$insert into public.settings (key, value) values ('currency.base', '"LRD"')$$) like 'permission denied%',
   'a cashier cannot insert into settings directly');
+
+-- public_branding exposes the company name only.
+select is(tests.value_as('anon', null, $$select public.public_branding()::text$$),
+  '{"name": "Method Solutions Inc.", "short_name": "MSI"}', 'public_branding returns name and short name only');
+select matches(tests.try_as('anon', null, $$select count(*) from public.settings$$),
+  '^permission denied', 'signed-out visitors cannot read settings directly');
 
 select * from finish();
 rollback;

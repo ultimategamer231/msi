@@ -16,7 +16,7 @@ Requirements: Node 22 (see `.nvmrc`), pnpm 10, Docker.
 ```bash
 pnpm install
 pnpm db:start                # local Supabase in Docker: applies migrations and seeds
-cp .env.example .env.local   # fill in values from `pnpm supabase status -o env`
+pnpm env:local               # writes .env.local from the local Supabase stack
 pnpm dev                     # http://localhost:3000
 ```
 

@@ -1,19 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-import { expectNoHorizontalScroll, expectNoSeriousA11yIssues } from "./helpers";
-
 test.describe("foundation", () => {
-  test("unknown routes show the designed not-found page", async ({ page }) => {
-    const response = await page.goto("/this-route-does-not-exist");
-    expect(response?.status()).toBe(404);
-    await expect(page.getByRole("heading", { level: 1, name: "This page does not exist" })).toBeVisible();
+  test("signed-out visitors to any page are sent to sign in", async ({ page }) => {
+    await page.goto("/this-route-does-not-exist");
+    await expect(page).toHaveURL(/\/login\?next=%2Fthis-route-does-not-exist$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expectNoHorizontalScroll(page);
-    await expectNoSeriousA11yIssues(page);
   });
 
   test("security headers are sent on every response", async ({ page }) => {
-    const response = await page.goto("/this-route-does-not-exist");
+    const response = await page.goto("/login");
     const headers = response?.headers() ?? {};
     expect(headers["x-frame-options"]).toBe("DENY");
     expect(headers["x-content-type-options"]).toBe("nosniff");

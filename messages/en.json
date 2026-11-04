@@ -14,5 +14,41 @@
     "body": "The page could not be shown. Nothing has been saved. Try again, and if it happens again tell your manager the time it happened.",
     "retry": "Try again",
     "reference": "Reference: {digest}"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "ceo": "CEO",
+    "manager": "Manager",
+    "accountant": "Accountant",
+    "cashier": "Cashier",
+    "loan_officer": "Loan officer"
+  },
+  "login": {
+    "title": "Sign in",
+    "intro": "For staff only. Accounts are created by the administrator.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "errors": {
+      "invalidInput": "Enter your email address and password.",
+      "invalidCredentials": "The email or password is not correct.",
+      "inactive": "This account is not active. Ask the administrator to check it.",
+      "rateLimited": "Too many attempts. Wait a few minutes, then try again.",
+      "unavailable": "Sign-in is not available right now. Try again in a minute."
+    },
+    "notices": {
+      "signed-out": "You have signed out.",
+      "inactive": "This account is not active. Ask the administrator to check it.",
+      "expired": "For security, sessions end after 12 hours. Sign in again."
+    }
+  },
+  "dashboard": {
+    "greeting": "Good day, {name}",
+    "signedInAs": "Signed in as {role}",
+    "allBranches": "All branches",
+    "forbidden": "You do not have access to that page. You have been brought back to the dashboard.",
+    "signOut": "Sign out",
+    "loading": "Loading your dashboard"
   }
 }
