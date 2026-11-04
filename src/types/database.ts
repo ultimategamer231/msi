@@ -270,6 +270,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      admin_record_password_reset: { Args: { p_user_id: string }; Returns: undefined };
       admin_set_profile: {
         Args: {
           p_active: boolean;

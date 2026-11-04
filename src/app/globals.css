@@ -149,6 +149,14 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Keep focused or scrolled-to fields clear of the phone bottom tab bar. */
+    scroll-padding-bottom: 5.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    html {
+      scroll-padding-bottom: 0;
+    }
   }
 
   body {

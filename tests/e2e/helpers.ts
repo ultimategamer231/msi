@@ -3,6 +3,11 @@ import { expect, type Page } from "@playwright/test";
 
 /** Fail on serious or critical WCAG 2.2 AA violations (master prompt section 5). */
 export async function expectNoSeriousA11yIssues(page: Page): Promise<void> {
+  // Scan the settled page: during the 200 ms fade-in, text is briefly translucent and would be
+  // measured at the wrong contrast.
+  await page.waitForFunction(() =>
+    document.getAnimations().every((animation) => animation.playState !== "running"),
+  );
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
@@ -35,4 +40,11 @@ export async function signOutThroughUi(page: Page, isMobile: boolean): Promise<v
   } else {
     await page.getByRole("complementary").getByRole("button", { name: "Sign out" }).click();
   }
+}
+
+/** Signs in as one of the fixture users and waits for the dashboard. */
+export async function signInAs(page: Page, user: { email: string; password: string }): Promise<void> {
+  await page.goto("/login");
+  await signIn(page, user.email, user.password);
+  await expect(page).toHaveURL(/\/dashboard$/);
 }

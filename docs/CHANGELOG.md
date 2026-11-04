@@ -13,6 +13,9 @@ All notable changes, one section per phase. Format follows Keep a Changelog.
 - M0.2: Migrations for roles, deployment environment, business clock (`app_now`, `business_today`), branches, profiles (managers may have no branch), settings with validation, hash-chained append-only `audit_log`, `document_sequences`, RLS on every table and explicit function grants.
 - M0.2: Admin RPCs `update_setting`, `upsert_branch`, `admin_set_profile`, each audited with before and after; `verify_audit_chain` for integrity checks.
 - M0.3: Sign-in page (company name from settings, no sign-up), sign-in and sign-out, session refresh in the Next.js proxy, 12-hour session limit, signed-out redirect with return path, route-role map from SPEC 9 with a page guard, inactive accounts refused.
+- M0.5: `/settings` (admin only): company header, logo upload, WhatsApp reminder texts, branches (add, rename, deactivate), rule settings A-05/A-07/A-09/A-10/A-12/A-18/A-19/A-20 with money in dollars stored as cents, business clock for demo and test databases, users (create with one-time password, edit role and branch, deactivate, reset password). Every change is audited.
+- M0.5: `admin_record_password_reset` RPC; admin logo upload storage policy; `update_setting` accepts SQL NULL as JSON null.
+- M0.5: Friendly text for every error code; dollars-to-cents input parser; shared form fields.
 - M0.4: App shell from the mock-ups: 232px sidebar with logo tile, role-aware navigation and user block; white top bar; purple phone header with context line; bottom tab bar with a "More" sheet; skeleton and in-shell error states; skip link; logo through a signed URL.
 - M0.4: Restyled shadcn/ui Button and Sheet; Callout and Skeleton components.
 - M0.3: E2E setup that creates one test account per role; e2e for every role's sign-in, wrong password, inactive user, return path, sign-out and not-found; CI e2e job runs against local Supabase.

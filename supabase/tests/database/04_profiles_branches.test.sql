@@ -1,7 +1,7 @@
 -- Auth helpers, branches and staff profiles (SPEC 4, 6.4, 7.1; FR-01, FR-02; B-11).
 begin;
 \ir _helpers.psql
-select plan(24);
+select plan(27);
 
 select tests.create_staff('Admin One', 'admin') as admin_id \gset
 select tests.create_staff('Manager One', 'manager') as manager_id \gset
@@ -80,6 +80,16 @@ select matches(tests.try_as('authenticated', :'admin_id',
 select matches(tests.try_as('authenticated', :'admin_id',
   format($$select public.admin_set_profile('%s', 'Admin One', null, 'admin', null, false)$$, :'admin_id')),
   '^INVALID_STATE', 'an admin cannot deactivate themselves');
+
+-- Password reset audit (the reset itself happens in Supabase Auth).
+select matches(tests.try_as('authenticated', :'manager_id',
+  format($$select public.admin_record_password_reset('%s')$$, :'cashier_id')), '^FORBIDDEN',
+  'manager cannot record a password reset');
+select is(tests.try_as('authenticated', :'admin_id',
+  format($$select public.admin_record_password_reset('%s')$$, :'cashier_id')), null, 'admin records a password reset');
+select is((select count(*)::int from public.audit_log where action = 'profile.password_reset' and entity_id = :'cashier_id'
+            and actor_id = :'admin_id' and before is null and after is null), 1,
+  'the reset is audited without any password data');
 
 select * from finish();
 rollback;

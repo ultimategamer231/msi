@@ -2,7 +2,7 @@
 -- change"; FR-02, FR-26). Business clock (B-01).
 begin;
 \ir _helpers.psql
-select plan(23);
+select plan(26);
 
 select tests.create_staff('Admin One', 'admin') as admin_id \gset
 select tests.create_staff('Manager One', 'manager') as manager_id \gset
@@ -67,6 +67,13 @@ select is(public.app_now(), '2026-02-12 09:10:00+00'::timestamptz, 'app_now() re
 select is(public.business_today(), '2026-02-12'::date, 'business_today() follows the clock in Africa/Monrovia');
 select is((select (value ->> 'frozen')::boolean from public.settings where key = 'clock.override_at'), true,
   'a clock without "frozen" is stored as frozen');
+
+-- SQL NULL (how PostgREST passes JSON null) clears nullable settings.
+select is(tests.try_as('authenticated', :'admin_id',
+  $$select public.update_setting('clock.override_at', null)$$), null, 'SQL NULL resets the clock to real time');
+select is((select value from public.settings where key = 'clock.override_at'), 'null'::jsonb, 'stored as JSON null');
+select matches(tests.try_as('authenticated', :'admin_id',
+  $$select public.update_setting('company', null)$$), '^INVALID_SETTING', 'null is still refused where a value is required');
 
 -- In production the override is refused and any stored value is ignored.
 update public.app_environment set kind = 'production' where id;

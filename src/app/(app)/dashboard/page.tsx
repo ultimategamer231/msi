@@ -32,7 +32,7 @@ async function DashboardContent({ searchParams }: { searchParams: PageProps<"/da
   return (
     <>
       <TopBar title={t("title")} staff={staff} />
-      <div className="grid animate-in gap-4 p-4 duration-200 fade-in lg:gap-5 lg:p-6">
+      <div className="grid animate-in grid-cols-1 gap-4 p-4 duration-200 fade-in lg:gap-5 lg:p-6">
         {params.notice === "forbidden" ? (
           <Callout tone="warning" role="alert">
             {t("forbidden")}

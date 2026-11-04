@@ -44,7 +44,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { key: "reports", href: "/reports", route: "/reports", built: false },
   { key: "ledger", href: "/ledger", route: "/ledger", built: false },
   { key: "audit", href: "/audit", route: "/audit", built: false },
-  { key: "settings", href: "/settings", route: "/settings", built: false },
+  { key: "settings", href: "/settings", route: "/settings", built: true },
 ];
 
 export function navigationFor(role: Role): NavItem[] {
