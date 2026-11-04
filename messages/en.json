@@ -371,15 +371,27 @@
       "lineError": "Enter an amount in either the debit or the credit column, not both.",
       "accountRequired": "Choose an account.",
       "minLines": "A journal needs at least two lines.",
-      "mineHeading": "Your manual journal requests",
-      "mineEmpty": "You have not requested any manual journals yet.",
+      "mineHeading": "Your journal requests",
+      "mineEmpty": "You have not requested any manual journals or capital entries yet.",
       "status": {
         "pending": "Waiting for approval",
         "approved": "Approved",
         "rejected": "Rejected",
         "cancelled": "Cancelled"
       },
-      "requestedOn": "Requested {date}"
+      "requestedOn": "Requested {date}",
+      "kinds": {
+        "capital_in": "Capital in"
+      }
+    },
+    "capital": {
+      "heading": "Record owner capital",
+      "intro": "Money the owners put into the business (recipe R10: the account is debited, Owner's Capital is credited). A manager approves it before it is posted.",
+      "date": "Date",
+      "account": "Paid into",
+      "amount": "Amount ($)",
+      "memo": "Memo",
+      "reference": "Deposit or transfer reference (optional)"
     }
   },
   "customers": {

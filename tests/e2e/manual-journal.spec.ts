@@ -20,7 +20,10 @@ test.describe("manual journal request (SPEC 4: accountant, admin; R11)", () => {
     await page.getByLabel("Line 2: Account").selectOption("1010-BR2");
     await fillExactly(page.locator("#line-1-credit"), "300.00");
     await expect(page.getByText("Balanced", { exact: true })).toBeVisible();
-    await page.getByRole("button", { name: "Send for approval" }).click();
+    await page
+      .getByRole("region", { name: "Request a manual journal" })
+      .getByRole("button", { name: "Send for approval" })
+      .click();
     await expect(
       page.getByRole("status").filter({ hasText: "Sent for approval. A manager will review it." }),
     ).toBeVisible();
@@ -41,16 +44,39 @@ test.describe("manual journal request (SPEC 4: accountant, admin; R11)", () => {
     await page.getByLabel("Line 2: Account").selectOption("1010-BR2");
     await fillExactly(page.locator("#line-1-credit"), "200");
     await expect(page.getByText("Not balanced yet: difference $100.00")).toBeVisible();
-    await page.getByRole("button", { name: "Send for approval" }).click();
+    await page
+      .getByRole("region", { name: "Request a manual journal" })
+      .getByRole("button", { name: "Send for approval" })
+      .click();
     await expect(
       page.getByRole("alert").filter({ hasText: "Debits and credits do not balance." }),
     ).toBeVisible();
 
     await fillExactly(page.locator("#line-1-debit"), "50");
-    await page.getByRole("button", { name: "Send for approval" }).click();
+    await page
+      .getByRole("region", { name: "Request a manual journal" })
+      .getByRole("button", { name: "Send for approval" })
+      .click();
     await expect(
       page.getByText("Enter an amount in either the debit or the credit column, not both."),
     ).toBeVisible();
+  });
+
+  test("the accountant sends owner capital for approval (R10, R-14)", async ({ page }) => {
+    const memo = `Owner capital ${unique()}`;
+    await signInAs(page, fixtureUser("accountant"));
+    await page.goto("/ledger?tab=manual");
+    const panel = page.getByRole("region", { name: "Record owner capital" });
+    await panel.getByLabel("Paid into").selectOption("1010-BR2");
+    await fillExactly(panel.getByLabel("Amount ($)"), "2,000");
+    await fillExactly(panel.getByLabel("Memo"), memo);
+    await fillExactly(panel.getByLabel("Deposit or transfer reference (optional)"), "Slip 4411");
+    await panel.getByRole("button", { name: "Send for approval" }).click();
+    await expect(panel.getByRole("status").filter({ hasText: "Sent for approval." })).toBeVisible();
+    const request = page.getByRole("listitem").filter({ hasText: `Capital in: ${memo}` });
+    await expect(request).toContainText("$2,000.00");
+    await expect(request).toContainText("Waiting for approval");
+    await expectNoSeriousA11yIssues(page);
   });
 
   test("a manager does not get the manual journal form", async ({ page }) => {

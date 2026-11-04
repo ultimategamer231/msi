@@ -45,7 +45,8 @@ select set_eq(
   array['app_now', 'business_today', 'environment_kind', 'auth_role', 'auth_branch', 'is_staff',
         'update_setting', 'upsert_branch', 'admin_set_profile', 'public_branding',
         'admin_record_password_reset', 'set_sequence_start', 'trial_balance',
-        'request_manual_journal', 'create_customer', 'add_customer_documents'],
+        'request_manual_journal', 'create_customer', 'add_customer_documents',
+        'request_customer_edit', 'decide_approval', 'request_capital_in'],
   'clients can call exactly the released RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).

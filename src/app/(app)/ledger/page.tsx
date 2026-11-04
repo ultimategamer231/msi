@@ -13,6 +13,7 @@ import { businessDateOf, formatDate, formatMoney, parseBusinessDate } from "@/li
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
+import { CapitalInForm } from "./capital-in-form";
 import { ManualJournalForm } from "./manual-journal-form";
 
 import messages from "../../../../messages/en.json";
@@ -450,13 +451,13 @@ async function ManualJournal({ staffId }: { staffId: string }) {
   const supabase = await createSupabaseServerClient();
   const [{ data: accounts, error }, { data: branches }, { data: today }, { data: requests }] =
     await Promise.all([
-      supabase.from("accounts").select("code, name").eq("active", true).order("code"),
+      supabase.from("accounts").select("code, name, is_cash").eq("active", true).order("code"),
       supabase.from("branches").select("id, code, name").eq("active", true).order("code"),
       supabase.rpc("business_today"),
       supabase
         .from("approval_requests")
-        .select("id, status, requested_at, payload")
-        .eq("type", "manual_journal")
+        .select("id, type, status, requested_at, payload")
+        .in("type", ["manual_journal", "capital_in"])
         .eq("requested_by", staffId)
         .order("requested_at", { ascending: false })
         .limit(20),
@@ -478,6 +479,10 @@ async function ManualJournal({ staffId }: { staffId: string }) {
           id: branch.id,
           label: `${branch.code} · ${branch.name}`,
         }))}
+        today={today}
+      />
+      <CapitalInForm
+        accounts={accounts.filter((account) => account.is_cash || ["1020", "1030"].includes(account.code))}
         today={today}
       />
       <section aria-labelledby="manual-mine" className="min-w-0 rounded-card border border-line bg-surface">
@@ -505,7 +510,10 @@ async function ManualJournal({ staffId }: { staffId: string }) {
                   className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-ink">{payload.memo ?? ""}</p>
+                    <p className="text-sm font-semibold text-ink">
+                      {request.type === "capital_in" ? `${t("kinds.capital_in")}: ` : ""}
+                      {payload.memo ?? ""}
+                    </p>
                     <p className="text-xs text-ink-muted">
                       {payload.entry_date !== undefined ? formatDate(payload.entry_date) : ""} ·{" "}
                       {t("requestedOn", { date: formatDate(businessDateOf(request.requested_at)) })}

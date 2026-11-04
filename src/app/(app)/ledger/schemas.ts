@@ -32,3 +32,23 @@ export const manualJournalSchema = z.object({
 });
 
 export type ManualJournalValues = z.infer<typeof manualJournalSchema>;
+
+/* Capital in (recipe R10, R-14): owner money into a branch cash, bank or mobile money account. */
+export const capitalInSchema = z.object({
+  entryDate: z.iso.date({ message: "date" }),
+  account: z.string().regex(/^[0-9]{4}(-[A-Z][A-Z0-9]{1,9})?$/, { message: "accountRequired" }),
+  amount: z
+    .string()
+    .trim()
+    .refine(
+      (value) => {
+        const cents = parseDollarsToCents(value);
+        return cents !== null && cents > 0n;
+      },
+      { message: "amount" },
+    ),
+  memo: z.string().trim().min(1, { message: "required" }).max(500, { message: "tooLong" }),
+  reference: z.string().trim().max(100, { message: "tooLong" }),
+});
+
+export type CapitalInValues = z.infer<typeof capitalInSchema>;

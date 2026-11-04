@@ -79,8 +79,9 @@ export type Database = {
           required_role: Database["public"]["Enums"]["app_role"];
           status: string;
           type: string;
+          apply_customer_edit: Json | null;
         };
-        ComputedFields: never;
+        ComputedFields: "apply_customer_edit";
         Insert: {
           decided_at?: string | null;
           decided_by?: string | null;
@@ -751,6 +752,15 @@ export type Database = {
         Returns: undefined;
       };
       app_now: { Args: Record<PropertyKey, never>; Returns: string };
+      apply_customer_edit: {
+        Args: {
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
       audit_row_digest: {
         Args: {
           p: Omit<
@@ -778,6 +788,7 @@ export type Database = {
         Returns: string;
       };
       customer_editable_fields: { Args: Record<PropertyKey, never>; Returns: string[] };
+      decide_approval: { Args: { p_decision: string; p_id: string; p_note: string }; Returns: Json };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
       find_duplicate_customers: {
         Args: { p_exclude?: string; p_id_number: string; p_phone: string; p_phone_alt: string };
@@ -831,7 +842,13 @@ export type Database = {
         Returns: string;
       };
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
+      request_capital_in: { Args: { p_request: Json }; Returns: string };
+      request_customer_edit: {
+        Args: { p_customer_id: string; p_patch: Json; p_reason: string };
+        Returns: string;
+      };
       request_manual_journal: { Args: { p_request: Json }; Returns: string };
+      require_posting_date: { Args: { p_date: string }; Returns: undefined };
       require_role: {
         Args: { p_roles: Database["public"]["Enums"]["app_role"][] };
         Returns: Database["public"]["Enums"]["app_role"];
