@@ -162,3 +162,13 @@ export function parseDuplicateMatches(details: string | null | undefined): Dupli
     return [];
   }
 }
+
+/** Form values from a stored customer row (for an edit request). */
+export function valuesFromRow(row: Record<string, unknown> & { type: string }): CustomerValues {
+  const values: Record<string, string> = { type: row.type === "business" ? "business" : "individual" };
+  for (const [field, column] of Object.entries(CUSTOMER_COLUMNS)) {
+    const value = row[column];
+    values[field] = typeof value === "string" ? value : "";
+  }
+  return values as unknown as CustomerValues;
+}

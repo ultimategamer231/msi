@@ -1,6 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import type * as React from "react";
 
+import Link from "next/link";
+
+import { approvalsWaiting } from "@/lib/approvals";
 import type { Staff } from "@/lib/auth/staff";
 import { getCompany } from "@/lib/company";
 
@@ -20,11 +23,13 @@ export async function TopBar({
   staff: Staff;
   actions?: React.ReactNode;
 }) {
-  const [company, t, tRoles] = await Promise.all([
+  const [company, t, tRoles, waiting] = await Promise.all([
     getCompany(),
     getTranslations("shell"),
     getTranslations("roles"),
+    approvalsWaiting(staff),
   ]);
+  const decides = staff.role === "manager" || staff.role === "ceo";
   const branch = staff.branch?.name ?? t("allBranches");
 
   return (
@@ -38,6 +43,20 @@ export async function TopBar({
       <div className="flex shrink-0 items-center gap-2.5">
         {actions}
         <p className="hidden text-sm font-medium text-ink-muted lg:block">{branch}</p>
+        {decides ? (
+          <Link
+            href="/approvals"
+            className="hidden min-h-10 items-center gap-2 rounded-control border border-line-input bg-surface px-3.5 text-sm font-semibold text-ink hover:bg-page hover:text-ink lg:inline-flex"
+          >
+            {t("approvals")}
+            {waiting > 0 ? (
+              <span className="inline-flex min-w-5 items-center justify-center rounded-badge bg-brand-accent px-1.5 text-xs leading-5 font-bold text-on-brand-accent">
+                <span aria-hidden="true">{waiting}</span>
+                <span className="sr-only">{t("approvalsWaiting", { count: waiting })}</span>
+              </span>
+            ) : null}
+          </Link>
+        ) : null}
         <LogoTile
           size="sm"
           className="lg:hidden"

@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M2 Customers (approved by Foday 2026-11-04); M0 and M1 in review on PR #1 |
-| Current block | M2.3 Edit requests, decide_approval, capital in (R-14) |
+| Current block | M2.4 Customer profile, approvals inbox, top-bar count |
 | Last approved block | M2 phase start (Foday 2026-11-04); blocks continue automatically once pushed and CI is green |
 | State | Working on M2 |
-| Next step | M2.4 Customer profile, approvals inbox, top-bar count |
+| Next step | M2.5 Guarantors, demo seed customers, M2 phase report |
 
 ## M2 plan (Customers: FR-03, FR-04, FR-05, FR-28; T-29, T-32)
 
@@ -47,3 +47,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-04 | M2.1 | customers, attachments, documents bucket, create_customer with duplicate guard (T-32), add_customer_documents; 186 database tests |
 | 2026-11-04 | M2.2 | /customers list (search, filters, phone cards, table), /customers/new (individual or business, photo and documents with type check and shrinking, duplicate warning with manager override); 10 new e2e checks |
 | 2026-11-04 | M2.3 | request_customer_edit (fields, photo, status), apply_customer_edit, decide_approval (customer edits, blacklist, manual journal, capital in), request_capital_in with ledger form; T-29; 225 database tests |
+| 2026-11-04 | M2.4 | /customers/[id] (mock-up 08: details, pending notice, documents, request edit, status change), /approvals (mock-up 12: Waiting, Approved, Rejected, Mine; approve, reject with reason and confirmation), approvals count in the shell; 10 new e2e checks |

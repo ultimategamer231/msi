@@ -28,3 +28,29 @@ export async function latestAudit(action: string, entityId: string) {
 export function ownerSql(sql: string): void {
   execFileSync("pnpm", ["-s", "supabase", "db", "query", sql], { stdio: ["ignore", "ignore", "inherit"] });
 }
+
+/** A client signed in as a test user, for setting up data through the same RPCs the app uses. */
+export async function userClient(user: { email: string; password: string }) {
+  const env = localSupabaseEnv();
+  const client = createClient(env.url, env.anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { error } = await client.auth.signInWithPassword({ email: user.email, password: user.password });
+  if (error !== null) throw error;
+  return client;
+}
+
+/** Creates a customer as the given user through create_customer; returns its id and code. */
+export async function createTestCustomer(
+  user: { email: string; password: string },
+  fields: Record<string, string>,
+): Promise<{ id: string; code: string }> {
+  const client = await userClient(user);
+  const { data: code, error } = await client.rpc("create_customer", {
+    p_customer: { type: "individual", ...fields },
+  });
+  if (error !== null) throw error;
+  const { data, error: readError } = await client.from("customers").select("id").eq("code", code).single();
+  if (readError !== null) throw readError;
+  return { id: data.id, code };
+}

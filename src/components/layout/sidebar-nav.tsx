@@ -10,6 +10,18 @@ export interface NavLinkItem {
   key: NavIcon;
   href: string;
   label: string;
+  /** Count shown as a yellow pill (approvals waiting), with its accessible text. */
+  badge?: { count: number; label: string };
+}
+
+export function CountBadge({ badge }: { badge: NavLinkItem["badge"] }) {
+  if (badge === undefined || badge.count === 0) return null;
+  return (
+    <span className="inline-flex min-w-5 items-center justify-center rounded-badge bg-brand-accent px-1.5 text-xs leading-5 font-bold text-on-brand-accent">
+      <span aria-hidden="true">{badge.count}</span>
+      <span className="sr-only">{badge.label}</span>
+    </span>
+  );
 }
 
 export function SidebarNav({ items, label }: { items: NavLinkItem[]; label: string }) {
@@ -31,6 +43,7 @@ export function SidebarNav({ items, label }: { items: NavLinkItem[]; label: stri
             )}
           >
             {item.label}
+            <CountBadge badge={item.badge} />
           </Link>
         );
       })}

@@ -17,7 +17,7 @@ import { isActive } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 import { NavIcon } from "./nav-icon";
-import type { NavLinkItem } from "./sidebar-nav";
+import { CountBadge, type NavLinkItem } from "./sidebar-nav";
 
 const MAX_TABS = 4;
 
@@ -92,7 +92,8 @@ export function BottomNav({
                     )}
                   >
                     <NavIcon name={item.key} className="size-5" />
-                    {item.label}
+                    <span className="flex-1">{item.label}</span>
+                    <CountBadge badge={item.badge} />
                   </Link>
                 </li>
               );

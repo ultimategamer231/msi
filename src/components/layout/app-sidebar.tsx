@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { getCurrentStaff } from "@/lib/auth/staff";
 import { getCompany } from "@/lib/company";
+import { approvalsWaiting } from "@/lib/approvals";
 import { navigationFor } from "@/lib/navigation";
 import { initials } from "@/lib/text";
 
@@ -20,10 +21,15 @@ export async function AppSidebar() {
     getTranslations("nav"),
     getTranslations("roles"),
   ]);
+  const waiting = await approvalsWaiting(staff);
   const items = navigationFor(staff.role).map((item) => ({
     key: item.key,
     href: item.href,
     label: tNav(item.key),
+    badge:
+      item.key === "approvals" && waiting > 0
+        ? { count: waiting, label: tNav("waiting", { count: waiting }) }
+        : undefined,
   }));
   const companyName = company?.name ?? "";
 

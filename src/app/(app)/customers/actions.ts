@@ -10,8 +10,10 @@ import { logServerError } from "@/lib/log";
 import type { Role } from "@/lib/permissions";
 import { errorCodeFrom, type ErrorCode } from "@/lib/rpc-errors";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Json } from "@/types/database";
 
 import {
+  CUSTOMER_STATUSES,
   customerPayload,
   customerSchema,
   duplicateOverrideSchema,
@@ -121,4 +123,114 @@ export async function createCustomer(
   }
   revalidatePath("/customers");
   return { ok: true, id: created.id, code };
+}
+
+export type EditRequestResult =
+  | { ok: true }
+  | { ok: false; code: "DUPLICATE_CUSTOMER"; matches: DuplicateMatch[] }
+  | { ok: false; code: ErrorCode };
+
+const EDIT_ROLES: readonly Role[] = ["loan_officer", "cashier", "manager", "admin"];
+
+async function sendEditRequest(
+  where: string,
+  staffId: string,
+  customerId: string,
+  patch: { [key: string]: Json | undefined },
+  reason: string,
+): Promise<EditRequestResult> {
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.rpc("request_customer_edit", {
+    p_customer_id: customerId,
+    p_patch: patch,
+    p_reason: reason,
+  });
+  if (error !== null) {
+    const errorCode = errorCodeFrom(error);
+    if (errorCode === "DUPLICATE_CUSTOMER") {
+      return { ok: false, code: "DUPLICATE_CUSTOMER", matches: parseDuplicateMatches(error.details) };
+    }
+    if (errorCode === "UNKNOWN") logServerError({ code: `RPC_${error.code}`, userId: staffId, where });
+    return { ok: false, code: errorCode };
+  }
+  revalidatePath(`/customers/${customerId}`);
+  revalidatePath("/approvals");
+  return { ok: true };
+}
+
+const uuid = /^[0-9a-f-]{36}$/;
+
+/* request_customer_edit (SPEC 8): the database stores only the fields that change. */
+export async function requestCustomerEdit(
+  customerId: string,
+  values: CustomerValues,
+  photo: UploadedFile | null,
+  options: { reason: string; override: boolean },
+): Promise<EditRequestResult> {
+  const staff = await staffWith(EDIT_ROLES);
+  if (staff === null) return { ok: false, code: "FORBIDDEN" };
+  const parsed = customerSchema.safeParse(values);
+  const reason = options.reason.trim();
+  if (!parsed.success || !uuid.test(customerId) || reason.length > 300)
+    return { ok: false, code: "INVALID_INPUT" };
+  if (options.override && reason === "") return { ok: false, code: "INVALID_INPUT" };
+
+  const patch: { [key: string]: Json | undefined } = { ...customerPayload(parsed.data) };
+  if (photo !== null && photo.kind === "photo") {
+    patch.photo = { storage_path: photo.storagePath, file_name: photo.fileName };
+  }
+  if (options.override) patch.duplicate_override = true;
+  return sendEditRequest("customers.requestCustomerEdit", staff.id, customerId, patch, reason);
+}
+
+/* A status change (blacklist, archive, reactivate) is an approved edit of its own (SPEC 5.11). */
+export async function requestCustomerStatus(
+  customerId: string,
+  status: (typeof CUSTOMER_STATUSES)[number],
+  reason: string,
+): Promise<EditRequestResult> {
+  const staff = await staffWith(EDIT_ROLES);
+  if (staff === null) return { ok: false, code: "FORBIDDEN" };
+  const trimmed = reason.trim();
+  if (
+    !uuid.test(customerId) ||
+    !CUSTOMER_STATUSES.includes(status) ||
+    trimmed === "" ||
+    trimmed.length > 300
+  ) {
+    return { ok: false, code: "INVALID_INPUT" };
+  }
+  return sendEditRequest("customers.requestCustomerStatus", staff.id, customerId, { status }, trimmed);
+}
+
+/* add_customer_documents: new scans for an existing customer (B-24). */
+export async function addCustomerDocuments(
+  customerId: string,
+  files: UploadedFile[],
+): Promise<{ ok: true } | { ok: false; code: ErrorCode }> {
+  const staff = await staffWith(UPLOAD_ROLES);
+  if (staff === null) return { ok: false, code: "FORBIDDEN" };
+  if (!uuid.test(customerId) || files.length === 0 || files.length > 10)
+    return { ok: false, code: "INVALID_INPUT" };
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.rpc("add_customer_documents", {
+    p_customer_id: customerId,
+    p_files: files.map((file) => ({
+      kind: file.kind,
+      storage_path: file.storagePath,
+      file_name: file.fileName,
+    })),
+  });
+  if (error !== null) {
+    const code = errorCodeFrom(error);
+    if (code === "UNKNOWN")
+      logServerError({
+        code: `RPC_${error.code}`,
+        userId: staff.id,
+        where: "customers.addCustomerDocuments",
+      });
+    return { ok: false, code };
+  }
+  revalidatePath(`/customers/${customerId}`);
+  return { ok: true };
 }

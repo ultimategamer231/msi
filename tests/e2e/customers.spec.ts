@@ -27,6 +27,14 @@ async function fillIndividual(page: Page, person: ReturnType<typeof uniquePerson
   await fillExactly(page.getByLabel("Phone", { exact: true }), person.phone);
 }
 
+/* After saving, the new profile opens with "Customer CU-000123 was created." */
+async function createdCode(page: Page): Promise<string> {
+  await expect(page).toHaveURL(/\/customers\/[0-9a-f-]{36}\?created=1$/);
+  const notice = page.getByRole("status").filter({ hasText: /Customer CU-\d{6} was created\./ });
+  await expect(notice).toBeVisible();
+  return /CU-\d{6}/.exec((await notice.textContent()) ?? "")?.[0] ?? "";
+}
+
 test.describe("customers (SPEC 5.11, 9; FR-03)", () => {
   test("a loan officer registers an individual with a photo and an ID scan", async ({ page }) => {
     const person = uniquePerson();
@@ -49,9 +57,7 @@ test.describe("customers (SPEC 5.11, 9; FR-03)", () => {
     await expectNoSeriousA11yIssues(page);
     await page.getByRole("button", { name: "Save customer" }).click();
 
-    await expect(page).toHaveURL(/\/customers\?created=CU-\d{6}$/);
-    const code = new URL(page.url()).searchParams.get("created") ?? "";
-    await expect(page.getByRole("status").filter({ hasText: `Customer ${code} was created.` })).toBeVisible();
+    const code = await createdCode(page);
 
     const { data: customer } = await serviceClient()
       .from("customers")
@@ -95,7 +101,7 @@ test.describe("customers (SPEC 5.11, 9; FR-03)", () => {
     await page.goto("/customers/new");
     await fillIndividual(page, person);
     await page.getByRole("button", { name: "Save customer" }).click();
-    await expect(page).toHaveURL(/created=CU-/);
+    await createdCode(page);
 
     // Same phone written another way, different person.
     const second = uniquePerson();
@@ -122,8 +128,7 @@ test.describe("customers (SPEC 5.11, 9; FR-03)", () => {
     await expect(page.getByText("Required.")).toBeVisible();
     await fillExactly(page.getByLabel("Reason for creating a second record"), "Brothers sharing one phone");
     await page.getByRole("button", { name: "Create anyway" }).click();
-    await expect(page).toHaveURL(/created=CU-/);
-    const code = new URL(page.url()).searchParams.get("created") ?? "";
+    const code = await createdCode(page);
     const { data: created } = await serviceClient().from("customers").select("id").eq("code", code).single();
     const [audit] = await latestAudit("customer.created", created?.id ?? "");
     expect(audit?.after).toMatchObject({ duplicate_override: { reason: "Brothers sharing one phone" } });
@@ -141,7 +146,7 @@ test.describe("customers (SPEC 5.11, 9; FR-03)", () => {
     await page.getByLabel("Branch", { exact: true }).selectOption({ label: "BR2 · Branch 2" });
     await page.getByLabel("Loan officer").selectOption({ label: "Test Officer" });
     await page.getByRole("button", { name: "Save customer" }).click();
-    await expect(page).toHaveURL(/created=CU-/);
+    await createdCode(page);
     await page.goto(`/customers?q=${encodeURIComponent(`Test Trading ${person.lastName}`)}`);
     await expect(page.getByRole("heading", { name: "1 customer" })).toBeVisible();
   });

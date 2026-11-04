@@ -71,7 +71,8 @@
     "reports": "Reports",
     "ledger": "Ledger",
     "audit": "Audit log",
-    "settings": "Settings"
+    "settings": "Settings",
+    "waiting": "{count, plural, one {# request waiting} other {# requests waiting}}"
   },
   "shell": {
     "product": "Loan management",
@@ -79,7 +80,9 @@
     "signOut": "Sign out",
     "allBranches": "All branches",
     "skipToContent": "Skip to main content",
-    "account": "Signed in as {name}, {role}"
+    "account": "Signed in as {name}, {role}",
+    "approvals": "Approvals",
+    "approvalsWaiting": "{count, plural, one {# request waiting for you} other {# requests waiting for you}}"
   },
   "errors": {
     "FORBIDDEN": "You are not allowed to do this.",
@@ -456,7 +459,9 @@
         "contact": "Contact and work",
         "nextOfKin": "Next of kin",
         "placement": "Branch and loan officer",
-        "documents": "Photo and documents"
+        "documents": "Photo and documents",
+        "photo": "New photo",
+        "reason": "Reason for the change"
       },
       "types": {
         "individual": "Individual",
@@ -500,7 +505,8 @@
       "files": {
         "photo": "Customer photo",
         "id_document": "ID scan",
-        "proof_of_address": "Proof of address"
+        "proof_of_address": "Proof of address",
+        "newPhoto": "New customer photo"
       },
       "fileHelp": "JPG, PNG or WebP, or PDF for scans. Up to 10 MB.",
       "fileChosen": "Chosen: {name}",
@@ -522,6 +528,180 @@
       },
       "submit": "Save customer",
       "submitting": "Saving…",
+      "cancel": "Cancel",
+      "editLabel": "Request a change",
+      "photoIntro": "Optional. The new photo replaces the current one once a manager approves.",
+      "editReason": "Reason (optional; required to keep a phone or ID number another customer has)",
+      "submitEdit": "Send for approval"
+    },
+    "profile": {
+      "title": "Customer",
+      "loading": "Loading the customer",
+      "none": "None",
+      "requestEdit": "Request edit",
+      "created": "Customer {code} was created.",
+      "requested": "Your change was sent for approval. The current details stay in use until a manager approves.",
+      "pending": {
+        "heading": "1 change waiting for approval.",
+        "body": "{summary}, requested by {requester} {when}. The current details stay in use until a manager approves.",
+        "change": "{field} {before} to {after}",
+        "photo": "a new photo"
+      },
+      "placement": "{branch} · loan officer {officer}",
+      "detailsLabel": "Customer details",
+      "photoAlt": "Photo of {name}",
+      "noPhoto": "Photo",
+      "fields": {
+        "phone": "Phone",
+        "phoneAlt": "Second phone",
+        "address": "Address",
+        "id": "ID",
+        "registrationNo": "Registration number",
+        "contactPerson": "Contact person",
+        "dateOfBirth": "Date of birth",
+        "occupation": "Occupation",
+        "employer": "Employer or business",
+        "nextOfKin": "Next of kin",
+        "officer": "Loan officer",
+        "branch": "Branch",
+        "registered": "Registered",
+        "notes": "Notes"
+      },
+      "columns": {
+        "status": "Status",
+        "first_name": "First name",
+        "last_name": "Last name",
+        "business_name": "Business name",
+        "registration_no": "Registration number",
+        "contact_person": "Contact person",
+        "id_type": "ID type",
+        "id_number": "ID number",
+        "date_of_birth": "Date of birth",
+        "phone": "Phone number",
+        "phone_alt": "Second phone",
+        "address": "Address",
+        "city": "City or county",
+        "occupation": "Occupation",
+        "employer_or_business": "Employer or business",
+        "next_of_kin_name": "Next of kin",
+        "next_of_kin_relation": "Next of kin relationship",
+        "next_of_kin_phone": "Next of kin phone",
+        "branch_id": "Branch",
+        "assigned_officer_id": "Loan officer",
+        "notes": "Notes",
+        "photo_path": "Photo"
+      },
+      "documents": "Documents",
+      "noDocuments": "No documents yet.",
+      "kinds": {
+        "photo": "Customer photo",
+        "id_document": "ID scan",
+        "proof_of_address": "Proof of address",
+        "other": "Other document"
+      },
+      "documentsForm": {
+        "label": "Add a document",
+        "kind": "Document",
+        "file": "File",
+        "help": "JPG, PNG, WebP or PDF, up to 10 MB.",
+        "submit": "Add document",
+        "adding": "Adding…",
+        "added": "The document was added.",
+        "chooseFile": "Choose a file first."
+      },
+      "statusHeading": "Blacklist or archive",
+      "statusIntro": "A status change needs a manager's approval and a reason.",
+      "statusForm": {
+        "label": "Request a status change",
+        "newStatus": "New status",
+        "reason": "Reason",
+        "reasonRequired": "Give the reason.",
+        "submit": "Send for approval",
+        "sending": "Sending…",
+        "sent": "Sent for approval."
+      },
+      "openApprovals": "Decide it in Approvals"
+    }
+  },
+  "when": {
+    "now": "just now",
+    "minutes": "{count, plural, one {# minute ago} other {# minutes ago}}",
+    "hours": "{count, plural, one {# hour ago} other {# hours ago}}",
+    "today": "Today, {time}",
+    "yesterday": "Yesterday, {time}",
+    "date": "{date}, {time}"
+  },
+  "approvals": {
+    "title": "Approvals",
+    "loading": "Loading approvals",
+    "waitingForYou": "{count, plural, =0 {Nothing waiting for you} other {# waiting for you}}",
+    "mineIntro": "Requests you made and what was decided.",
+    "tabsLabel": "Approval lists",
+    "tabs": {
+      "waiting": "Waiting",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "mine": "Mine"
+    },
+    "empty": {
+      "waiting": "Nothing is waiting for your decision.",
+      "approved": "No approved requests yet.",
+      "rejected": "No rejected requests yet.",
+      "mine": "You have not made any requests yet."
+    },
+    "types": {
+      "customer_edit": "Customer edit",
+      "customer_blacklist": "Customer status",
+      "manual_journal": "Manual journal",
+      "capital_in": "Capital in",
+      "loan_approval": "Loan",
+      "loan_extension": "Extension",
+      "payment_void": "Payment void",
+      "journal_reversal": "Journal reversal",
+      "write_off": "Write-off",
+      "expense": "Expense",
+      "day_close": "Day close"
+    },
+    "status": {
+      "pending": "Waiting",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "titles": {
+      "customer": "{name}, {fields}",
+      "journal": "{memo}, {amount}"
+    },
+    "photo": "Photo",
+    "none": "None",
+    "current": "Current",
+    "requested": "Requested",
+    "newPhoto": "A new photo is attached to this request.",
+    "reasonGiven": "Reason given",
+    "duplicateOverride": "Another customer has this phone or ID number; the manager who asked gave a reason to keep it.",
+    "openCustomer": "Open customer {code}",
+    "date": "Date",
+    "reference": "Reference",
+    "account": "Account",
+    "debit": "Debit",
+    "credit": "Credit",
+    "linesOf": "Lines of {title}",
+    "decidedApproved": "Approved by {name} · {when}",
+    "decidedRejected": "Rejected by {name} · {when}",
+    "page": "Page {page} of {pages}",
+    "previous": "Previous",
+    "next": "Next",
+    "footer": "You cannot approve requests you made yourself. Every decision is recorded with your name and the time.",
+    "decision": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "sending": "Saving…",
+      "notePlaceholder": "Reason (required to reject)",
+      "noteLabel": "Reason for {title}",
+      "noteRequired": "Give the reason for rejecting.",
+      "confirmReject": "Reject \"{title}\"?",
+      "confirmReason": "Reason: {reason}",
+      "yesReject": "Yes, reject",
       "cancel": "Cancel"
     }
   }

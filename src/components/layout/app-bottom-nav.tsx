@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { getCurrentStaff } from "@/lib/auth/staff";
+import { approvalsWaiting } from "@/lib/approvals";
 import { navigationFor } from "@/lib/navigation";
 
 import { BottomNav } from "./bottom-nav";
@@ -14,10 +15,15 @@ export async function AppBottomNav() {
     getTranslations("nav"),
     getTranslations("roles"),
   ]);
+  const waiting = await approvalsWaiting(staff);
   const items = navigationFor(staff.role).map((item) => ({
     key: item.key,
     href: item.href,
     label: tNav(item.key),
+    badge:
+      item.key === "approvals" && waiting > 0
+        ? { count: waiting, label: tNav("waiting", { count: waiting }) }
+        : undefined,
   }));
   return (
     <BottomNav

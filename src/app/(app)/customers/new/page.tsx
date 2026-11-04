@@ -7,7 +7,7 @@ import { TopBar } from "@/components/layout/top-bar";
 import { requirePageAccess } from "@/lib/auth/staff";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-import { CustomerForm } from "./customer-form";
+import { CustomerForm } from "../customer-form";
 
 /*
  * /customers/new (loan officer, manager, admin; SPEC 9): individual or business, KYC fields, photo
@@ -51,6 +51,7 @@ async function NewCustomerContent() {
           <p className="mt-2 max-w-[70ch] text-sm leading-6 text-ink-muted">{t("form.intro")}</p>
         </div>
         <CustomerForm
+          mode={{ kind: "create" }}
           branches={branches.map((branch) => ({ id: branch.id, label: `${branch.code} · ${branch.name}` }))}
           officers={officers.flatMap((officer) =>
             officer.branch_id === null

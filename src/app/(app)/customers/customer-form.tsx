@@ -14,14 +14,8 @@ import { shrinkImage } from "@/lib/shrink-image";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@/lib/zod-resolver";
 
-import { createCustomer, uploadCustomerFile, type UploadedFile } from "../actions";
-import {
-  ID_TYPES,
-  customerSchema,
-  emptyCustomer,
-  type CustomerValues,
-  type DuplicateMatch,
-} from "../schemas";
+import { createCustomer, requestCustomerEdit, uploadCustomerFile, type UploadedFile } from "./actions";
+import { ID_TYPES, customerSchema, emptyCustomer, type CustomerValues, type DuplicateMatch } from "./schemas";
 
 export interface BranchOption {
   id: string;
@@ -43,7 +37,12 @@ type SlotKind = (typeof FILE_SLOTS)[number]["kind"];
 
 type Status = { tone: "error"; code: ErrorCode } | { tone: "duplicate"; matches: DuplicateMatch[] } | null;
 
+/** New customer, or a request to change an existing one (SPEC 5.11: edits need approval). */
+export type CustomerFormMode =
+  { kind: "create" } | { kind: "edit"; customerId: string; initial: CustomerValues };
+
 export function CustomerForm({
+  mode,
   branches,
   officers,
   chooseBranch,
@@ -51,6 +50,7 @@ export function CustomerForm({
   defaultBranchId,
   fixedPlacement,
 }: {
+  mode: CustomerFormMode;
   branches: BranchOption[];
   officers: OfficerOption[];
   /** Managers and admin choose the branch and officer; a loan officer's come from their profile. */
@@ -74,10 +74,14 @@ export function CustomerForm({
   // Files already uploaded in this visit, so a retry (for example after a duplicate warning) does
   // not upload them again.
   const [uploaded] = useState(() => new Map<File, UploadedFile>());
+  const [reason, setReason] = useState("");
+  const editing = mode.kind === "edit";
+  // An edit request may only bring a new photo; other documents are added on the profile.
+  const slots = editing ? FILE_SLOTS.filter((slot) => slot.kind === "photo") : FILE_SLOTS;
 
   const form = useForm<CustomerValues>({
     resolver: zodResolver(customerSchema),
-    defaultValues: { ...emptyCustomer, branchId: defaultBranchId },
+    defaultValues: mode.kind === "edit" ? mode.initial : { ...emptyCustomer, branchId: defaultBranchId },
   });
   const type = useWatch({ control: form.control, name: "type" });
   const branchId = useWatch({ control: form.control, name: "branchId" });
@@ -89,7 +93,7 @@ export function CustomerForm({
 
   async function uploadAll(): Promise<UploadedFile[] | ErrorCode> {
     const result: UploadedFile[] = [];
-    for (const slot of FILE_SLOTS) {
+    for (const slot of slots) {
       const file = files[slot.kind];
       if (file === undefined) continue;
       const cached = uploaded.get(file);
@@ -122,13 +126,29 @@ export function CustomerForm({
         setStatus({ tone: "error", code: prepared });
         return;
       }
+      if (mode.kind === "edit") {
+        const edit = await requestCustomerEdit(mode.customerId, values, prepared[0] ?? null, {
+          reason: withOverride ? overrideReason.trim() : reason.trim(),
+          override: withOverride,
+        });
+        if (edit.ok) {
+          router.push(`/customers/${mode.customerId}?requested=1`);
+          return;
+        }
+        if (edit.code === "DUPLICATE_CUSTOMER" && "matches" in edit) {
+          setStatus({ tone: "duplicate", matches: edit.matches });
+          return;
+        }
+        setStatus({ tone: "error", code: edit.code });
+        return;
+      }
       const result = await createCustomer(
         values,
         prepared,
         withOverride ? { reason: overrideReason.trim() } : null,
       );
       if (result.ok) {
-        router.push(`/customers?created=${encodeURIComponent(result.code)}`);
+        router.push(`/customers/${result.id}?created=1`);
         return;
       }
       if (result.code === "DUPLICATE_CUSTOMER" && "matches" in result) {
@@ -163,26 +183,28 @@ export function CustomerForm({
   return (
     <form
       noValidate
-      aria-label={t("label")}
+      aria-label={editing ? t("editLabel") : t("label")}
       className="grid gap-4 lg:gap-5"
       onSubmit={(event) => void form.handleSubmit((values) => submit(values, false))(event)}
     >
-      <Section title={t("sections.type")}>
-        <fieldset>
-          <legend className="sr-only">{t("sections.type")}</legend>
-          <div className="grid grid-cols-2 gap-2 sm:max-w-md">
-            {(["individual", "business"] as const).map((option) => (
-              <TypeOption
-                key={option}
-                value={option}
-                checked={type === option}
-                label={t(`types.${option}`)}
-                register={form.register("type")}
-              />
-            ))}
-          </div>
-        </fieldset>
-      </Section>
+      {editing ? null : (
+        <Section title={t("sections.type")}>
+          <fieldset>
+            <legend className="sr-only">{t("sections.type")}</legend>
+            <div className="grid grid-cols-2 gap-2 sm:max-w-md">
+              {(["individual", "business"] as const).map((option) => (
+                <TypeOption
+                  key={option}
+                  value={option}
+                  checked={type === option}
+                  label={t(`types.${option}`)}
+                  register={form.register("type")}
+                />
+              ))}
+            </div>
+          </fieldset>
+        </Section>
+      )}
 
       <Section title={type === "individual" ? t("sections.person") : t("sections.business")}>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -299,9 +321,12 @@ export function CustomerForm({
         </Field>
       </Section>
 
-      <Section title={t("sections.documents")} intro={t("documentsIntro")}>
+      <Section
+        title={editing ? t("sections.photo") : t("sections.documents")}
+        intro={editing ? t("photoIntro") : t("documentsIntro")}
+      >
         <div className="grid gap-4 sm:grid-cols-3">
-          {FILE_SLOTS.map((slot) => {
+          {slots.map((slot) => {
             const id = `customer-file-${slot.kind}`;
             const file = files[slot.kind];
             const error = fileErrors[slot.kind] === true ? t("fileTooLarge") : undefined;
@@ -309,7 +334,7 @@ export function CustomerForm({
               <Field
                 key={slot.kind}
                 id={id}
-                label={t(`files.${slot.kind}`)}
+                label={editing ? t("files.newPhoto") : t(`files.${slot.kind}`)}
                 help={file === undefined ? t("fileHelp") : t("fileChosen", { name: file.name })}
                 error={error}
               >
@@ -337,6 +362,21 @@ export function CustomerForm({
           })}
         </div>
       </Section>
+
+      {editing ? (
+        <Section title={t("sections.reason")}>
+          <Field id="edit-reason" label={t("editReason")}>
+            <textarea
+              id="edit-reason"
+              rows={2}
+              maxLength={300}
+              value={reason}
+              onChange={(event) => setReason(event.target.value)}
+              className={`${inputClass} py-2 leading-6`}
+            />
+          </Field>
+        </Section>
+      ) : null}
 
       {status?.tone === "duplicate" ? (
         <section
@@ -402,10 +442,10 @@ export function CustomerForm({
 
       <div className="flex flex-wrap gap-2">
         <Button type="submit" disabled={pending}>
-          {pending ? t("submitting") : t("submit")}
+          {pending ? t("submitting") : editing ? t("submitEdit") : t("submit")}
         </Button>
         <Link
-          href="/customers"
+          href={editing ? `/customers/${mode.customerId}` : "/customers"}
           className={cn("inline-flex min-h-11 items-center px-3 text-sm font-semibold lg:min-h-10")}
         >
           {t("cancel")}
