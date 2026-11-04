@@ -3,7 +3,7 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M1 Ledger core complete (report `docs/reports/PHASE-M1.md`); M0 and M1 in review on PR #1 |
-| Current block | M1.4 done; M1 phase report posted |
+| Current block | M1 follow-up done (B-22 logo on sign-in, R-12 advisors in CI) |
 | Last approved block | Continuous mode from M0.2 on (Foday 2026-11-04): next block starts automatically once pushed and CI is green |
 | State | **Waiting for Foday's approval to start M2** (phases need approval) |
 | Next step | On approval: M2 phase plan check, then M2.1 Customers |
@@ -31,3 +31,4 @@
 | 2026-11-04 | M1.2 | period_locks, next_number (B-02 global loans, B-03 6-digit EXP), set_sequence_start, post_journal with all SPEC 6.3 checks; T-22; 132 database tests |
 | 2026-11-04 | M1.3 | /ledger (journals with lines, filters, pagination; trial balance with balanced check), trial_balance() function, ScrollRegion a11y fix; 139 DB tests, 97 e2e checks |
 | 2026-11-04 | M1.4 | approval_requests, request_manual_journal (dry-run validation), manual journal tab on /ledger, resolver nesting fix, data-independent DB tests; M1 phase report |
+| 2026-11-04 | M1 follow-up | Foday answered B-22 (approved) and asked for recommended defaults elsewhere: public logo on sign-in, db advisors in CI, FK indexes; B-23, R-14, PR #1 decisions recorded |

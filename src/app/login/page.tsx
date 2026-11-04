@@ -1,7 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
+import { LogoTile } from "@/components/layout/logo-tile";
+import { publicLogoUrl } from "@/lib/company";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { blankIfPending } from "@/lib/text";
 
 import { LoginForm } from "./login-form";
 
@@ -20,24 +23,51 @@ export default function LoginPage({ searchParams }: PageProps<"/login">) {
   );
 }
 
-async function companyName(): Promise<string | null> {
+interface PublicBranding {
+  name: string;
+  shortName: string;
+  logoUrl: string | null;
+}
+
+async function publicBranding(): Promise<PublicBranding | null> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.rpc("public_branding");
   if (error !== null || data === null || typeof data !== "object" || Array.isArray(data)) return null;
-  const name = (data as Record<string, unknown>).name;
-  return typeof name === "string" && name.trim() !== "" ? name : null;
+  const value = data as Record<string, unknown>;
+  const name = blankIfPending(value.name);
+  if (name === "") return null;
+  return {
+    name,
+    shortName: blankIfPending(value.short_name),
+    logoUrl: publicLogoUrl(supabase, blankIfPending(value.logo_path)),
+  };
 }
 
 async function LoginContent({ searchParams }: { searchParams: PageProps<"/login">["searchParams"] }) {
-  const [t, params, name] = await Promise.all([getTranslations("login"), searchParams, companyName()]);
+  const [t, tShell, params, branding] = await Promise.all([
+    getTranslations("login"),
+    getTranslations("shell"),
+    searchParams,
+    publicBranding(),
+  ]);
   const notice =
     typeof params.notice === "string" && NOTICES.has(params.notice) ? (params.notice as Notice) : null;
   const next = typeof params.next === "string" ? params.next : "";
 
   return (
     <section className="rounded-card border border-line bg-surface p-6 sm:p-8">
-      {name !== null ? <p className="text-sm font-semibold text-primary">{name}</p> : null}
-      <h1 className="mt-1 text-2xl font-bold text-ink">{t("title")}</h1>
+      {branding !== null ? (
+        <div className="flex items-center gap-3">
+          <LogoTile
+            logoUrl={branding.logoUrl}
+            alt={tShell("logoAlt", { company: branding.name })}
+            shortName={branding.shortName}
+            className="rounded-tile border border-line p-1"
+          />
+          <p className="text-sm font-semibold text-primary">{branding.name}</p>
+        </div>
+      ) : null}
+      <h1 className="mt-5 text-2xl font-bold text-ink">{t("title")}</h1>
       <p className="mt-2 text-sm leading-6 text-ink-muted">{t("intro")}</p>
       {notice !== null ? (
         <p

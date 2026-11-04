@@ -52,4 +52,9 @@ Raised in Phase 0 (2026-11-03). "Blocks" says which milestone needs the answer. 
 | B-03 | **Approved:** `EXP` numbers use 6 digits (`EXP-BR2-000031`). Built in M1.2. |
 | B-11 | **Approved:** managers may have `branch_id` null; branch-scoped manager writes use the loan's branch. Built in M0.2. |
 | B-20 | Repository confirmed (`ultimategamer231/msi`); the Phase 0 branch was renamed to `main` and is the default. **Push rule (2026-11-04):** push whenever a block or phase is done; wait for approval only before starting the next one (`CLAUDE.md` updated). Work continues on `claude/new-session-6ictcc` with a draft PR into `main` until told otherwise. |
+| B-22 | **Approved (2026-11-04):** the logo may appear on public pages. Only the `branding` bucket is public-read (it holds nothing but the logo); every other bucket stays private with signed URLs. The sign-in page shows the logo; `public_branding()` returns `logo_path`. Built in M1 follow-up (migration `20261105000500`). |
+| B-23 | **Recommended default applied:** keep both layers. The owner gets `IMMUTABLE_RECORD` from the trigger; every other role is refused earlier by missing privileges. No grant added. |
+| R-12 | **Approved:** CI database job runs `supabase db advisors` (security and performance) and fails on warnings. Four missing foreign-key indexes it found were added. |
+| R-14 | **Approved:** an RPC for recipe R10 (capital in), requested and approved like a manual journal. Scheduled in M2 with the `decide_approval` dispatcher. |
+| PR #1 | **Recommended default applied:** M0 and M1 stay together in PR #1. |
 | Others | Not yet answered; the proposed defaults apply when their milestone arrives, and I will ask again where a default changes money, security or schema. |

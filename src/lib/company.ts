@@ -20,7 +20,17 @@ export interface Company {
   logoUrl: string | null;
 }
 
-const LOGO_URL_SECONDS = 600; // SPEC 11: signed URLs expire in 10 minutes
+type ServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+
+/**
+ * Public URL of the company logo ("<bucket>/<object>" in settings.company.logo_path). The branding
+ * bucket is public-read so the logo can appear on public pages (B-22); no signing needed.
+ */
+export function publicLogoUrl(supabase: ServerClient, logoPath: string): string | null {
+  const [bucket, ...rest] = logoPath.split("/");
+  if (bucket === undefined || bucket === "" || rest.length === 0) return null;
+  return supabase.storage.from(bucket).getPublicUrl(rest.join("/")).data.publicUrl;
+}
 
 export const getCompany = cache(async (): Promise<Company | null> => {
   const supabase = await createSupabaseServerClient();
@@ -33,15 +43,7 @@ export const getCompany = cache(async (): Promise<Company | null> => {
     return null;
   const value = data.value as Record<string, unknown>;
 
-  let logoUrl: string | null = null;
-  const logoPath = blankIfPending(value.logo_path);
-  const [bucket, ...rest] = logoPath.split("/");
-  if (bucket !== undefined && bucket !== "" && rest.length > 0) {
-    const { data: signed } = await supabase.storage
-      .from(bucket)
-      .createSignedUrl(rest.join("/"), LOGO_URL_SECONDS);
-    logoUrl = signed?.signedUrl ?? null;
-  }
+  const logoUrl = publicLogoUrl(supabase, blankIfPending(value.logo_path));
 
   return {
     name: blankIfPending(value.name),

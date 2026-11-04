@@ -49,7 +49,7 @@ See `docs/DECISIONS.md` (M1.1 to M1.4): content hash for the journal chain, line
 | R-14 | Add an RPC for recipe R10 (capital in / owner contributions), approved like a manual journal | SPEC 6.2 lists R10 but no function; MSI will put money in; avoids using free-form manual journals for a routine event | Small | M2 or M8 |
 
 ## Risks and open questions
-- **B-22** (logo on public pages) and **B-23** (T-21 wording) need your decision.
+- B-22 approved and built; B-23 keeps both layers (see `docs/QUESTIONS.md` answers).
 - PR #1 now carries M0 and M1. If you merge it, both go in together; if you want them separate, tell me and I will split the history.
 
 ## Next: M2 Customers (FR-03, FR-04, FR-05, FR-28; T-29, T-32) — waiting for your approval

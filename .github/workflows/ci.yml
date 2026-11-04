@@ -52,6 +52,8 @@ jobs:
         run: pnpm db:start
       - name: PL/pgSQL lint
         run: pnpm supabase db lint --level warning --fail-on warning
+      - name: Supabase advisors (fail on warnings and errors; R-12)
+        run: pnpm supabase db advisors --type all --level warn --fail-on warn
       - name: pgTAP tests
         run: pnpm test:db
       - name: Generated database types are current

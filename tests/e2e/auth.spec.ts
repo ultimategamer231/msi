@@ -17,6 +17,8 @@ test.describe("sign-in (FR-01, M0 acceptance: login works per role)", () => {
     await page.goto("/login");
     await expect(page.getByRole("heading", { level: 1, name: "Sign in" })).toBeVisible();
     await expect(page.getByText("Method Solutions Inc.")).toBeVisible();
+    // B-22: the logo is shown on the public sign-in page.
+    await expect(page.getByRole("img", { name: "Method Solutions Inc. logo" })).toBeVisible();
     await expect(page.getByRole("link", { name: /sign up|register|create account/i })).toHaveCount(0);
     await expectNoHorizontalScroll(page);
     await expectNoSeriousA11yIssues(page);

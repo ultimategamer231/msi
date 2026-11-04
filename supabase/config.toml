@@ -118,9 +118,10 @@ enabled = true
 # The maximum file size allowed (e.g. "5MB", "500KB").
 file_size_limit = "10MiB"
 
-# Company logo (SPEC 11 Branding). Private: served through signed URLs only.
+# Company logo (SPEC 11 Branding).
 [storage.buckets.branding]
-public = false
+# Public-read: holds only the company logo, shown on public pages (B-22). Uploads are admin-only.
+public = true
 file_size_limit = "10MiB"
 allowed_mime_types = ["image/png", "image/jpeg", "image/webp"]
 objects_path = "../public/brand"

@@ -94,3 +94,7 @@ Small, reversible decisions inside the spec (master prompt section 6). Anything 
 | 2026-11-04 | M1.4 | Fix: the zod resolver nests errors by path (`errors.lines[1].debit`) | Line-level errors were blocked but not shown | n/a |
 | 2026-11-04 | M1.4 | Database tests no longer assume an empty database (year-2000 dates for totals, filters by test users, relative counts) | Local runs after e2e left data and failed; CI uses a fresh database | n/a |
 | 2026-11-04 | M1.4 | Ledger tabs wrap on narrow screens; e2e checks the accountant's three-tab ledger at 360 px | CI found an 8 px overflow at 390 px (three tabs just wider than the phone); local fonts hid it | n/a |
+| 2026-11-04 | M1 follow-up | `branding` bucket is public-read; logo links use public URLs everywhere (sign-in, shell, later receipts and `/verify`) | B-22 approved by Foday; the bucket holds only the logo | Signed URLs for signed-in screens only |
+| 2026-11-04 | M1 follow-up | T-21: keep privilege refusal for non-owner roles; only the owner reaches `IMMUTABLE_RECORD` | B-23 recommended default (Foday: "use recommended best practice") | Grant UPDATE to see the trigger message |
+| 2026-11-04 | M1 follow-up | CI runs `supabase db advisors --level warn --fail-on warn`; foreign-key indexes added on accounts.branch_id, journals.posted_by, journal_lines.staff_id, approval_requests.decided_by | R-12 approved | n/a |
+| 2026-11-04 | M1 follow-up | R10 capital-in RPC planned for M2, approved like a manual journal | R-14 approved | Use manual journals |

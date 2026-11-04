@@ -56,7 +56,8 @@ select ok(
 
 -- public_branding exposes the company name only.
 select is(tests.value_as('anon', null, $$select public.public_branding()::text$$),
-  '{"name": "Method Solutions Inc.", "short_name": "MSI"}', 'public_branding returns name and short name only');
+  '{"name": "Method Solutions Inc.", "logo_path": "branding/msi-logo.png", "short_name": "MSI"}',
+  'public_branding returns the name, short name and logo path only');
 select matches(tests.try_as('anon', null, $$select count(*) from public.settings$$),
   '^permission denied', 'signed-out visitors cannot read settings directly');
 
