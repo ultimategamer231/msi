@@ -57,6 +57,127 @@ const DEMO_BRANCHES = [
   { code: "BR3", name: "Branch 3" },
 ] as const;
 
+interface DemoCustomer {
+  type: "individual" | "business";
+  officerEmail: string;
+  registeredDaysBefore: number;
+  fields: Record<string, string | null>;
+}
+
+const MARIAMA_ID = "LR-0012345";
+const officer = {
+  BR1: "ruth.browne@msi-demo.test",
+  BR2: "emmanuel.tarpeh@msi-demo.test",
+  BR3: "david.kerkula@msi-demo.test",
+} as const;
+const person = (
+  first: string,
+  last: string,
+  phone: string,
+  idNumber: string,
+  extra: Record<string, string | null> = {},
+) => ({
+  first_name: first,
+  last_name: last,
+  phone,
+  id_type: "national_id",
+  id_number: idNumber,
+  ...extra,
+});
+
+/*
+ * docs/DEMO_DATA.md customers, in registration order (codes CU-000001..12, Mariama Kollie 8th on
+ * 02 Oct 2025 = A-133). Details not given in DEMO_DATA (other phones, ID numbers, occupations,
+ * registration days) are demo placeholders in the same style.
+ */
+const DEMO_CUSTOMERS: readonly DemoCustomer[] = [
+  {
+    type: "individual",
+    officerEmail: officer.BR1,
+    registeredDaysBefore: 139,
+    fields: person("Prince", "Karmo", "0770 555 081", "LR-0012301", { occupation: "Tailor" }),
+  },
+  {
+    type: "business",
+    officerEmail: officer.BR1,
+    registeredDaysBefore: 138,
+    fields: {
+      business_name: "Dolo & Sons Trading",
+      registration_no: "BRN-2019-4471",
+      contact_person: "James Dolo",
+      phone: "0770 555 071",
+      address: "Waterside Market, Monrovia",
+      occupation: "Wholesale trade",
+    },
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR3,
+    registeredDaysBefore: 137,
+    fields: person("Mohammed", "Sheriff", "0770 555 058", "LR-0012303", { occupation: "Taxi driver" }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR3,
+    registeredDaysBefore: 136,
+    fields: person("Fatu", "Kamara", "0770 555 047", "LR-0012304", { occupation: "Shop owner" }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR2,
+    registeredDaysBefore: 135,
+    fields: person("Esther", "Toe", "0770 555 021", "LR-0012305", { occupation: "Hairdresser" }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR2,
+    registeredDaysBefore: 134,
+    fields: person("Joseph B.", "Gbessay", "0770 555 033", "LR-0012306", { occupation: "Shop owner" }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR2,
+    registeredDaysBefore: 134,
+    fields: person("Musu", "Freeman", "0770 555 074", "LR-0012307", { occupation: "Seamstress" }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR2,
+    registeredDaysBefore: 133,
+    fields: person("Mariama", "Kollie", "0770 555 010", MARIAMA_ID, {
+      address: "Montserrado County",
+      occupation: "Market trader",
+      next_of_kin_name: "Joseph Kollie",
+      next_of_kin_relation: "brother",
+      next_of_kin_phone: "0770 555 014",
+    }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR2,
+    registeredDaysBefore: 120,
+    fields: person("Comfort", "Weah", "0770 555 066", "LR-0012309", { occupation: "Food seller" }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR2,
+    registeredDaysBefore: 100,
+    fields: person("Alieu", "Sesay", "0770 555 091", "LR-0012310", { occupation: "Mechanic" }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR2,
+    registeredDaysBefore: 60,
+    fields: person("Hawa", "Dukuly", "0770 555 052", "LR-0012311", { occupation: "Seamstress" }),
+  },
+  {
+    type: "individual",
+    officerEmail: officer.BR1,
+    registeredDaysBefore: 20,
+    fields: person("Kpanah", "Mulbah", "0770 555 061", "LR-0012312", { occupation: "Farmer" }),
+  },
+];
+
 // Staff accounts are created well before the first demo record (Mariama Kollie registered A-133).
 const STAFF_CREATED_DAYS_BEFORE_ANCHOR = 140;
 
@@ -199,7 +320,68 @@ async function main(): Promise<void> {
     });
   }
 
-  // 4. Leave the clock at the morning of A (DEMO_DATA "Seeded state"), or at real time.
+  // 4. Customers (M2), created by their loan officers through create_customer at their
+  //    registration time, so Mariama Kollie is CU-000008 (DEMO_DATA). Skipped when already present.
+  const officerClients = new Map<string, SupabaseClient<Database>>();
+  const signedIn = async (email: string) => {
+    const cached = officerClients.get(email);
+    if (cached !== undefined) return cached;
+    const account = accounts.find((candidate) => candidate.email === email);
+    if (account === undefined) throw new Error(`No demo account ${email}`);
+    const officer = createClient<Database>(API_URL, ANON_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { error } = await officer.auth.signInWithPassword({ email, password: account.password });
+    if (error !== null) throw error;
+    officerClients.set(email, officer);
+    return officer;
+  };
+  const existingCustomers = new Set(
+    ownerQuery<{ id_number: string | null; business_name: string | null }>(
+      "select id_number, business_name from public.customers",
+    ).flatMap((row) => [row.id_number, row.business_name].filter((value): value is string => value !== null)),
+  );
+  const [{ count: customerCount } = { count: 0 }] = ownerQuery<{ count: number }>(
+    "select count(*)::int as count from public.customers",
+  );
+  if (customerCount > 0 && !existingCustomers.has(MARIAMA_ID)) {
+    console.warn(
+      "Customers already exist: demo customer codes will not match DEMO_DATA (use a fresh database).",
+    );
+  }
+  for (const customer of DEMO_CUSTOMERS) {
+    const key = customer.fields.id_number ?? customer.fields.business_name ?? "";
+    if (existingCustomers.has(key)) continue;
+    await rpc(client, "update_setting", {
+      p_key: "clock.override_at",
+      p_value: { at: `${addDays(anchor, -customer.registeredDaysBefore)}T10:00:00Z`, frozen: true },
+    });
+    await rpc(await signedIn(customer.officerEmail), "create_customer", {
+      p_customer: { type: customer.type, ...customer.fields },
+    });
+  }
+
+  // 5. Waiting on A (DEMO_DATA "Approvals waiting"): Emmanuel Tarpeh asks to change Mariama
+  //    Kollie's phone at about 07:10. Loan, extension and expense requests arrive with M3, M5, M8.
+  const [mariama] = ownerQuery<{ id: string; phone: string; pending: number }>(
+    `select c.id, c.phone, (select count(*)::int from public.approval_requests r
+                             where r.entity_id = c.id and r.status = 'pending') as pending
+       from public.customers c where c.id_number = ${sqlText(MARIAMA_ID)}`,
+  );
+  if (mariama !== undefined && mariama.pending === 0 && mariama.phone === "0770 555 010") {
+    await rpc(client, "update_setting", {
+      p_key: "clock.override_at",
+      p_value: { at: `${anchor}T07:10:00Z`, frozen: true },
+    });
+    await rpc(await signedIn("emmanuel.tarpeh@msi-demo.test"), "request_customer_edit", {
+      p_customer_id: mariama.id,
+      p_patch: { phone: "0770 555 011" },
+      p_reason: null,
+    });
+  }
+  for (const officer of officerClients.values()) await officer.auth.signOut();
+
+  // 6. Leave the clock at the morning of A (DEMO_DATA "Seeded state"), or at real time.
   await rpc(client, "update_setting", {
     p_key: "clock.override_at",
     p_value: anchorGiven ? { at: `${anchor}T09:10:00Z`, frozen: true } : null,

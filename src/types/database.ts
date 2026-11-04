@@ -436,6 +436,57 @@ export type Database = {
         };
         Relationships: [];
       };
+      guarantors: {
+        Row: {
+          address: string | null;
+          created_at: string;
+          created_by: string;
+          doc_path: string | null;
+          full_name: string;
+          id: string;
+          id_number: string | null;
+          id_type: string | null;
+          loan_id: string;
+          phone: string;
+          relationship: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          address?: string | null;
+          created_at?: string;
+          created_by: string;
+          doc_path?: string | null;
+          full_name: string;
+          id?: string;
+          id_number?: string | null;
+          id_type?: string | null;
+          loan_id: string;
+          phone: string;
+          relationship?: string | null;
+        };
+        Update: {
+          address?: string | null;
+          created_at?: string;
+          created_by?: string;
+          doc_path?: string | null;
+          full_name?: string;
+          id?: string;
+          id_number?: string | null;
+          id_type?: string | null;
+          loan_id?: string;
+          phone?: string;
+          relationship?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "guarantors_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       hash_chains: {
         Row: {
           chain: string;
@@ -775,6 +826,7 @@ export type Database = {
       business_today: { Args: Record<PropertyKey, never>; Returns: string };
       chain_genesis: { Args: { p_chain: string }; Returns: string };
       claim_upload: { Args: { p_images_only?: boolean; p_path: string }; Returns: Json };
+      clean_guarantors: { Args: { p_guarantors: Json }; Returns: Json };
       clock_override_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
       create_customer: { Args: { p_customer: Json }; Returns: string };
       customer_clean: { Args: { p_input: Json }; Returns: Json };

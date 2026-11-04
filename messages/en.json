@@ -704,5 +704,35 @@
       "yesReject": "Yes, reject",
       "cancel": "Cancel"
     }
+  },
+  "guarantors": {
+    "heading": "Guarantors (optional)",
+    "intro": "Up to 3 people who promise to pay if the borrower cannot. Their ID scan is added with the loan documents.",
+    "none": "No guarantors added.",
+    "number": "Guarantor {number}",
+    "remove": "Remove guarantor {number}",
+    "add": "Add guarantor",
+    "fields": {
+      "fullName": "Full name",
+      "phone": "Phone",
+      "relationship": "Relationship to the borrower (optional)",
+      "address": "Address (optional)",
+      "idNumber": "ID number (optional)",
+      "idType": "ID type (optional)"
+    },
+    "noId": "No ID given",
+    "idTypes": {
+      "national_id": "National ID",
+      "passport": "Passport",
+      "voter_card": "Voter card",
+      "drivers_license": "Driver's licence",
+      "other": "Other"
+    },
+    "validation": {
+      "required": "Required.",
+      "tooLong": "This is too long.",
+      "phone": "Enter a phone number with 7 to 15 digits.",
+      "tooMany": "At most 3 guarantors."
+    }
   }
 }

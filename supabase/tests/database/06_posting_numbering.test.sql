@@ -8,6 +8,9 @@ select id as br2 from public.branches where code = 'BR2' \gset
 select tests.create_staff('Admin One', 'admin') as admin_id \gset
 select tests.create_staff('Accountant One', 'accountant') as accountant_id \gset
 
+-- Start every counter from zero inside this (rolled-back) test, whatever the database holds.
+delete from public.document_sequences where kind <> 'journal'; -- journals already posted keep their numbers
+
 -- Numbering formats (SPEC 6.3 with B-02 and B-03).
 select is(public.next_number('receipt', :'br2'), 'RCT-BR2-000001', 'receipts count per branch');
 select is(public.next_number('receipt', :'br2'), 'RCT-BR2-000002', 'and are gapless');

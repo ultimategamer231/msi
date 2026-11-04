@@ -2,6 +2,16 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
+## [M2 Customers] 2026-11-04 (in review, PR #1)
+### Added
+- M2.1: Customer register (individual and business) with KYC fields, a duplicate check on phone, second phone and ID number (manager override with a reason), document attachments that are never deleted, and a private documents store.
+- M2.2: Customer list with search (name, phone, ID, code) and filters; new-customer form with photo, ID scan and proof of address; large photos are made smaller before upload; the server checks each file's real type.
+- M2.3: Customer changes and blacklisting go through approval; one approval step for all requests (customer changes, manual journals, owner capital); owner capital entry (R10) on the ledger.
+- M2.4: Customer profile (mock-up 08) with pending-change notice, documents and request edit; approvals inbox (mock-up 12) with Waiting, Approved, Rejected and Mine; approvals count in the header and menu.
+- M2.5: Guarantor model and form section for loans; demo customers (Mariama Kollie CU-000008 with her pending phone change).
+### Fixed
+- M2.5: A numbering test no longer depends on an empty database.
+
 ## [M1 Ledger core] 2026-11-04 (in review, PR #1)
 ### Added
 - M1.1: Chart of accounts (SPEC 6.1) with a cash account per branch created automatically; `journals` and `journal_lines` with the SPEC 6.3 invariants (balanced at commit, one-sided lines, immutable), lines only in the creating transaction, and journals joined to the hash chain (`verify_journal_chain`). Tests T-20, T-21.
