@@ -44,7 +44,7 @@ select set_eq(
      where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'EXECUTE')$$,
   array['app_now', 'business_today', 'environment_kind', 'auth_role', 'auth_branch', 'is_staff',
         'update_setting', 'upsert_branch', 'admin_set_profile', 'public_branding',
-        'admin_record_password_reset'],
+        'admin_record_password_reset', 'set_sequence_start'],
   'clients can call exactly the M0 RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).

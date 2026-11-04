@@ -363,6 +363,43 @@ export type Database = {
           },
         ];
       };
+      period_locks: {
+        Row: {
+          branch_id: string;
+          locked_at: string;
+          locked_by: string | null;
+          locked_through: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          branch_id: string;
+          locked_at?: string;
+          locked_by?: string | null;
+          locked_through: string;
+        };
+        Update: {
+          branch_id?: string;
+          locked_at?: string;
+          locked_by?: string | null;
+          locked_through?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "period_locks_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: true;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "period_locks_locked_by_fkey";
+            columns: ["locked_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           active: boolean;
@@ -460,6 +497,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      account_component: { Args: { p_code: string }; Returns: string };
       admin_record_password_reset: { Args: { p_user_id: string }; Returns: undefined };
       admin_set_profile: {
         Args: {
@@ -488,6 +526,7 @@ export type Database = {
       chain_genesis: { Args: { p_chain: string }; Returns: string };
       clock_override_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
+      global_sequence_branch: { Args: Record<PropertyKey, never>; Returns: string };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       journal_content_digest: {
         Args: {
@@ -505,10 +544,27 @@ export type Database = {
       journal_lines_canonical: { Args: { p_journal_id: string }; Returns: Json };
       jsonb_is_short_text: { Args: { p: Json; p_max: number }; Returns: boolean };
       jsonb_is_whole_number: { Args: { p: Json }; Returns: boolean };
+      next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
+      post_journal: {
+        Args: {
+          p_branch: string;
+          p_date: string;
+          p_lines: Json;
+          p_memo: string;
+          p_source_id: string;
+          p_source_type: string;
+        };
+        Returns: string;
+      };
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
       require_role: {
         Args: { p_roles: Database["public"]["Enums"]["app_role"][] };
         Returns: Database["public"]["Enums"]["app_role"];
+      };
+      sequence_scope: { Args: { p_branch: string; p_kind: string }; Returns: string };
+      set_sequence_start: {
+        Args: { p_branch_id: string; p_kind: string; p_last_value: number };
+        Returns: undefined;
       };
       setting_error: { Args: { p_key: string; p_problem: string }; Returns: undefined };
       update_setting: { Args: { p_key: string; p_value: Json }; Returns: Json };
