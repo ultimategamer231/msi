@@ -93,3 +93,4 @@ Small, reversible decisions inside the spec (master prompt section 6). Anything 
 | 2026-11-04 | M1.4 | The manual journal form shows live totals by summing what was typed (BigInt, display only); the server validates and posts | Helps users balance before sending; no money rule duplicated | Remove the hint |
 | 2026-11-04 | M1.4 | Fix: the zod resolver nests errors by path (`errors.lines[1].debit`) | Line-level errors were blocked but not shown | n/a |
 | 2026-11-04 | M1.4 | Database tests no longer assume an empty database (year-2000 dates for totals, filters by test users, relative counts) | Local runs after e2e left data and failed; CI uses a fresh database | n/a |
+| 2026-11-04 | M1.4 | Ledger tabs wrap on narrow screens; e2e checks the accountant's three-tab ledger at 360 px | CI found an 8 px overflow at 390 px (three tabs just wider than the phone); local fonts hid it | n/a |

@@ -70,7 +70,7 @@ async function LedgerContent({ searchParams }: { searchParams: PageProps<"/ledge
       <div className="grid animate-in grid-cols-1 gap-4 p-4 duration-200 fade-in lg:gap-5 lg:p-6">
         <p className="max-w-[70ch] text-sm leading-6 text-ink-muted">{t("intro")}</p>
         <nav aria-label={t("tabs.label")}>
-          <ul className="flex gap-2">
+          <ul className="flex flex-wrap gap-2">
             <li>
               <Link
                 href="/ledger"

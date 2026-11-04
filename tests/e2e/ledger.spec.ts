@@ -40,6 +40,20 @@ test.describe("ledger (FR-21; SPEC 9 /ledger for accountant, manager, CEO, admin
     await expectNoSeriousA11yIssues(page);
   });
 
+  test("the accountant's three ledger tabs fit at 360 px (SPEC 11 minimum width)", async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(!isMobile, "phone layout");
+    await signInAs(page, fixtureUser("accountant"));
+    await page.setViewportSize({ width: 360, height: 780 });
+    for (const path of ["/ledger", "/ledger?tab=trial", "/ledger?tab=manual"]) {
+      await page.goto(path);
+      await expect(page.getByRole("heading", { level: 1, name: "Ledger" })).toBeVisible();
+      await expectNoHorizontalScroll(page);
+    }
+  });
+
   test("the trial balance is balanced and shows the totals", async ({ page }) => {
     await signInAs(page, fixtureUser("manager"));
     await page.goto("/ledger?tab=trial&asof=2026-12-31");
