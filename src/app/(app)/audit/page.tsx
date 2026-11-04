@@ -6,6 +6,7 @@ import { Field, inputClass } from "@/components/forms/fields";
 import { PageSkeleton } from "@/components/layout/page-skeleton";
 import { TopBar } from "@/components/layout/top-bar";
 import { buttonVariants } from "@/components/ui/button";
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import { auditChanges } from "@/lib/audit-diff";
 import { requirePageAccess } from "@/lib/auth/staff";
 import { formatDateTime, parseBusinessDate } from "@/lib/format";
@@ -203,7 +204,10 @@ async function AuditContent({ searchParams }: { searchParams: PageProps<"/audit"
                         {changes.length === 0 ? (
                           <p className="mt-2 text-xs text-ink-muted">{t("noChanges")}</p>
                         ) : (
-                          <div className="relative mt-2 overflow-x-auto">
+                          <ScrollRegion
+                            label={t("changesOf", { action: actionLabel(row.action) })}
+                            className="mt-2"
+                          >
                             <table className="w-full min-w-[420px] border-collapse text-xs">
                               <thead className="bg-subtle text-left text-ink-muted">
                                 <tr>
@@ -232,7 +236,7 @@ async function AuditContent({ searchParams }: { searchParams: PageProps<"/audit"
                                 ))}
                               </tbody>
                             </table>
-                          </div>
+                          </ScrollRegion>
                         )}
                       </details>
                     </div>

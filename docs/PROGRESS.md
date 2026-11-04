@@ -3,15 +3,15 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M1 Ledger core (M0 complete, report `docs/reports/PHASE-M0.md`, in review on PR #1) |
-| Current block | M1.2 Posting and numbering (done, pushed) |
+| Current block | M1.3 Ledger screen and trial balance (done, pushed) |
 | Last approved block | Continuous mode from M0.2 on (Foday 2026-11-04): next block starts automatically once pushed and CI is green |
-| State | M1.2 pushed; M1.3 starts when CI is green |
-| Next step | M1.3 Ledger screen (journals, drill to lines) and trial balance view |
+| State | M1.3 pushed; M1.4 starts when CI is green (last block of M1; then the M1 phase report and STOP for approval) |
+| Next step | M1.4 Manual journal request (form, request_manual_journal RPC, approval_requests table) |
 
 ## Session start checklist (cloud container)
 
 1. Read `CLAUDE.md`, the SPEC sections for the current block, and this file.
-2. Start Docker if it is not running: `dockerd > /tmp/dockerd.log 2>&1 &` then `docker info`.
+2. Start Docker if it is not running: `dockerd > /tmp/dockerd.log 2>&1 &` then `docker info`. If Supabase containers come back unhealthy after a restart: `pnpm supabase stop --no-backup` then `pnpm db:start`.
 3. `pnpm install`, `pnpm db:start` (applies migrations and seeds), `pnpm env:local` (writes `.env.local`); `pnpm test:db` for pgTAP, `pnpm build && CI=1 pnpm test:e2e` for e2e.
 4. Work is safe only once pushed; the container is temporary.
 
@@ -29,3 +29,4 @@
 | 2026-11-04 | M0.6 | /audit screen, seed:demo (M0 part), phase checks, security review (no findings), M0 phase report |
 | 2026-11-04 | M1.1 | accounts (SPEC 6.1) with branch cash accounts, journals and journal_lines with balance, one-sided, immutable, same-transaction and hash-chain invariants; T-20, T-21; global function grant fix |
 | 2026-11-04 | M1.2 | period_locks, next_number (B-02 global loans, B-03 6-digit EXP), set_sequence_start, post_journal with all SPEC 6.3 checks; T-22; 132 database tests |
+| 2026-11-04 | M1.3 | /ledger (journals with lines, filters, pagination; trial balance with balanced check), trial_balance() function, ScrollRegion a11y fix; 139 DB tests, 97 e2e checks |

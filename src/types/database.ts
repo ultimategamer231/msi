@@ -567,6 +567,17 @@ export type Database = {
         Returns: undefined;
       };
       setting_error: { Args: { p_key: string; p_problem: string }; Returns: undefined };
+      trial_balance: {
+        Args: { p_as_of: string };
+        Returns: {
+          account_id: string;
+          code: string;
+          credit_cents: number;
+          debit_cents: number;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        }[];
+      };
       update_setting: { Args: { p_key: string; p_value: Json }; Returns: Json };
       upsert_branch: { Args: { p_branch: Json }; Returns: string };
       validate_setting: { Args: { p_key: string; p_value: Json }; Returns: undefined };

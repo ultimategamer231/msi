@@ -282,6 +282,69 @@
       "profile_password_reset": "Password reset",
       "environment_changed": "Environment changed"
     },
-    "none": "none"
+    "none": "none",
+    "changesOf": "Changes: {action}"
+  },
+  "ledger": {
+    "title": "Ledger",
+    "loading": "Loading the ledger",
+    "intro": "Every money movement is a balanced journal. Posted journals cannot be changed; mistakes are corrected with a reversing journal.",
+    "tabs": {
+      "label": "Ledger views",
+      "journals": "Journals",
+      "trial": "Trial balance"
+    },
+    "filters": {
+      "label": "Filter journals",
+      "from": "From",
+      "to": "To",
+      "branch": "Branch",
+      "anyBranch": "All branches",
+      "apply": "Apply filters",
+      "clear": "Clear"
+    },
+    "count": "{count, plural, one {# journal} other {# journals}}",
+    "empty": "No journals match these filters. Journals appear here as loans are paid out, payments come in and expenses are paid.",
+    "showLines": "Show lines",
+    "reversal": "Reversal",
+    "postedBy": "Posted by {name}",
+    "system": "System",
+    "total": "Total",
+    "lines": {
+      "account": "Account",
+      "debit": "Debit",
+      "credit": "Credit",
+      "detail": "Detail"
+    },
+    "components": {
+      "principal": "amount lent",
+      "interest": "interest",
+      "penalty": "penalty"
+    },
+    "page": "Page {page} of {pages}",
+    "previous": "Previous page",
+    "next": "Next page",
+    "trial": {
+      "asOf": "As at",
+      "show": "Show",
+      "heading": "Trial balance as at {date}",
+      "code": "Code",
+      "account": "Account",
+      "type": "Type",
+      "debit": "Debit",
+      "credit": "Credit",
+      "totals": "Totals",
+      "balanced": "Balanced: total debits equal total credits.",
+      "unbalanced": "Not balanced: total debits and credits differ by {difference}. Tell the accountant and Corex support straight away.",
+      "empty": "No entries up to this date."
+    },
+    "types": {
+      "asset": "Asset",
+      "liability": "Liability",
+      "equity": "Equity",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "linesOf": "Lines of {journal}"
   }
 }

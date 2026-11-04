@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 
 import { CheckboxRow, Field, Panel, describedBy, inputClass } from "@/components/forms/fields";
 import { Button } from "@/components/ui/button";
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@/lib/zod-resolver";
 
@@ -33,7 +34,10 @@ export function BranchesPanel({ branches }: { branches: BranchRow[] }) {
       {branches.length === 0 ? (
         <p className="text-sm text-ink-muted">{t("branches.empty")}</p>
       ) : (
-        <div className="relative -mx-4 overflow-x-auto border-y border-line sm:mx-0 sm:rounded-control sm:border">
+        <ScrollRegion
+          label={t("branches.heading")}
+          className="-mx-4 border-y border-line sm:mx-0 sm:rounded-control sm:border"
+        >
           <table className="w-full min-w-[520px] border-collapse text-sm">
             <thead className="bg-subtle text-left text-xs font-semibold text-ink-muted">
               <tr>
@@ -82,7 +86,7 @@ export function BranchesPanel({ branches }: { branches: BranchRow[] }) {
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       )}
       <div className="mt-4">
         {editing === null ? (
