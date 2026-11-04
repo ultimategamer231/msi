@@ -257,7 +257,7 @@ begin
   end if;
 
   select (value #>> '{}')::bigint into v_limit from settings where key = 'approvals.loan_manager_limit_cents';
-  v_role := case when v_loan.principal_cents > v_limit then 'ceo' else 'manager' end;
+  v_role := (case when v_loan.principal_cents > v_limit then 'ceo' else 'manager' end)::app_role;
   v_interest := flat_interest(v_loan.principal_cents, v_product.interest_rate_bps, v_loan.term_months);
 
   update loans set
