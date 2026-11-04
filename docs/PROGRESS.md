@@ -2,11 +2,11 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M0 Foundation |
-| Current block | M0.5 Settings and user management (done, pushed) |
+| Current phase | M0 Foundation complete (report: `docs/reports/PHASE-M0.md`); M1 Ledger core next |
+| Current block | M0.6 done; M0 phase report posted |
 | Last approved block | Continuous mode from M0.2 on (Foday 2026-11-04): next block starts automatically once pushed and CI is green |
-| State | M0.5 pushed; next block starts when CI is green |
-| Next step | M0.6 Audit log screen, M0 demo seed and phase checks (then the M0 phase report) |
+| State | M0 pushed; M1.1 starts when CI is green |
+| Next step | M1.1 Chart of accounts, journals, journal lines, invariant triggers (T-20, T-21) |
 
 ## Session start checklist (cloud container)
 
@@ -26,3 +26,4 @@
 | 2026-11-04 | M0.3 | Sign-in, sign-out, proxy session refresh and 12-hour limit, route map and page guard, public_branding, e2e global setup with role fixtures, 32 e2e checks |
 | 2026-11-04 | M0.4 | App shell: sidebar, top bar, phone header and bottom tabs with More sheet, role-aware navigation, logo via signed URL, skeleton/error states, skip link; 39 e2e checks |
 | 2026-11-04 | M0.5 | /settings for the admin: company header, logo upload, reminder texts, branches, rule settings, demo clock, users (create, edit, deactivate, reset password); null-setting fix; 75 e2e checks |
+| 2026-11-04 | M0.6 | /audit screen, seed:demo (M0 part), phase checks, security review (no findings), M0 phase report |

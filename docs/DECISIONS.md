@@ -67,3 +67,8 @@ Small, reversible decisions inside the spec (master prompt section 6). Anything 
 | 2026-11-04 | M0.5 | Fix: `update_setting` treats SQL NULL as JSON null (new migration) | PostgREST passes JSON null as SQL NULL, so clearing the go-live date or the demo clock was refused | n/a |
 | 2026-11-04 | M0.5 | Page grids use `grid-cols-1` (minmax(0,1fr)) and tables sit in a `relative` scroll container; `scroll-padding-bottom` keeps fields clear of the phone tab bar | Wide tables and visually-hidden labels widened the page at 390px; the fixed tab bar covered focused fields | n/a |
 | 2026-11-04 | M0.5 | E2E accessibility scans wait until CSS animations have finished | The 200 ms fade-in briefly makes text translucent, which axe measured as low contrast in one run | n/a |
+| 2026-11-04 | M0.6 | `/audit` lists entries in hash-chain order (insertion order), not by `at` | With the demo clock, `at` is business time and can be earlier than real insertion order; chain order is the true sequence | Order by `at` |
+| 2026-11-04 | M0.6 | Audit action labels are message keys with underscores (`setting_updated`) | next-intl treats dots in keys as nesting | n/a |
+| 2026-11-04 | M0.6 | `seed:demo` without `--as-of` anchors on today and leaves the clock on real time; with `--as-of` it freezes the clock at 09:10 on that date (DEMO_DATA "seeded state") | Screenshots need a fixed date; everyday local use needs real time | n/a |
+| 2026-11-04 | M0.6 | Demo staff use `@msi-demo.test` emails (reserved `.test` domain) | Cannot be real addresses | n/a |
+| 2026-11-04 | M0.6 | E2E fills that may race React hydration use `fillExactly` (fill, check, retry) | A fill before hydration merged with the server-rendered value; not a user-facing defect | n/a |
