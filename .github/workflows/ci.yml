@@ -36,6 +36,29 @@ jobs:
       - name: Dependency audit (high and critical)
         run: pnpm audit --audit-level high
 
+  database:
+    name: Database tests (local Supabase)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Start local Supabase (migrations and seeds applied)
+        run: pnpm db:start
+      - name: PL/pgSQL lint
+        run: pnpm supabase db lint --level warning --fail-on warning
+      - name: pgTAP tests
+        run: pnpm test:db
+      - name: Generated database types are current
+        run: pnpm types && git diff --exit-code src/types/database.ts
+      - if: always()
+        run: pnpm db:stop
+
   e2e:
     name: Playwright smoke and accessibility
     if: github.event_name == 'pull_request'

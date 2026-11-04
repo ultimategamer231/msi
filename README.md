@@ -11,11 +11,12 @@ Start with these:
 
 ## Run locally
 
-Requirements: Node 22 (see `.nvmrc`), pnpm 10, Docker (for local Supabase from M0.2).
+Requirements: Node 22 (see `.nvmrc`), pnpm 10, Docker.
 
 ```bash
 pnpm install
-cp .env.example .env.local   # fill in values from `pnpm supabase status` once M0.2 is in place
+pnpm db:start                # local Supabase in Docker: applies migrations and seeds
+cp .env.example .env.local   # fill in values from `pnpm supabase status -o env`
 pnpm dev                     # http://localhost:3000
 ```
 
@@ -31,8 +32,11 @@ pnpm dev                     # http://localhost:3000
 | `pnpm test`                              | Vitest unit tests                                                             |
 | `pnpm test:e2e`                          | Playwright at 390 px and 1280 px, with axe accessibility checks               |
 | `pnpm screenshots --out <dir> <routes…>` | Screenshots at 390 and 1280 px; `--compare nn=/route` for mock-up comparisons |
+| `pnpm db:start` / `db:stop` / `db:reset` | Local Supabase; reset re-applies migrations and seeds                         |
+| `pnpm test:db`                           | pgTAP database tests (RLS, grants, audit chain, RPCs)                         |
+| `pnpm types`                             | Regenerate `src/types/database.ts` from the local database                    |
 
-`pnpm test:db`, `pnpm seed:demo` and `pnpm types` arrive with local Supabase in M0.2.
+`pnpm seed:demo` arrives in M0.6.
 
 ## Money and dates
 

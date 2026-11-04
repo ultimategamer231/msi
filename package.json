@@ -13,7 +13,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:db": "supabase test db",
     "test:e2e": "playwright test",
+    "db:start": "supabase start -x studio,imgproxy,mailpit,logflare,vector,supavisor,edge-runtime,realtime",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "types": "supabase gen types typescript --local --schema public > src/types/database.ts && prettier --write --log-level warn src/types/database.ts",
     "screenshots": "tsx scripts/screenshots.ts"
   },
   "dependencies": {
