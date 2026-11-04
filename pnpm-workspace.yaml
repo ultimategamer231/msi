@@ -1,0 +1,8 @@
+onlyBuiltDependencies:
+  - esbuild
+  - supabase
+ignoredBuiltDependencies:
+  - "@parcel/watcher"
+  - "@swc/core"
+  - sharp
+  - unrs-resolver

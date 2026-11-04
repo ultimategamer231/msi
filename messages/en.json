@@ -1,0 +1,18 @@
+{
+  "app": {
+    "title": "Loan management",
+    "description": "Loans, repayments, collateral and accounts for staff."
+  },
+  "notFound": {
+    "code": "Error 404",
+    "title": "This page does not exist",
+    "body": "The address may be mistyped, or the page has moved. Nothing has been changed.",
+    "home": "Go to the start page"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "The page could not be shown. Nothing has been saved. Try again, and if it happens again tell your manager the time it happened.",
+    "retry": "Try again",
+    "reference": "Reference: {digest}"
+  }
+}
