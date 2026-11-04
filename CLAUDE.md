@@ -10,7 +10,7 @@ Next.js App Router, TypeScript strict, Tailwind, shadcn/ui, Supabase (Postgres, 
 ## Workflow
 - Build one milestone at a time (SPEC section 13). At the end of each: tests green, `pnpm build` clean, screenshots at 390px and 1280px, short changelog, then STOP and wait for approval.
 - Add environment variables only when a milestone needs them.
-- Commit per milestone with a clear message. Do not push until the milestone is approved.
+- Commit per block with a clear message (Conventional Commits). Push as soon as a block or phase is done and keep the phase's draft pull request up to date. Approval is needed only before starting the next block or phase, never before pushing. Never push to `main` and never merge without approval.
 
 ## Non-negotiable rules
 1. Money is integer cents (`bigint` in DB). Rates are integer basis points. No floats anywhere.

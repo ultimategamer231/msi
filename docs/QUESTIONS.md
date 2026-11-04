@@ -49,5 +49,5 @@ Raised in Phase 0 (2026-11-03). "Blocks" says which milestone needs the answer. 
 | B-02 | **Approved as proposed.** Global loan counter with branch prefix; admin `set_sequence_start` before go-live; seed fills remaining gaps with real records. Built in M1.2. |
 | B-03 | **Approved:** `EXP` numbers use 6 digits (`EXP-BR2-000031`). Built in M1.2. |
 | B-11 | **Approved:** managers may have `branch_id` null; branch-scoped manager writes use the loan's branch. Built in M0.2. |
-| B-20 | Repository confirmed (`ultimategamer231/msi`); the Phase 0 branch was renamed to `main` and is the default. Branch naming for phases still to confirm (see M0.1 report). |
+| B-20 | Repository confirmed (`ultimategamer231/msi`); the Phase 0 branch was renamed to `main` and is the default. **Push rule (2026-11-04):** push whenever a block or phase is done; wait for approval only before starting the next one (`CLAUDE.md` updated). Work continues on `claude/new-session-6ictcc` with a draft PR into `main` until told otherwise. |
 | Others | Not yet answered; the proposed defaults apply when their milestone arrives, and I will ask again where a default changes money, security or schema. |
