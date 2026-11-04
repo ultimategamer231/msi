@@ -99,7 +99,7 @@
     "INVALID_SETTING": "One of the values is not valid. Check the highlighted fields.",
     "INVALID_INPUT": "Check the highlighted fields.",
     "DUPLICATE_EMAIL": "A user with this email already exists.",
-    "UPLOAD_REJECTED": "Use a PNG, JPG or WebP image of 10 MB or less.",
+    "UPLOAD_REJECTED": "The file was not accepted. Use a JPG, PNG or WebP image (or a PDF where allowed) of 10 MB or less.",
     "UNKNOWN": "Something went wrong and nothing was saved. Try again."
   },
   "settings": {
@@ -380,6 +380,137 @@
         "cancelled": "Cancelled"
       },
       "requestedOn": "Requested {date}"
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "loading": "Loading customers",
+    "allCustomers": "All customers",
+    "new": "New customer",
+    "created": "Customer {code} was created.",
+    "count": "{count, plural, =0 {No customers} one {# customer} other {# customers}}",
+    "empty": "No customers yet. Loan officers and managers add them here.",
+    "emptyFiltered": "No customers match these filters.",
+    "tableLabel": "Customer list",
+    "page": "Page {page} of {pages}",
+    "previous": "Previous",
+    "next": "Next",
+    "filters": {
+      "label": "Find customers",
+      "q": "Search",
+      "qPlaceholder": "Name, phone, ID number or code",
+      "status": "Status",
+      "anyStatus": "Any status",
+      "branch": "Branch",
+      "anyBranch": "All branches",
+      "officer": "Loan officer",
+      "anyOfficer": "Any officer",
+      "apply": "Search",
+      "clear": "Clear"
+    },
+    "columns": {
+      "customer": "Customer",
+      "phone": "Phone",
+      "idNumber": "ID number",
+      "branch": "Branch",
+      "officer": "Loan officer",
+      "registered": "Registered",
+      "status": "Status"
+    },
+    "status": {
+      "active": "Active",
+      "blacklisted": "Blacklisted",
+      "archived": "Archived"
+    },
+    "types": {
+      "individual": "Individual",
+      "business": "Business"
+    },
+    "validation": {
+      "required": "Required.",
+      "tooLong": "This is too long.",
+      "phone": "Enter a phone number with 7 to 15 digits.",
+      "date": "Enter a valid date."
+    },
+    "form": {
+      "title": "New customer",
+      "loading": "Loading the form",
+      "label": "New customer",
+      "intro": "Enter the details from the customer's ID. Once saved, any change to this record needs a manager's approval.",
+      "sections": {
+        "type": "Customer type",
+        "person": "Personal details",
+        "business": "Business details",
+        "contact": "Contact and work",
+        "nextOfKin": "Next of kin",
+        "placement": "Branch and loan officer",
+        "documents": "Photo and documents"
+      },
+      "types": {
+        "individual": "Individual",
+        "business": "Business"
+      },
+      "fields": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "dateOfBirth": "Date of birth (optional)",
+        "businessName": "Registered business name",
+        "registrationNo": "Registration number (optional)",
+        "contactPerson": "Contact person",
+        "idType": "ID type",
+        "idTypeOptional": "ID type (optional)",
+        "idNumber": "ID number",
+        "phone": "Phone",
+        "phoneAlt": "Second phone (optional)",
+        "address": "Address (optional)",
+        "city": "City or county (optional)",
+        "occupation": "Occupation (optional)",
+        "employerOrBusiness": "Employer or business (optional)",
+        "nextOfKinName": "Name (optional)",
+        "nextOfKinRelation": "Relationship (optional)",
+        "nextOfKinPhone": "Phone (optional)",
+        "branchId": "Branch",
+        "assignedOfficerId": "Loan officer",
+        "notes": "Notes (optional)"
+      },
+      "chooseIdType": "Choose the ID type",
+      "idTypes": {
+        "national_id": "National ID",
+        "passport": "Passport",
+        "voter_card": "Voter card",
+        "drivers_license": "Driver's licence",
+        "other": "Other"
+      },
+      "chooseBranch": "Choose a branch",
+      "noOfficer": "No officer yet",
+      "placementFixed": "{branch} · loan officer {officer}",
+      "documentsIntro": "Optional now; you can add documents later. Large photos are made smaller before they are sent.",
+      "files": {
+        "photo": "Customer photo",
+        "id_document": "ID scan",
+        "proof_of_address": "Proof of address"
+      },
+      "fileHelp": "JPG, PNG or WebP, or PDF for scans. Up to 10 MB.",
+      "fileChosen": "Chosen: {name}",
+      "fileTooLarge": "This file is larger than 10 MB.",
+      "duplicate": {
+        "heading": "This customer may already be registered",
+        "match": {
+          "phone": "same phone number",
+          "id_number": "same ID number"
+        },
+        "status": {
+          "blacklisted": "blacklisted",
+          "archived": "archived"
+        },
+        "managerHelp": "Check the existing record first. If this really is a different person, give the reason and create the record anyway.",
+        "officerHelp": "Check the existing record. If this really is a different person, ask a manager to create the record.",
+        "reason": "Reason for creating a second record",
+        "override": "Create anyway"
+      },
+      "submit": "Save customer",
+      "submitting": "Saving…",
+      "cancel": "Cancel"
     }
   }
 }

@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M2 Customers (approved by Foday 2026-11-04); M0 and M1 in review on PR #1 |
-| Current block | M2.1 Customers, duplicate guard, attachments (database) |
+| Current block | M2.2 Customer list and new-customer form |
 | Last approved block | M2 phase start (Foday 2026-11-04); blocks continue automatically once pushed and CI is green |
 | State | Working on M2 |
-| Next step | M2.2 Customer list and new-customer form |
+| Next step | M2.3 Edit requests, decide_approval, capital in (R-14) |
 
 ## M2 plan (Customers: FR-03, FR-04, FR-05, FR-28; T-29, T-32)
 
@@ -45,3 +45,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-04 | M1.4 | approval_requests, request_manual_journal (dry-run validation), manual journal tab on /ledger, resolver nesting fix, data-independent DB tests; M1 phase report |
 | 2026-11-04 | M1 follow-up | Foday answered B-22 (approved) and asked for recommended defaults elsewhere: public logo on sign-in, db advisors in CI, FK indexes; B-23, R-14, PR #1 decisions recorded |
 | 2026-11-04 | M2.1 | customers, attachments, documents bucket, create_customer with duplicate guard (T-32), add_customer_documents; 186 database tests |
+| 2026-11-04 | M2.2 | /customers list (search, filters, phone cards, table), /customers/new (individual or business, photo and documents with type check and shrinking, duplicate warning with manager override); 10 new e2e checks |

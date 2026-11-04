@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: {
+    // One document upload per request (10 MB at most, SPEC 7.2) plus form overhead.
+    serverActions: { bodySizeLimit: "11mb" },
+    proxyClientMaxBodySize: "11mb",
+  },
   turbopack: {
     rules: {
       "*.css": {
