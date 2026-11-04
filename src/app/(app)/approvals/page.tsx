@@ -229,6 +229,12 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                 title = t("titles.customer", { name: String(payload.name ?? ""), fields: fields.join(", ") });
               } else if (row.type === "manual_journal" || row.type === "capital_in") {
                 title = t("titles.journal", { memo: String(payload.memo ?? ""), amount: formatMoney(total) });
+              } else if (row.type === "loan_approval") {
+                title = t("titles.loan", {
+                  name: String(payload.customer_name ?? ""),
+                  loan: String(payload.loan_no ?? ""),
+                  amount: formatMoney(String(payload.principal_cents ?? "0")),
+                });
               } else {
                 title = typeLabel(row.type);
               }
@@ -348,6 +354,48 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                             ))}
                           </tbody>
                         </table>
+                      </div>
+                    ) : null}
+
+                    {row.type === "loan_approval" ? (
+                      <div className="grid gap-3">
+                        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+                          {(
+                            [
+                              ["loanAmount", formatMoney(String(payload.principal_cents ?? "0"))],
+                              ["loanInterest", formatMoney(String(payload.interest_cents ?? "0"))],
+                              ["loanTotal", formatMoney(String(payload.total_due_cents ?? "0"))],
+                              [
+                                "loanTerm",
+                                t("loanTermValue", {
+                                  months: Number(payload.term_months ?? 0),
+                                  product: String(payload.product ?? ""),
+                                }),
+                              ],
+                            ] as const
+                          ).map(([key, value]) => (
+                            <div key={key} className="min-w-0">
+                              <dt className="text-xs font-medium text-ink-muted">{t(key)}</dt>
+                              <dd className="tabular mt-0.5 font-semibold break-words text-ink">{value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                        {row.reason !== null ? (
+                          <p className="text-sm text-ink">
+                            <span className="text-ink-muted">{t("purpose")}: </span>
+                            {row.reason}
+                          </p>
+                        ) : null}
+                        {row.required_role === "ceo" ? (
+                          <p className="rounded-control bg-warning-bg px-3 py-2 text-sm text-status-overdue-fg">
+                            {t("aboveLimit", { limit: formatMoney(String(payload.limit_cents ?? "0")) })}
+                          </p>
+                        ) : null}
+                        {typeof payload.loan_id === "string" ? (
+                          <Link href={`/loans/${payload.loan_id}`} className="text-sm font-semibold">
+                            {t("openLoan", { loan: String(payload.loan_no ?? "") })}
+                          </Link>
+                        ) : null}
                       </div>
                     ) : null}
 

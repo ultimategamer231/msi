@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 
 import { fixtureUser } from "./fixtures";
 import { expectNoHorizontalScroll, expectNoSeriousA11yIssues, fillExactly, signInAs } from "./helpers";
-import { createTestCustomer, latestAudit, serviceClient, userClient } from "./service";
+import { createTestCustomer, latestAudit, serviceClient, submitTestLoan, userClient } from "./service";
 
 /* Test-only phone range, unique per run. */
 function person() {
@@ -203,5 +203,36 @@ test.describe("customer edits and the approvals inbox (SPEC 5.11, 9; T-29; mock-
     await expect(page.getByText(/utility-bill\.pdf/)).toBeVisible();
     // A cashier decides nothing, so no approvals count is shown.
     await expect(page.getByText(/requests? waiting/)).toHaveCount(0);
+  });
+
+  test("loan applications: a manager approves up to the limit; above it only the CEO decides (T-18, T-19)", async ({
+    page,
+  }) => {
+    const fields = person();
+    const customer = await createTestCustomer(fixtureUser("loan_officer"), fields);
+    const small = await submitTestLoan(fixtureUser("loan_officer"), customer.id, 150000);
+    const large = await submitTestLoan(fixtureUser("loan_officer"), customer.id, 250000);
+
+    await signInAs(page, fixtureUser("manager"));
+    await page.goto("/approvals");
+    const card = page.getByRole("article").filter({ hasText: small.loanNo });
+    await expect(card).toContainText("$1,500.00");
+    await expect(card).toContainText("Total to repay$1,800.00");
+    await expect(page.getByRole("article").filter({ hasText: large.loanNo })).toHaveCount(0);
+    await card.getByRole("button", { name: "Approve" }).click();
+    await expect(card).toHaveCount(0);
+    const { data: approved } = await serviceClient()
+      .from("loans")
+      .select("status")
+      .eq("id", small.id)
+      .single();
+    expect(approved?.status).toBe("approved");
+
+    await page.context().clearCookies();
+    await signInAs(page, fixtureUser("ceo"));
+    await page.goto("/approvals");
+    const ceoCard = page.getByRole("article").filter({ hasText: large.loanNo });
+    await expect(ceoCard).toContainText("Above the $2,000.00 manager limit, so it needs CEO approval.");
+    await expectNoSeriousA11yIssues(page);
   });
 });

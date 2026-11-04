@@ -54,3 +54,32 @@ export async function createTestCustomer(
   if (readError !== null) throw readError;
   return { id: data.id, code };
 }
+
+/** Creates and submits a loan application as the given user; returns the loan id and number. */
+export async function submitTestLoan(
+  user: { email: string; password: string },
+  customerId: string,
+  principalCents: number,
+): Promise<{ id: string; loanNo: string }> {
+  const client = await userClient(user);
+  const { data: product, error: productError } = await client
+    .from("loan_products")
+    .select("id")
+    .eq("name", "Standard 1-month")
+    .single();
+  if (productError !== null) throw productError;
+  const { data: id, error } = await client.rpc("create_loan_draft", {
+    p_loan: {
+      customer_id: customerId,
+      product_id: product.id,
+      principal_cents: principalCents,
+      term_months: 1,
+    },
+  });
+  if (error !== null) throw error;
+  const { error: submitError } = await client.rpc("submit_loan", { p_loan_id: id });
+  if (submitError !== null) throw submitError;
+  const { data: loan, error: readError } = await client.from("loans").select("loan_no").eq("id", id).single();
+  if (readError !== null) throw readError;
+  return { id, loanNo: loan.loan_no };
+}

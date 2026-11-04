@@ -1107,6 +1107,17 @@ export type Database = {
         };
         Returns: Json;
       };
+      apply_loan_decision: {
+        Args: {
+          p_decision: string;
+          p_note: string;
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
       audit_row_digest: {
         Args: {
           p: Omit<
@@ -1119,11 +1130,17 @@ export type Database = {
       auth_branch: { Args: Record<PropertyKey, never>; Returns: string };
       auth_role: { Args: Record<PropertyKey, never>; Returns: Database["public"]["Enums"]["app_role"] };
       business_today: { Args: Record<PropertyKey, never>; Returns: string };
+      cancel_loan: { Args: { p_loan_id: string; p_reason: string }; Returns: undefined };
       chain_genesis: { Args: { p_chain: string }; Returns: string };
+      check_loan_application: {
+        Args: { p_loan: Json; p_role: Database["public"]["Enums"]["app_role"] };
+        Returns: Json;
+      };
       claim_upload: { Args: { p_images_only?: boolean; p_path: string }; Returns: Json };
       clean_guarantors: { Args: { p_guarantors: Json }; Returns: Json };
       clock_override_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
       create_customer: { Args: { p_customer: Json }; Returns: string };
+      create_loan_draft: { Args: { p_loan: Json }; Returns: string };
       customer_clean: { Args: { p_input: Json }; Returns: Json };
       customer_display_name: {
         Args: {
@@ -1234,6 +1251,8 @@ export type Database = {
         Returns: undefined;
       };
       setting_error: { Args: { p_key: string; p_problem: string }; Returns: undefined };
+      store_guarantors: { Args: { p_guarantors: Json; p_loan_id: string }; Returns: number };
+      submit_loan: { Args: { p_loan_id: string }; Returns: string };
       trial_balance: {
         Args: { p_as_of: string };
         Returns: {
@@ -1245,6 +1264,7 @@ export type Database = {
           type: Database["public"]["Enums"]["account_type"];
         }[];
       };
+      update_loan_draft: { Args: { p_loan: Json; p_loan_id: string }; Returns: undefined };
       update_setting: { Args: { p_key: string; p_value: Json }; Returns: Json };
       upsert_branch: { Args: { p_branch: Json }; Returns: string };
       upsert_loan_product: { Args: { p_product: Json }; Returns: string };
