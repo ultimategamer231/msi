@@ -40,3 +40,14 @@ Raised in Phase 0 (2026-11-03). "Blocks" says which milestone needs the answer. 
 | B-19 | Receipt "Share on WhatsApp" (mock-up 04) is not in SPEC (WhatsApp is specified for reminders only). | mock-up 04 vs SPEC 10.3 | Build it as a `wa.me` link with receipt number, amount, balance and the `/verify` link (no PII beyond what the borrower already has). Needs your approval as a small scope addition. | M4 |
 | B-20 | Process: CLAUDE.md says "do not push until the milestone is approved"; the master prompt asks for one branch per phase (`phase/m0-foundation` …) with a PR per phase; this cloud session is bound to branch `claude/new-session-6ictcc`. | CLAUDE.md vs master prompt vs session | Phase 0 docs go to `claude/new-session-6ictcc` with a draft PR. From M0 on I use `phase/<milestone>` branches and push only for the phase PR, once you confirm I may push to those branch names. | M0 |
 | B-21 | SPEC 16 references `tools/audit.py`; it is not in the kit. DEMO_DATA names `e2e/demo-payment.spec.ts`; SPEC 3.3 puts e2e in `tests/e2e/`. | kit | Not needed to build. E2E files live in `tests/e2e/` (so `tests/e2e/demo-payment.spec.ts`). Send `audit.py` if you want it in the repo. | none |
+
+### Answers from Foday (2026-11-04)
+
+| ID | Decision |
+| --- | --- |
+| B-01 | **Approved as proposed.** `app_now()` / `business_today()` read setting `clock.override_at`; allowed only in demo/test environments, refused in production. Built in M0.2. |
+| B-02 | **Approved as proposed.** Global loan counter with branch prefix; admin `set_sequence_start` before go-live; seed fills remaining gaps with real records. Built in M1.2. |
+| B-03 | **Approved:** `EXP` numbers use 6 digits (`EXP-BR2-000031`). Built in M1.2. |
+| B-11 | **Approved:** managers may have `branch_id` null; branch-scoped manager writes use the loan's branch. Built in M0.2. |
+| B-20 | Repository confirmed (`ultimategamer231/msi`); the Phase 0 branch was renamed to `main` and is the default. Branch naming for phases still to confirm (see M0.1 report). |
+| Others | Not yet answered; the proposed defaults apply when their milestone arrives, and I will ask again where a default changes money, security or schema. |

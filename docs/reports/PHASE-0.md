@@ -229,3 +229,23 @@ Common to every block: lint, typecheck and tests green; no TODOs or stubs; user-
 4. Decisions on recommendations R-01..R-11 (any you approve go into the matching block plan).
 
 I will not start M0.1 until you approve.
+
+## 9. Approval outcome (2026-11-04)
+
+Plan approved by Foday. Recommendation decisions:
+
+| ID | Decision | Where it lands |
+| --- | --- | --- |
+| R-01 | **Declined for MVP:** two-factor sign-in stays in phase 2 (auth code kept ready for it) | Phase 2 |
+| R-02 | **Approved:** hash-chained `audit_log` (M0.2) and `journals` (M1.1) | M0.2, M1.1 |
+| R-03 | **Approved:** nightly integrity job (trial balance, journal balance, no negative components, hash chain) on dashboard and `/api/health` | M8, M9 |
+| R-04 | **Approved, scans only:** Dependabot, gitleaks, CodeQL in CI; no branch protection | M0.1 |
+| R-05 | **Declined:** no idle timeout; 12-hour absolute session only | n/a |
+| R-06 | **Approved:** error tracking and uptime monitoring prepared in the release phase; Foday creates the accounts | Release |
+| R-07 | **Approved:** encrypted weekly off-site dump and quarterly restore drill in `docs/OPERATIONS.md` | Release |
+| R-08 | **Declined** (not on the plan) | n/a |
+| R-09 | **Declined** (not on the plan) | n/a |
+| R-10 | **Approved:** test the 80 mm receipt on MSI's thermal printer before M4 sign-off (needs the printer model, client question 7) | M4 |
+| R-11 | **Approved:** customer-record view audit events (M9); retention policy and privacy wording drafted for MSI's lawyer (M7) | M7, M9 |
+
+Builder questions answered: B-01, B-02, B-03, B-11 (see `docs/QUESTIONS.md`).
