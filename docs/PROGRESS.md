@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M0 Foundation |
-| Current block | M0.3 Authentication, sessions and route guard (done, pushed) |
+| Current block | M0.4 App shell (done, pushed) |
 | Last approved block | Continuous mode from M0.2 on (Foday 2026-11-04): next block starts automatically once pushed and CI is green |
-| State | M0.3 pushed; next block starts when CI is green |
-| Next step | M0.4 App shell: tokens, layout, navigation, states and motion |
+| State | M0.4 pushed; next block starts when CI is green |
+| Next step | M0.5 Settings and user management (admin) |
 
 ## Session start checklist (cloud container)
 
@@ -24,3 +24,4 @@
 | 2026-11-04 | M0.1 | Next.js 16 scaffold, MSI tokens, next-intl, format module, Vitest, Playwright + axe, screenshot tool, CI, security scans, Dependabot |
 | 2026-11-04 | M0.2 | Local Supabase, 5 migrations (roles, environment, business clock, branches, profiles, settings, hash-chained audit log, document sequences, RLS and grants), admin RPCs, seed_core, 70 pgTAP tests, CI database job |
 | 2026-11-04 | M0.3 | Sign-in, sign-out, proxy session refresh and 12-hour limit, route map and page guard, public_branding, e2e global setup with role fixtures, 32 e2e checks |
+| 2026-11-04 | M0.4 | App shell: sidebar, top bar, phone header and bottom tabs with More sheet, role-aware navigation, logo via signed URL, skeleton/error states, skip link; 39 e2e checks |

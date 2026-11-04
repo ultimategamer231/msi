@@ -13,6 +13,8 @@ All notable changes, one section per phase. Format follows Keep a Changelog.
 - M0.2: Migrations for roles, deployment environment, business clock (`app_now`, `business_today`), branches, profiles (managers may have no branch), settings with validation, hash-chained append-only `audit_log`, `document_sequences`, RLS on every table and explicit function grants.
 - M0.2: Admin RPCs `update_setting`, `upsert_branch`, `admin_set_profile`, each audited with before and after; `verify_audit_chain` for integrity checks.
 - M0.3: Sign-in page (company name from settings, no sign-up), sign-in and sign-out, session refresh in the Next.js proxy, 12-hour session limit, signed-out redirect with return path, route-role map from SPEC 9 with a page guard, inactive accounts refused.
+- M0.4: App shell from the mock-ups: 232px sidebar with logo tile, role-aware navigation and user block; white top bar; purple phone header with context line; bottom tab bar with a "More" sheet; skeleton and in-shell error states; skip link; logo through a signed URL.
+- M0.4: Restyled shadcn/ui Button and Sheet; Callout and Skeleton components.
 - M0.3: E2E setup that creates one test account per role; e2e for every role's sign-in, wrong password, inactive user, return path, sign-out and not-found; CI e2e job runs against local Supabase.
 - M0.2: `seed_core.sql` (branches, MSI company header, A-01..A-20 rule settings, reminder templates); 70 pgTAP tests; CI database job with PL/pgSQL lint and a generated-types check.
 

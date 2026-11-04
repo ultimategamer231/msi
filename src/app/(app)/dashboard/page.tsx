@@ -1,64 +1,56 @@
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 
+import { PageSkeleton } from "@/components/layout/page-skeleton";
+import { TopBar } from "@/components/layout/top-bar";
+import { Callout } from "@/components/ui/callout";
 import { requirePageAccess } from "@/lib/auth/staff";
+import { formatWeekdayDate } from "@/lib/format";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default function DashboardPage({ searchParams }: PageProps<"/dashboard">) {
+export default async function DashboardPage({ searchParams }: PageProps<"/dashboard">) {
+  const t = await getTranslations("dashboard");
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
-      <Suspense fallback={<DashboardSkeleton />}>
-        <DashboardContent searchParams={searchParams} />
-      </Suspense>
-    </main>
+    <Suspense fallback={<PageSkeleton label={t("loading")} />}>
+      <DashboardContent searchParams={searchParams} />
+    </Suspense>
   );
 }
 
 async function DashboardContent({ searchParams }: { searchParams: PageProps<"/dashboard">["searchParams"] }) {
   const staff = await requirePageAccess("/dashboard");
-  const [t, tRoles, params] = await Promise.all([
+  const supabase = await createSupabaseServerClient();
+  const [t, tShell, params, today] = await Promise.all([
     getTranslations("dashboard"),
-    getTranslations("roles"),
+    getTranslations("shell"),
     searchParams,
+    supabase.rpc("business_today"),
   ]);
+  if (today.error !== null) throw new Error("Could not read the business date");
   const firstName = staff.fullName.split(" ")[0] ?? staff.fullName;
 
   return (
-    <section className="grid gap-5">
-      {params.notice === "forbidden" ? (
-        <p
-          role="alert"
-          className="rounded-control border border-warning-border bg-warning-bg px-4 py-3 text-sm text-status-overdue-fg"
-        >
-          {t("forbidden")}
-        </p>
-      ) : null}
-      <div className="rounded-card border border-line bg-surface p-6">
-        <h1 className="text-2xl font-bold text-ink">{t("greeting", { name: firstName })}</h1>
-        <p className="mt-2 text-sm text-ink-muted" data-testid="signed-in-as">
-          {t("signedInAs", { role: tRoles(staff.role) })}
-          {" · "}
-          {staff.branch?.name ?? t("allBranches")}
-        </p>
-        <form action="/auth/sign-out" method="post" className="mt-6">
-          <button
-            type="submit"
-            className="min-h-11 rounded-control border border-line-input bg-white px-4 text-sm font-semibold text-ink transition-colors duration-150 ease-out hover:bg-page"
-          >
-            {t("signOut")}
-          </button>
-        </form>
+    <>
+      <TopBar title={t("title")} staff={staff} />
+      <div className="grid animate-in gap-4 p-4 duration-200 fade-in lg:gap-5 lg:p-6">
+        {params.notice === "forbidden" ? (
+          <Callout tone="warning" role="alert">
+            {t("forbidden")}
+          </Callout>
+        ) : null}
+        <section className="rounded-card border border-line bg-surface p-5 lg:p-6" aria-labelledby="greeting">
+          <h2 id="greeting" className="text-xl font-bold text-ink lg:text-2xl">
+            {t("greeting", { name: firstName })}
+          </h2>
+          <p className="mt-1 text-sm text-ink-muted" data-testid="business-date">
+            {t("today", {
+              date: formatWeekdayDate(today.data),
+              branch: staff.branch?.name ?? tShell("allBranches"),
+            })}
+          </p>
+          <p className="mt-4 max-w-[65ch] text-sm leading-6 text-ink-muted">{t("comingUp")}</p>
+        </section>
       </div>
-    </section>
-  );
-}
-
-async function DashboardSkeleton() {
-  const t = await getTranslations("dashboard");
-  return (
-    <div role="status" aria-label={t("loading")} className="rounded-card border border-line bg-surface p-6">
-      <div className="h-7 w-56 animate-pulse rounded bg-page" />
-      <div className="mt-3 h-4 w-72 animate-pulse rounded bg-page" />
-      <div className="mt-6 h-11 w-28 animate-pulse rounded-[10px] bg-page" />
-    </div>
+    </>
   );
 }

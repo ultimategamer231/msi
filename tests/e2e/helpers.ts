@@ -26,3 +26,13 @@ export async function signIn(page: Page, email: string, password: string): Promi
   await page.getByLabel("Password").fill(password);
   await page.getByRole("button", { name: "Sign in" }).click();
 }
+
+/** Signs out through the visible UI: the sidebar button on desktop, the "More" sheet on phones. */
+export async function signOutThroughUi(page: Page, isMobile: boolean): Promise<void> {
+  if (isMobile) {
+    await page.getByRole("button", { name: "More" }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "Sign out" }).click();
+  } else {
+    await page.getByRole("complementary").getByRole("button", { name: "Sign out" }).click();
+  }
+}

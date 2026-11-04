@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import { fixtureUser, type FixtureKey } from "./fixtures";
-import { expectNoHorizontalScroll, expectNoSeriousA11yIssues, signIn } from "./helpers";
+import { expectNoHorizontalScroll, expectNoSeriousA11yIssues, signIn, signOutThroughUi } from "./helpers";
 
 const ROLE_LABELS: Record<Exclude<FixtureKey, "inactive">, string> = {
   admin: "Administrator",
@@ -28,11 +28,17 @@ test.describe("sign-in (FR-01, M0 acceptance: login works per role)", () => {
       await page.goto("/login");
       await signIn(page, user.email, user.password);
       await expect(page).toHaveURL(/\/dashboard$/);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText("Dashboard");
+      await expect(page.getByRole("heading", { level: 2 })).toHaveText(
         `Good day, ${user.fullName.split(" ")[0]}`,
       );
-      await expect(page.getByTestId("signed-in-as")).toContainText(`Signed in as ${label}`);
-      await expect(page.getByTestId("signed-in-as")).toContainText(
+      await expect(
+        page
+          .getByText(new RegExp(`(^|· )${label}( ·|$)`))
+          .filter({ visible: true })
+          .first(),
+      ).toBeVisible();
+      await expect(page.getByTestId("business-date")).toContainText(
         user.branchCode === null ? "All branches" : "Branch 2",
       );
     });
@@ -78,11 +84,12 @@ test.describe("route guard (M0 acceptance: unauthorised routes redirect)", () =>
     await expect(page).toHaveURL(/\/dashboard$/);
   });
 
-  test("signing out ends the session", async ({ page }) => {
+  test("signing out ends the session", async ({ page, isMobile }) => {
     const user = fixtureUser("loan_officer");
     await page.goto("/login");
     await signIn(page, user.email, user.password);
-    await page.getByRole("button", { name: "Sign out" }).click();
+    await expect(page).toHaveURL(/\/dashboard$/);
+    await signOutThroughUi(page, isMobile);
     await expect(page).toHaveURL(/\/login\?notice=signed-out$/);
     await expect(page.getByRole("status")).toHaveText("You have signed out.");
     await page.goto("/dashboard");

@@ -13,7 +13,8 @@
     "title": "Something went wrong",
     "body": "The page could not be shown. Nothing has been saved. Try again, and if it happens again tell your manager the time it happened.",
     "retry": "Try again",
-    "reference": "Reference: {digest}"
+    "reference": "Reference: {digest}",
+    "inAppTitle": "This page could not be shown"
   },
   "roles": {
     "admin": "Administrator",
@@ -44,11 +45,40 @@
     }
   },
   "dashboard": {
+    "title": "Dashboard",
     "greeting": "Good day, {name}",
-    "signedInAs": "Signed in as {role}",
-    "allBranches": "All branches",
+    "today": "{date} · {branch}",
     "forbidden": "You do not have access to that page. You have been brought back to the dashboard.",
+    "loading": "Loading your dashboard",
+    "comingUp": "Your work summary appears here as each part of the system is switched on: due loans, collections, approvals and cash."
+  },
+  "nav": {
+    "label": "Main",
+    "more": "More",
+    "moreTitle": "All pages",
+    "close": "Close menu",
+    "dashboard": "Dashboard",
+    "field": "Today",
+    "customers": "Customers",
+    "loans": "Loans",
+    "payments": "Payments",
+    "due": "Due and overdue",
+    "collateral": "Collateral",
+    "recovery": "Recovery",
+    "approvals": "Approvals",
+    "dayClose": "Day close",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "ledger": "Ledger",
+    "audit": "Audit log",
+    "settings": "Settings"
+  },
+  "shell": {
+    "product": "Loan management",
+    "logoAlt": "{company} logo",
     "signOut": "Sign out",
-    "loading": "Loading your dashboard"
+    "allBranches": "All branches",
+    "skipToContent": "Skip to main content",
+    "account": "Signed in as {name}, {role}"
   }
 }
