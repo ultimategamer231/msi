@@ -654,6 +654,72 @@ export type Database = {
           },
         ];
       };
+      loan_products: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          default_term_months: number;
+          id: string;
+          interest_method: string;
+          interest_rate_bps: number;
+          max_term_months: number;
+          name: string;
+          penalty_base: string;
+          penalty_max_periods: number;
+          penalty_period_days: number;
+          penalty_rate_bps: number;
+          rate_period: string;
+          recovery_after_days: number;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          default_term_months: number;
+          id?: string;
+          interest_method?: string;
+          interest_rate_bps: number;
+          max_term_months: number;
+          name: string;
+          penalty_base?: string;
+          penalty_max_periods: number;
+          penalty_period_days: number;
+          penalty_rate_bps: number;
+          rate_period?: string;
+          recovery_after_days: number;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          default_term_months?: number;
+          id?: string;
+          interest_method?: string;
+          interest_rate_bps?: number;
+          max_term_months?: number;
+          name?: string;
+          penalty_base?: string;
+          penalty_max_periods?: number;
+          penalty_period_days?: number;
+          penalty_rate_bps?: number;
+          rate_period?: string;
+          recovery_after_days?: number;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loan_products_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       period_locks: {
         Row: {
           branch_id: string;
@@ -924,6 +990,7 @@ export type Database = {
       };
       update_setting: { Args: { p_key: string; p_value: Json }; Returns: Json };
       upsert_branch: { Args: { p_branch: Json }; Returns: string };
+      upsert_loan_product: { Args: { p_product: Json }; Returns: string };
       validate_customer: {
         Args: {
           p_row: Omit<

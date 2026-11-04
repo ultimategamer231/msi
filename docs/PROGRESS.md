@@ -2,11 +2,23 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M2 Customers complete (report `docs/reports/PHASE-M2.md`); M0, M1 and M2 in review on PR #1 |
-| Current block | M2.5 done; M2 phase report posted |
-| Last approved block | M2 phase start (Foday 2026-11-04); blocks continue automatically once pushed and CI is green |
-| State | **Waiting for Foday's approval to start M3** (phases need approval) |
-| Next step | On approval: M3 Loans, starting with M3.1 loan products |
+| Current phase | M3 Loans (approved by Foday 2026-11-04); M0, M1 and M2 in review on PR #1 |
+| Current block | M3.1 Loan products |
+| Last approved block | M3 phase start (Foday 2026-11-04, "Start M3"); blocks continue automatically once pushed and CI is green |
+| State | Working on M3 |
+| Next step | M3.2 Loans table, money helpers, preview, loan_balances |
+
+## M3 plan (Loans: FR-06, FR-07, FR-08, FR-09; T-01, T-02, T-17, T-18, T-19, T-23, T-35)
+
+| Block | Content | Done when |
+| --- | --- | --- |
+| M3.1 | `loan_products` (SPEC 7.1), `upsert_loan_product` (admin, audited), seeded standard product, products tab in `/settings` | pgTAP and e2e |
+| M3.2 | Money helpers (`round_half_up`, `pct`, `add_months_clamped`), `loans` (SPEC 7.3) with snapshot terms, `loan_balances` and `customer_balances` views, `preview_loan_terms` | T-01, T-02, T-09 match `tools/vectors.py` |
+| M3.3 | `create_loan_draft`, `update_loan_draft`, `submit_loan` (routes by `approvals.loan_manager_limit_cents`), loan decisions in `decide_approval` (creator ≠ approver), cancel | T-17, T-18, T-19 |
+| M3.4 | Minimal collateral (`collaterals`, `loan_collaterals`, `register_collateral`, `link_collateral`), `disburse_loan` (R1) with collateral, funds and day-lock checks | T-23, T-35 |
+| M3.5 | `/loans/new` wizard: customer, product, amount and term with live preview, collateral, guarantors, submit | e2e at 390 and 1280 |
+| M3.6 | `/loans` (mock-up 06) and `/loans/[id]` (mock-up 07); loans and total owed on the customer profile | compare screenshots |
+| M3.7 | `issued_documents`, `issue_document`, loan agreement PDF; demo seed (opening capital, DEMO_DATA loans that M3 can create); M3 phase report | all checks green |
 
 ## M2 plan (Customers: FR-03, FR-04, FR-05, FR-28; T-29, T-32)
 
@@ -49,3 +61,5 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-04 | M2.3 | request_customer_edit (fields, photo, status), apply_customer_edit, decide_approval (customer edits, blacklist, manual journal, capital in), request_capital_in with ledger form; T-29; 225 database tests |
 | 2026-11-04 | M2.4 | /customers/[id] (mock-up 08: details, pending notice, documents, request edit, status change), /approvals (mock-up 12: Waiting, Approved, Rejected, Mine; approve, reject with reason and confirmation), approvals count in the shell; 10 new e2e checks |
 | 2026-11-04 | M2.5 | guarantors table and clean_guarantors, guarantor form section, demo seed customers and pending phone change, M2 phase report |
+| 2026-11-04 | M3 | Phase approved by Foday ("Start M3"); B-24, B-25 and the M2 mock-up differences not answered, defaults stay |
+| 2026-11-04 | M3.1 | loan_products, upsert_loan_product (admin, audited), seeded standard product, Loan products tab in /settings with percent input; 246 database tests |

@@ -112,6 +112,7 @@
       "label": "Settings sections",
       "company": "Company",
       "branches": "Branches",
+      "products": "Loan products",
       "rules": "Rules",
       "users": "Users"
     },
@@ -235,6 +236,46 @@
       "you": "You",
       "selfNote": "You cannot change your own role or deactivate yourself.",
       "empty": "No users yet."
+    },
+    "products": {
+      "heading": "Loan products",
+      "intro": "Interest, term and penalty rules offered to borrowers. A loan copies its product's rules when it is submitted, so changes here apply only to new loans.",
+      "empty": "No loan products yet.",
+      "name": "Product",
+      "interest": "Interest",
+      "term": "Term",
+      "penalty": "Penalty",
+      "status": "Status",
+      "interestValue": "{rate} flat per month",
+      "termValue": "{term} {term, plural, one {month} other {months}} (up to {max})",
+      "penaltyValue": "{rate} every {days} days, at most {max}",
+      "active": "Active",
+      "inactive": "Not offered",
+      "add": "Add product",
+      "addHeading": "New loan product",
+      "editHeading": "Edit {name}",
+      "fields": {
+        "name": "Name",
+        "interestRate": "Interest per month (%)",
+        "defaultTermMonths": "Usual term (months)",
+        "maxTermMonths": "Longest term (months)",
+        "penaltyRate": "Penalty rate (%)",
+        "penaltyPeriodDays": "Days between penalties",
+        "penaltyMaxPeriods": "Most penalties",
+        "recoveryAfterDays": "Recovery after (days overdue)",
+        "penaltyBase": "Penalty is charged on",
+        "active": "Offered for new loans"
+      },
+      "bases": {
+        "outstanding_total": "Everything still owed (A-06)",
+        "original_due": "The original amount due"
+      },
+      "snapshotNote": "Interest is flat: principal × rate × months, charged at payout. Existing loans keep the rules they were approved with.",
+      "validation": {
+        "percent": "Enter a percentage with at most two decimals (for example 20 or 12.5).",
+        "wholeNumber": "Enter a whole number in the allowed range.",
+        "termOrder": "The usual term cannot be longer than the longest term."
+      }
     }
   },
   "audit": {

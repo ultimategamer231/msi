@@ -46,7 +46,7 @@ select set_eq(
         'update_setting', 'upsert_branch', 'admin_set_profile', 'public_branding',
         'admin_record_password_reset', 'set_sequence_start', 'trial_balance',
         'request_manual_journal', 'create_customer', 'add_customer_documents',
-        'request_customer_edit', 'decide_approval', 'request_capital_in'],
+        'request_customer_edit', 'decide_approval', 'request_capital_in', 'upsert_loan_product'],
   'clients can call exactly the released RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).

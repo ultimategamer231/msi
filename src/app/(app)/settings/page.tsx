@@ -17,12 +17,13 @@ import type { Json } from "@/types/database";
 
 import { BranchesPanel } from "./branches-panel";
 import { CompanyPanel } from "./company-panel";
+import { ProductsPanel } from "./products-panel";
 import { RulesPanel } from "./rules-panel";
 import type { AllocationComponent } from "./schemas";
 import { UsersPanel } from "./users-panel";
 
 /* /settings (admin): company header, branches, rule settings and users (SPEC 9, FR-01, FR-02). */
-const TABS = ["company", "branches", "rules", "users"] as const;
+const TABS = ["company", "branches", "products", "rules", "users"] as const;
 type Tab = (typeof TABS)[number];
 
 export default async function SettingsPage({ searchParams }: PageProps<"/settings">) {
@@ -65,6 +66,7 @@ async function SettingsContent({ searchParams }: { searchParams: PageProps<"/set
         </nav>
         {tab === "company" ? <CompanyTab /> : null}
         {tab === "branches" ? <BranchesTab /> : null}
+        {tab === "products" ? <ProductsTab /> : null}
         {tab === "rules" ? <RulesTab /> : null}
         {tab === "users" ? <UsersTab staff={staff} /> : null}
       </div>
@@ -107,6 +109,34 @@ async function CompanyTab() {
         reminder: typeof templates.reminder === "string" ? templates.reminder : "",
         reminderOverdue: typeof templates.reminder_overdue === "string" ? templates.reminder_overdue : "",
       }}
+    />
+  );
+}
+
+async function ProductsTab() {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("loan_products")
+    .select(
+      "id, name, interest_rate_bps, default_term_months, max_term_months, penalty_rate_bps, penalty_period_days, penalty_base, penalty_max_periods, recovery_after_days, active",
+    )
+    .order("name");
+  if (error !== null) throw new Error("Could not read loan products");
+  return (
+    <ProductsPanel
+      products={data.map((product) => ({
+        id: product.id,
+        name: product.name,
+        interestRateBps: product.interest_rate_bps,
+        defaultTermMonths: product.default_term_months,
+        maxTermMonths: product.max_term_months,
+        penaltyRateBps: product.penalty_rate_bps,
+        penaltyPeriodDays: product.penalty_period_days,
+        penaltyBase: product.penalty_base === "original_due" ? "original_due" : "outstanding_total",
+        penaltyMaxPeriods: product.penalty_max_periods,
+        recoveryAfterDays: product.recovery_after_days,
+        active: product.active,
+      }))}
     />
   );
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { centsToInput, parseDollarsToCents } from "./money-input";
+import { bpsToInput, centsToInput, parseDollarsToCents, parsePercentToBps } from "./money-input";
 
 describe("parseDollarsToCents", () => {
   it.each([
@@ -37,5 +37,26 @@ describe("centsToInput", () => {
     for (const cents of [0n, 1n, 99n, 100n, 123456n, 200000n]) {
       expect(parseDollarsToCents(centsToInput(cents))).toBe(cents);
     }
+  });
+});
+
+describe("parsePercentToBps and bpsToInput", () => {
+  it("turns percentages into whole basis points", () => {
+    expect(parsePercentToBps("20")).toBe(2000);
+    expect(parsePercentToBps("20.5")).toBe(2050);
+    expect(parsePercentToBps("12.34 %")).toBe(1234);
+    expect(parsePercentToBps("0.05")).toBe(5);
+    expect(parsePercentToBps("100")).toBe(10000);
+  });
+
+  it("refuses more than two decimals, negatives and text", () => {
+    for (const bad of ["20.555", "-5", "", "abc", "1e3", "20,5"]) expect(parsePercentToBps(bad)).toBeNull();
+  });
+
+  it("shows basis points without trailing zeros", () => {
+    expect(bpsToInput(2000)).toBe("20");
+    expect(bpsToInput(2050)).toBe("20.5");
+    expect(bpsToInput(1234)).toBe("12.34");
+    expect(bpsToInput(5)).toBe("0.05");
   });
 });

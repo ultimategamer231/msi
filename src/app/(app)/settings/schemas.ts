@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { parsePercentToBps } from "@/lib/money-input";
 import { ROLES } from "@/lib/permissions";
 
 /*
@@ -95,3 +96,43 @@ export const userSchema = z
   .object({ ...userFields, id: z.uuid(), active: z.boolean() })
   .refine(branchRule, { message: "branchRequired", path: ["branchId"] });
 export type UserValues = z.infer<typeof userSchema>;
+
+/* Loan products (SPEC 7.1, FR-06). Rates are typed as percentages and stored as basis points. */
+const percent = (max: number) =>
+  z
+    .string()
+    .trim()
+    .refine(
+      (value) => {
+        const bps = parsePercentToBps(value);
+        return bps !== null && bps <= max;
+      },
+      { message: "percent" },
+    );
+const whole = (min: number, max: number) =>
+  z
+    .string()
+    .trim()
+    .refine((value) => /^\d{1,4}$/.test(value) && Number(value) >= min && Number(value) <= max, {
+      message: "wholeNumber",
+    });
+
+export const productSchema = z
+  .object({
+    id: z.uuid().optional(),
+    name: required(80),
+    interestRate: percent(10000).refine((value) => parsePercentToBps(value) !== 0, { message: "percent" }),
+    defaultTermMonths: whole(1, 36),
+    maxTermMonths: whole(1, 36),
+    penaltyRate: percent(10000),
+    penaltyPeriodDays: whole(1, 90),
+    penaltyBase: z.enum(["outstanding_total", "original_due"]),
+    penaltyMaxPeriods: whole(0, 52),
+    recoveryAfterDays: whole(1, 365),
+    active: z.boolean(),
+  })
+  .refine((value) => Number(value.defaultTermMonths) <= Number(value.maxTermMonths), {
+    message: "termOrder",
+    path: ["defaultTermMonths"],
+  });
+export type ProductValues = z.infer<typeof productSchema>;

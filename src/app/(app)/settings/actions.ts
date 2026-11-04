@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 import { getCurrentStaff } from "@/lib/auth/staff";
 import { logServerError } from "@/lib/log";
-import { parseDollarsToCents } from "@/lib/money-input";
+import { parseDollarsToCents, parsePercentToBps } from "@/lib/money-input";
 import { generatePassword } from "@/lib/password";
 import { errorCodeFrom, type ErrorCode } from "@/lib/rpc-errors";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -18,6 +18,7 @@ import {
   clockSchema,
   companySchema,
   newUserSchema,
+  productSchema,
   rulesSchema,
   templatesSchema,
   userSchema,
@@ -25,6 +26,7 @@ import {
   type ClockValues,
   type CompanyValues,
   type NewUserValues,
+  type ProductValues,
   type RulesValues,
   type TemplatesValues,
   type UserValues,
@@ -322,4 +324,33 @@ export async function resetPassword(userId: string): Promise<ActionResult<{ pass
     return fail(errorCodeFrom(auditError), "settings.resetPassword", admin.userId);
   }
   return done({ password });
+}
+
+/* upsert_loan_product (SPEC 4: admin; FR-06). Rates go to the database as whole basis points. */
+export async function saveProduct(values: ProductValues): Promise<ActionResult<{ id: string }>> {
+  const admin = await requireAdmin();
+  if (!admin.ok) return admin;
+  const parsed = productSchema.safeParse(values);
+  if (!parsed.success) return fail("INVALID_INPUT", "settings.saveProduct");
+  const interest = parsePercentToBps(parsed.data.interestRate);
+  const penalty = parsePercentToBps(parsed.data.penaltyRate);
+  if (interest === null || penalty === null) return fail("INVALID_INPUT", "settings.saveProduct");
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.rpc("upsert_loan_product", {
+    p_product: {
+      ...(parsed.data.id === undefined ? {} : { id: parsed.data.id }),
+      name: parsed.data.name,
+      interest_rate_bps: interest,
+      default_term_months: Number.parseInt(parsed.data.defaultTermMonths, 10),
+      max_term_months: Number.parseInt(parsed.data.maxTermMonths, 10),
+      penalty_rate_bps: penalty,
+      penalty_period_days: Number.parseInt(parsed.data.penaltyPeriodDays, 10),
+      penalty_base: parsed.data.penaltyBase,
+      penalty_max_periods: Number.parseInt(parsed.data.penaltyMaxPeriods, 10),
+      recovery_after_days: Number.parseInt(parsed.data.recoveryAfterDays, 10),
+      active: parsed.data.active,
+    },
+  });
+  if (error !== null) return fail(errorCodeFrom(error), "settings.saveProduct", admin.userId);
+  return done({ id: data });
 }

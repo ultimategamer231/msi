@@ -66,3 +66,11 @@ values
   ('5060', 'Bank and Mobile Money Charges', 'expense'),
   ('5900', 'Other Expenses', 'expense')
 on conflict (code) do nothing;
+
+-- M3: the standard product from DEMO_DATA (A-02, A-03, A-06, A-08): 20% flat per month, 1 month,
+-- penalty 20% of the amount owed every 7 days after the due date, at most 4, recovery after 30 days.
+-- The maximum term (3 months) is a placeholder until MSI confirms it.
+insert into public.loan_products (name, interest_rate_bps, default_term_months, max_term_months, penalty_rate_bps,
+                                  penalty_period_days, penalty_base, penalty_max_periods, recovery_after_days)
+values ('Standard 1-month', 2000, 1, 3, 2000, 7, 'outstanding_total', 4, 30)
+on conflict (name) do nothing;
