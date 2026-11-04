@@ -22,7 +22,7 @@ Date: 2026-11-04 · Branch: `claude/new-session-6ictcc` · PR: https://github.co
 - Database: 234 passed (fresh and seeded database); `supabase db lint` and `supabase db advisors` clean at warning level
 - E2E: 126 passed (390 and 1280 px, axe on every screen)
 - Lint, typecheck, build: clean
-- CI: green on M2.1. The runs for M2.2–M2.4 were still queued on GitHub's side when this report was written (no job had started); the latest run covers all blocks.
+- CI: green on every M2 block push (M2.1 to M2.5), including the e2e job; GitHub queued some runs for up to 30 minutes before starting them.
 
 ## Mock-up comparison
 `docs/screenshots/m2/compare-08.png` and `compare-12.png` (mock-up left, built right, demo data as of 12 Feb 2026 09:10). Same layout, copy and colours. Differences, all deliberate:
