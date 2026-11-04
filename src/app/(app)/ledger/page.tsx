@@ -9,9 +9,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
 import { ScrollRegion } from "@/components/ui/scroll-region";
 import { requirePageAccess } from "@/lib/auth/staff";
-import { formatDate, formatMoney, parseBusinessDate } from "@/lib/format";
+import { businessDateOf, formatDate, formatMoney, parseBusinessDate } from "@/lib/format";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
+
+import { ManualJournalForm } from "./manual-journal-form";
 
 import messages from "../../../../messages/en.json";
 
@@ -57,7 +59,10 @@ export default async function LedgerPage({ searchParams }: PageProps<"/ledger">)
 async function LedgerContent({ searchParams }: { searchParams: PageProps<"/ledger">["searchParams"] }) {
   const staff = await requirePageAccess("/ledger");
   const [t, params] = await Promise.all([getTranslations("ledger"), searchParams]);
-  const tab = single(params.tab) === "trial" ? "trial" : "journals";
+  // SPEC 4: manual journals are requested by the accountant or the admin.
+  const canRequest = staff.role === "accountant" || staff.role === "admin";
+  const requested = single(params.tab);
+  const tab = requested === "trial" ? "trial" : requested === "manual" && canRequest ? "manual" : "journals";
 
   return (
     <>
@@ -84,9 +89,22 @@ async function LedgerContent({ searchParams }: { searchParams: PageProps<"/ledge
                 {t("tabs.trial")}
               </Link>
             </li>
+            {canRequest ? (
+              <li>
+                <Link
+                  href="/ledger?tab=manual"
+                  aria-current={tab === "manual" ? "page" : undefined}
+                  className={linkClass(tab === "manual")}
+                >
+                  {t("tabs.manual")}
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </nav>
-        {tab === "trial" ? <TrialBalance params={params} /> : <Journals params={params} />}
+        {tab === "trial" ? <TrialBalance params={params} /> : null}
+        {tab === "journals" ? <Journals params={params} /> : null}
+        {tab === "manual" ? <ManualJournal staffId={staff.id} /> : null}
       </div>
     </>
   );
@@ -421,6 +439,93 @@ async function TrialBalance({ params }: { params: Params }) {
               </table>
             </ScrollRegion>
           </>
+        )}
+      </section>
+    </>
+  );
+}
+
+async function ManualJournal({ staffId }: { staffId: string }) {
+  const t = await getTranslations("ledger.manual");
+  const supabase = await createSupabaseServerClient();
+  const [{ data: accounts, error }, { data: branches }, { data: today }, { data: requests }] =
+    await Promise.all([
+      supabase.from("accounts").select("code, name").eq("active", true).order("code"),
+      supabase.from("branches").select("id, code, name").eq("active", true).order("code"),
+      supabase.rpc("business_today"),
+      supabase
+        .from("approval_requests")
+        .select("id, status, requested_at, payload")
+        .eq("type", "manual_journal")
+        .eq("requested_by", staffId)
+        .order("requested_at", { ascending: false })
+        .limit(20),
+    ]);
+  if (error !== null || today === null) throw new Error("Could not load the manual journal form");
+
+  const statusClass: Record<string, string> = {
+    pending: "bg-status-due-bg text-status-due-fg",
+    approved: "bg-status-active-bg text-status-active-fg",
+    rejected: "bg-status-overdue-bg text-status-overdue-fg",
+    cancelled: "bg-status-pending-bg text-status-pending-fg",
+  };
+
+  return (
+    <>
+      <ManualJournalForm
+        accounts={accounts}
+        branches={(branches ?? []).map((branch) => ({
+          id: branch.id,
+          label: `${branch.code} · ${branch.name}`,
+        }))}
+        today={today}
+      />
+      <section aria-labelledby="manual-mine" className="min-w-0 rounded-card border border-line bg-surface">
+        <h2 id="manual-mine" className="px-4 pt-4 text-base font-bold text-ink">
+          {t("mineHeading")}
+        </h2>
+        {(requests ?? []).length === 0 ? (
+          <p className="px-4 py-8 text-sm text-ink-muted">{t("mineEmpty")}</p>
+        ) : (
+          <ul className="mt-2 divide-y divide-page">
+            {(requests ?? []).map((request) => {
+              const payload = (request.payload ?? {}) as {
+                memo?: string;
+                entry_date?: string;
+                lines?: { debit_cents?: number }[];
+              };
+              const total = (payload.lines ?? []).reduce(
+                (sum, line) => sum + BigInt(line.debit_cents ?? 0),
+                0n,
+              );
+              const status = request.status in messages.ledger.manual.status ? request.status : "pending";
+              return (
+                <li
+                  key={request.id}
+                  className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-ink">{payload.memo ?? ""}</p>
+                    <p className="text-xs text-ink-muted">
+                      {payload.entry_date !== undefined ? formatDate(payload.entry_date) : ""} ·{" "}
+                      {t("requestedOn", { date: formatDate(businessDateOf(request.requested_at)) })}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="tabular text-sm font-semibold text-ink">{formatMoney(total)}</span>
+                    <span
+                      className={cn(
+                        "inline-block rounded-badge px-2.5 py-0.5 text-xs font-semibold",
+                        statusClass[status],
+                      )}
+                    >
+                      {t(`status.${status as keyof typeof messages.ledger.manual.status}`)}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         )}
       </section>
     </>

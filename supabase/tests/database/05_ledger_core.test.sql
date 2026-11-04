@@ -35,8 +35,10 @@ end $$;
 
 -- Chart of accounts (SPEC 6.1).
 select is((select count(*)::int from public.accounts where code ~ '^[0-9]{4}$'), 22, 'the 22 shared accounts are seeded');
-select set_eq($$select code from public.accounts where is_cash$$, array['1010-BR1', '1010-BR2', '1010-BR3'],
-  'each branch has its cash account');
+select is((select count(*)::int from public.branches b
+            where not exists (select 1 from public.accounts a where a.branch_id = b.id and a.is_cash
+                                and a.code = '1010-' || b.code)), 0,
+  'each branch has its cash account 1010-<code>');
 select is((select type::text from public.accounts where code = '2100'), 'liability', 'customer surplus is a liability');
 select is((select type::text from public.accounts where code = '5050'), 'expense', 'bad debts is an expense');
 

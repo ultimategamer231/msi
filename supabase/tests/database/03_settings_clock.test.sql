@@ -19,7 +19,9 @@ select matches(tests.try_as('authenticated', :'inactive_admin_id',
 select matches(tests.try_as('service_role', null,
   $$select public.update_setting('approvals.expense_limit_cents', '5000')$$), '^permission denied', 'the service role cannot call it');
 
--- A change by the admin writes exactly one audit row with before and after.
+-- A change by the admin writes exactly one audit row with before and after. Start from the seeded
+-- value so the test does not depend on changes left by other test runs.
+update public.settings set value = '10000' where key = 'approvals.expense_limit_cents';
 select count(*) as audit_before from public.audit_log \gset
 select is(tests.try_as('authenticated', :'admin_id',
   $$select public.update_setting('approvals.expense_limit_cents', '12500')$$), null, 'admin can change a setting');

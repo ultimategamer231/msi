@@ -64,6 +64,70 @@ export type Database = {
         };
         Relationships: [];
       };
+      approval_requests: {
+        Row: {
+          decided_at: string | null;
+          decided_by: string | null;
+          decision_note: string | null;
+          entity_id: string | null;
+          entity_type: string;
+          id: string;
+          payload: NonNullable<Json>;
+          reason: string | null;
+          requested_at: string;
+          requested_by: string;
+          required_role: Database["public"]["Enums"]["app_role"];
+          status: string;
+          type: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          decided_at?: string | null;
+          decided_by?: string | null;
+          decision_note?: string | null;
+          entity_id?: string | null;
+          entity_type: string;
+          id?: string;
+          payload: NonNullable<Json>;
+          reason?: string | null;
+          requested_at?: string;
+          requested_by: string;
+          required_role: Database["public"]["Enums"]["app_role"];
+          status?: string;
+          type: string;
+        };
+        Update: {
+          decided_at?: string | null;
+          decided_by?: string | null;
+          decision_note?: string | null;
+          entity_id?: string | null;
+          entity_type?: string;
+          id?: string;
+          payload?: NonNullable<Json>;
+          reason?: string | null;
+          requested_at?: string;
+          requested_by?: string;
+          required_role?: Database["public"]["Enums"]["app_role"];
+          status?: string;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "approval_requests_decided_by_fkey";
+            columns: ["decided_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "approval_requests_requested_by_fkey";
+            columns: ["requested_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       audit_log: {
         Row: {
           action: string;
@@ -557,6 +621,7 @@ export type Database = {
         Returns: string;
       };
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
+      request_manual_journal: { Args: { p_request: Json }; Returns: string };
       require_role: {
         Args: { p_roles: Database["public"]["Enums"]["app_role"][] };
         Returns: Database["public"]["Enums"]["app_role"];

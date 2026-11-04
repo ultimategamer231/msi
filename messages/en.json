@@ -292,7 +292,8 @@
     "tabs": {
       "label": "Ledger views",
       "journals": "Journals",
-      "trial": "Trial balance"
+      "trial": "Trial balance",
+      "manual": "Manual journal"
     },
     "filters": {
       "label": "Filter journals",
@@ -345,6 +346,40 @@
       "income": "Income",
       "expense": "Expense"
     },
-    "linesOf": "Lines of {journal}"
+    "linesOf": "Lines of {journal}",
+    "manual": {
+      "heading": "Request a manual journal",
+      "intro": "For corrections and entries that no other screen records. A manager approves it before it is posted. Every manual journal needs a memo explaining why.",
+      "date": "Date",
+      "memo": "Memo (why this entry is needed)",
+      "branch": "Branch",
+      "noBranch": "No branch",
+      "linesLabel": "Journal lines",
+      "account": "Account",
+      "chooseAccount": "Choose an account",
+      "debit": "Debit ($)",
+      "credit": "Credit ($)",
+      "lineLabel": "Line {number}",
+      "addLine": "Add line",
+      "removeLine": "Remove line {number}",
+      "totals": "Totals: debits {debit}, credits {credit}",
+      "difference": "Not balanced yet: difference {difference}",
+      "balanced": "Balanced",
+      "submit": "Send for approval",
+      "submitting": "Sending…",
+      "sent": "Sent for approval. A manager will review it.",
+      "lineError": "Enter an amount in either the debit or the credit column, not both.",
+      "accountRequired": "Choose an account.",
+      "minLines": "A journal needs at least two lines.",
+      "mineHeading": "Your manual journal requests",
+      "mineEmpty": "You have not requested any manual journals yet.",
+      "status": {
+        "pending": "Waiting for approval",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      },
+      "requestedOn": "Requested {date}"
+    }
   }
 }

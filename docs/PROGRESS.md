@@ -2,11 +2,11 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M1 Ledger core (M0 complete, report `docs/reports/PHASE-M0.md`, in review on PR #1) |
-| Current block | M1.3 Ledger screen and trial balance (done, pushed) |
+| Current phase | M1 Ledger core complete (report `docs/reports/PHASE-M1.md`); M0 and M1 in review on PR #1 |
+| Current block | M1.4 done; M1 phase report posted |
 | Last approved block | Continuous mode from M0.2 on (Foday 2026-11-04): next block starts automatically once pushed and CI is green |
-| State | M1.3 pushed; M1.4 starts when CI is green (last block of M1; then the M1 phase report and STOP for approval) |
-| Next step | M1.4 Manual journal request (form, request_manual_journal RPC, approval_requests table) |
+| State | **Waiting for Foday's approval to start M2** (phases need approval) |
+| Next step | On approval: M2 phase plan check, then M2.1 Customers |
 
 ## Session start checklist (cloud container)
 
@@ -30,3 +30,4 @@
 | 2026-11-04 | M1.1 | accounts (SPEC 6.1) with branch cash accounts, journals and journal_lines with balance, one-sided, immutable, same-transaction and hash-chain invariants; T-20, T-21; global function grant fix |
 | 2026-11-04 | M1.2 | period_locks, next_number (B-02 global loans, B-03 6-digit EXP), set_sequence_start, post_journal with all SPEC 6.3 checks; T-22; 132 database tests |
 | 2026-11-04 | M1.3 | /ledger (journals with lines, filters, pagination; trial balance with balanced check), trial_balance() function, ScrollRegion a11y fix; 139 DB tests, 97 e2e checks |
+| 2026-11-04 | M1.4 | approval_requests, request_manual_journal (dry-run validation), manual journal tab on /ledger, resolver nesting fix, data-independent DB tests; M1 phase report |

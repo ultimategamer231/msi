@@ -2,12 +2,14 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
-## [M1 Ledger core] unreleased
+## [M1 Ledger core] 2026-11-04 (in review, PR #1)
 ### Added
 - M1.1: Chart of accounts (SPEC 6.1) with a cash account per branch created automatically; `journals` and `journal_lines` with the SPEC 6.3 invariants (balanced at commit, one-sided lines, immutable), lines only in the creating transaction, and journals joined to the hash chain (`verify_journal_chain`). Tests T-20, T-21.
 - M1.2: `post_journal` (the only journal writer: balance, whole cents, active accounts, one currency, loan receivable tagging, period locks, audit), `next_number` with a global loan counter (B-02) and 6-digit expense numbers (B-03), `set_sequence_start` for continuing paper numbering before go-live, `period_locks`. Test T-22.
 - M1.3: `/ledger` for accountant, manager, CEO and admin: journals with expandable lines, date and branch filters, pagination; trial balance as at a date with a balanced check; `trial_balance()` SQL function.
+- M1.4: `approval_requests` (maker-checker inbox table) and the manual journal request: form on `/ledger` for accountant and admin with live totals, validated under the real posting rules, waiting for a manager's decision (decisions arrive with M2).
 ### Fixed
+- M1.4: Errors on individual journal lines are shown (form resolver now nests errors).
 - M1.3: Wide tables on phones are now keyboard-scrollable (WCAG 2.1.1).
 - M1.1: New functions no longer get EXECUTE for PUBLIC by default.
 

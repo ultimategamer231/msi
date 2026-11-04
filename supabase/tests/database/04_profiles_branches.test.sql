@@ -22,7 +22,8 @@ select is(tests.value_as('authenticated', :'inactive_id', 'select public.is_staf
   'a deactivated user is not staff');
 select is(tests.value_as('authenticated', :'inactive_id', 'select count(*) from public.branches')::int, 0,
   'a deactivated user reads nothing');
-select is(tests.value_as('authenticated', :'cashier_id', 'select count(*) from public.branches')::int, 3,
+select is(tests.value_as('authenticated', :'cashier_id', 'select count(*) from public.branches')::int,
+  (select count(*)::int from public.branches),
   'staff read all branches (SPEC 4: reads are not branch-scoped)');
 
 -- Profile branch rule (SPEC 4, B-11).
