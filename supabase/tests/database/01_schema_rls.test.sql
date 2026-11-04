@@ -45,8 +45,8 @@ select set_eq(
   array['app_now', 'business_today', 'environment_kind', 'auth_role', 'auth_branch', 'is_staff',
         'update_setting', 'upsert_branch', 'admin_set_profile', 'public_branding',
         'admin_record_password_reset', 'set_sequence_start', 'trial_balance',
-        'request_manual_journal'],
-  'clients can call exactly the M0 RPCs and helpers');
+        'request_manual_journal', 'create_customer', 'add_customer_documents'],
+  'clients can call exactly the released RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).
 select ok(
@@ -55,8 +55,9 @@ select ok(
   'a cashier cannot insert into settings directly');
 
 -- public_branding exposes the company name only.
-select is(tests.value_as('anon', null, $$select public.public_branding()::text$$),
-  '{"name": "Method Solutions Inc.", "logo_path": "branding/msi-logo.png", "short_name": "MSI"}',
+select is(tests.value_as('anon', null, $$select public.public_branding()::text$$)::jsonb,
+  (select jsonb_build_object('name', value ->> 'name', 'short_name', value ->> 'short_name', 'logo_path', value ->> 'logo_path')
+     from public.settings where key = 'company'),
   'public_branding returns the name, short name and logo path only');
 select matches(tests.try_as('anon', null, $$select count(*) from public.settings$$),
   '^permission denied', 'signed-out visitors cannot read settings directly');

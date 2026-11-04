@@ -128,6 +128,54 @@ export type Database = {
           },
         ];
       };
+      attachments: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          entity_id: string;
+          entity_type: string;
+          file_name: string;
+          id: string;
+          kind: string;
+          mime: string;
+          size_bytes: number;
+          storage_path: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          entity_id: string;
+          entity_type: string;
+          file_name: string;
+          id?: string;
+          kind: string;
+          mime: string;
+          size_bytes: number;
+          storage_path: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          entity_id?: string;
+          entity_type?: string;
+          file_name?: string;
+          id?: string;
+          kind?: string;
+          mime?: string;
+          size_bytes?: number;
+          storage_path?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "attachments_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       audit_log: {
         Row: {
           action: string;
@@ -235,6 +283,133 @@ export type Database = {
           {
             foreignKeyName: "branches_updated_by_fkey";
             columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      customers: {
+        Row: {
+          address: string | null;
+          assigned_officer_id: string | null;
+          branch_id: string;
+          business_name: string | null;
+          city: string | null;
+          code: string;
+          contact_person: string | null;
+          created_at: string;
+          created_by: string;
+          date_of_birth: string | null;
+          employer_or_business: string | null;
+          first_name: string | null;
+          id: string;
+          id_number: string | null;
+          id_number_key: string | null;
+          id_type: string | null;
+          last_name: string | null;
+          next_of_kin_name: string | null;
+          next_of_kin_phone: string | null;
+          next_of_kin_relation: string | null;
+          notes: string | null;
+          occupation: string | null;
+          phone: string;
+          phone_alt: string | null;
+          phone_alt_key: string | null;
+          phone_key: string | null;
+          photo_path: string | null;
+          registration_no: string | null;
+          search_text: string | null;
+          status: string;
+          type: string;
+          customer_display_name: string | null;
+          validate_customer: undefined | null;
+        };
+        ComputedFields: "customer_display_name" | "validate_customer";
+        Insert: {
+          address?: string | null;
+          assigned_officer_id?: string | null;
+          branch_id: string;
+          business_name?: string | null;
+          city?: string | null;
+          code: string;
+          contact_person?: string | null;
+          created_at?: string;
+          created_by: string;
+          date_of_birth?: string | null;
+          employer_or_business?: string | null;
+          first_name?: string | null;
+          id?: string;
+          id_number?: string | null;
+          id_number_key?: never;
+          id_type?: string | null;
+          last_name?: string | null;
+          next_of_kin_name?: string | null;
+          next_of_kin_phone?: string | null;
+          next_of_kin_relation?: string | null;
+          notes?: string | null;
+          occupation?: string | null;
+          phone: string;
+          phone_alt?: string | null;
+          phone_alt_key?: never;
+          phone_key?: never;
+          photo_path?: string | null;
+          registration_no?: string | null;
+          search_text?: never;
+          status?: string;
+          type: string;
+        };
+        Update: {
+          address?: string | null;
+          assigned_officer_id?: string | null;
+          branch_id?: string;
+          business_name?: string | null;
+          city?: string | null;
+          code?: string;
+          contact_person?: string | null;
+          created_at?: string;
+          created_by?: string;
+          date_of_birth?: string | null;
+          employer_or_business?: string | null;
+          first_name?: string | null;
+          id?: string;
+          id_number?: string | null;
+          id_number_key?: never;
+          id_type?: string | null;
+          last_name?: string | null;
+          next_of_kin_name?: string | null;
+          next_of_kin_phone?: string | null;
+          next_of_kin_relation?: string | null;
+          notes?: string | null;
+          occupation?: string | null;
+          phone?: string;
+          phone_alt?: string | null;
+          phone_alt_key?: never;
+          phone_key?: never;
+          photo_path?: string | null;
+          registration_no?: string | null;
+          search_text?: never;
+          status?: string;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "customers_assigned_officer_id_fkey";
+            columns: ["assigned_officer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customers_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customers_created_by_fkey";
+            columns: ["created_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
@@ -562,6 +737,7 @@ export type Database = {
     };
     Functions: {
       account_component: { Args: { p_code: string }; Returns: string };
+      add_customer_documents: { Args: { p_customer_id: string; p_files: Json }; Returns: undefined };
       admin_record_password_reset: { Args: { p_user_id: string }; Returns: undefined };
       admin_set_profile: {
         Args: {
@@ -588,9 +764,38 @@ export type Database = {
       auth_role: { Args: Record<PropertyKey, never>; Returns: Database["public"]["Enums"]["app_role"] };
       business_today: { Args: Record<PropertyKey, never>; Returns: string };
       chain_genesis: { Args: { p_chain: string }; Returns: string };
+      claim_upload: { Args: { p_images_only?: boolean; p_path: string }; Returns: Json };
       clock_override_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
+      create_customer: { Args: { p_customer: Json }; Returns: string };
+      customer_clean: { Args: { p_input: Json }; Returns: Json };
+      customer_display_name: {
+        Args: {
+          p_customer: Omit<
+            Database["public"]["Tables"]["customers"]["Row"],
+            Database["public"]["Tables"]["customers"]["ComputedFields"]
+          >;
+        };
+        Returns: string;
+      };
+      customer_editable_fields: { Args: Record<PropertyKey, never>; Returns: string[] };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
+      find_duplicate_customers: {
+        Args: { p_exclude?: string; p_id_number: string; p_phone: string; p_phone_alt: string };
+        Returns: Json;
+      };
       global_sequence_branch: { Args: Record<PropertyKey, never>; Returns: string };
+      guard_duplicate_customer: {
+        Args: {
+          p_override: boolean;
+          p_override_reason: string;
+          p_row: Omit<
+            Database["public"]["Tables"]["customers"]["Row"],
+            Database["public"]["Tables"]["customers"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      id_number_key: { Args: { p_id: string }; Returns: string };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       journal_content_digest: {
         Args: {
@@ -608,7 +813,12 @@ export type Database = {
       journal_lines_canonical: { Args: { p_journal_id: string }; Returns: Json };
       jsonb_is_short_text: { Args: { p: Json; p_max: number }; Returns: boolean };
       jsonb_is_whole_number: { Args: { p: Json }; Returns: boolean };
+      link_attachments: {
+        Args: { p_entity_id: string; p_entity_type: string; p_files: Json };
+        Returns: Json;
+      };
       next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
+      phone_key: { Args: { p_phone: string }; Returns: string };
       post_journal: {
         Args: {
           p_branch: string;
@@ -645,6 +855,15 @@ export type Database = {
       };
       update_setting: { Args: { p_key: string; p_value: Json }; Returns: Json };
       upsert_branch: { Args: { p_branch: Json }; Returns: string };
+      validate_customer: {
+        Args: {
+          p_row: Omit<
+            Database["public"]["Tables"]["customers"]["Row"],
+            Database["public"]["Tables"]["customers"]["ComputedFields"]
+          >;
+        };
+        Returns: undefined;
+      };
       validate_setting: { Args: { p_key: string; p_value: Json }; Returns: undefined };
       verify_audit_chain: { Args: Record<PropertyKey, never>; Returns: number };
       verify_journal_chain: { Args: Record<PropertyKey, never>; Returns: number };

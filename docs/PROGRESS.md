@@ -2,11 +2,23 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M1 Ledger core complete (report `docs/reports/PHASE-M1.md`); M0 and M1 in review on PR #1 |
-| Current block | M1 follow-up done (B-22 logo on sign-in, R-12 advisors in CI) |
-| Last approved block | Continuous mode from M0.2 on (Foday 2026-11-04): next block starts automatically once pushed and CI is green |
-| State | **Waiting for Foday's approval to start M2** (phases need approval) |
-| Next step | On approval: M2 phase plan check, then M2.1 Customers |
+| Current phase | M2 Customers (approved by Foday 2026-11-04); M0 and M1 in review on PR #1 |
+| Current block | M2.1 Customers, duplicate guard, attachments (database) |
+| Last approved block | M2 phase start (Foday 2026-11-04); blocks continue automatically once pushed and CI is green |
+| State | Working on M2 |
+| Next step | M2.2 Customer list and new-customer form |
+
+## M2 plan (Customers: FR-03, FR-04, FR-05, FR-28; T-29, T-32)
+
+| Block | Content | Done when |
+| --- | --- | --- |
+| M2.1 | `customers` (SPEC 7.2), `attachments` (append-only), private `documents` bucket with own-folder uploads, `create_customer` with duplicate guard (phone, second phone, ID number; manager override with reason), `add_customer_documents` | T-32 and RLS tests pass |
+| M2.2 | `/customers` list (search by name, phone, ID, code; status, branch and officer filters; 25 per page) and `/customers/new` (individual and business, photo and document upload, duplicate warning listing the existing record) | e2e at 390 and 1280 px with axe |
+| M2.3 | `request_customer_edit` (edits and blacklisting), `decide_approval` dispatcher (customer edits, blacklist, manual journals), R10 capital-in request (R-14) | T-29 passes; approved manual journal posts |
+| M2.4 | Customer profile (mock-up 08) with pending-change notice and documents; approvals inbox (mock-up 12) with Waiting, Approved, Rejected, Mine; top-bar approvals count | "inbox shows pending edit and applies it" |
+| M2.5 | `guarantors` table (loan link added with loans in M3), guarantor form section for the loan wizard; demo seed customers and the pending phone edit; M2 phase report | all checks green |
+
+Loans, collateral and total owed on the profile arrive with M3 and M6; the panels are not shown before their data exists.
 
 ## Session start checklist (cloud container)
 
@@ -32,3 +44,4 @@
 | 2026-11-04 | M1.3 | /ledger (journals with lines, filters, pagination; trial balance with balanced check), trial_balance() function, ScrollRegion a11y fix; 139 DB tests, 97 e2e checks |
 | 2026-11-04 | M1.4 | approval_requests, request_manual_journal (dry-run validation), manual journal tab on /ledger, resolver nesting fix, data-independent DB tests; M1 phase report |
 | 2026-11-04 | M1 follow-up | Foday answered B-22 (approved) and asked for recommended defaults elsewhere: public logo on sign-in, db advisors in CI, FK indexes; B-23, R-14, PR #1 decisions recorded |
+| 2026-11-04 | M2.1 | customers, attachments, documents bucket, create_customer with duplicate guard (T-32), add_customer_documents; 186 database tests |
