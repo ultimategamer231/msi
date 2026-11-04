@@ -1,7 +1,7 @@
 -- M3.4: collateral pledge and disbursement (SPEC 5.3, 5.4, 5.9; R1; T-23, T-35).
 begin;
 \ir _helpers.psql
-select plan(23);
+select plan(25);
 
 select id as br2 from public.branches where code = 'BR2' \gset
 select id as br3 from public.branches where code = 'BR3' \gset
@@ -101,7 +101,8 @@ select matches(tests.try_as('authenticated', :'cashier_id', format(
 delete from public.period_locks where branch_id = (select id from public.branches where code = 'TF');
 
 select is(tests.try_as('authenticated', :'cashier_id', format(
-  $$select public.disburse_loan('%s', 'cash', null, null)$$, :'loan_a')), null, 'the cashier pays out the loan');
+  $$select public.disburse_loan('%s', 'cash', null, null); set constraints all immediate; set constraints all deferred$$, :'loan_a')), null,
+  'the cashier pays out the loan, and the commit-time ledger checks pass under the cashier''s own rights');
 select results_eq(format($$select status, disbursed_on, due_date, disbursement_method from public.loans where id = '%s'$$, :'loan_a'),
   $$values ('active'::text, '2026-01-05'::date, '2026-02-05'::date, 'cash'::text)$$,
   'the loan is active and due one calendar month later (T-02)');
@@ -112,11 +113,20 @@ select results_eq(
   $$values ('1100'::text, 100000::bigint, 0::bigint, 'principal'::text), ('1110', 20000, 0, 'interest'),
            ('1010-TF', 0, 100000, null), ('4000', 0, 20000, null)$$,
   'R1: Dr 1100 principal, Dr 1110 interest, Cr branch cash, Cr 4000 interest income');
+select tests.become('authenticated', :'cashier_id');
+select lives_ok('set constraints all immediate', 'deferred balance checks see every line even for a role that cannot read the ledger');
+set constraints all deferred;
+select tests.unbecome();
 select tests.become('authenticated', :'officer_id');
 select results_eq(format($$select principal_out, interest_out, total_out from public.loan_balances where loan_id = '%s'$$, :'loan_a'),
   $$values (100000::bigint, 20000::bigint, 120000::bigint)$$, 'the borrower owes 120000 (T-01)');
 select tests.unbecome();
 select is((select count(*)::int from public.audit_log where action = 'loan.disbursed' and entity_id = :'loan_a'), 1, 'the payout is audited');
+select tests.become('authenticated', :'officer_id');
+select results_eq(format($$select source_type, component, amount_cents from public.loan_activity('%s')$$, :'loan_a'),
+  $$values ('disbursement'::text, 'principal'::text, 100000::bigint), ('disbursement', 'interest', 20000)$$,
+  'loan_activity lists the payout per component for any staff member');
+select tests.unbecome();
 select matches(tests.try_as('authenticated', :'cashier_id', format(
   $$select public.disburse_loan('%s', 'cash', null, null)$$, :'loan_a')), '^INVALID_STATE', 'a loan is paid out only once');
 
