@@ -2,6 +2,12 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
+## [M1 Ledger core] unreleased
+### Added
+- M1.1: Chart of accounts (SPEC 6.1) with a cash account per branch created automatically; `journals` and `journal_lines` with the SPEC 6.3 invariants (balanced at commit, one-sided lines, immutable), lines only in the creating transaction, and journals joined to the hash chain (`verify_journal_chain`). Tests T-20, T-21.
+### Fixed
+- M1.1: New functions no longer get EXECUTE for PUBLIC by default.
+
 ## [M0 Foundation] 2026-11-04 (in review, PR #1)
 ### Added
 - M0.6: `/audit` read-only audit log for manager, CEO and admin with filters and before/after changes; `pnpm seed:demo [--as-of]` creating the DEMO_DATA staff accounts through audited RPCs.

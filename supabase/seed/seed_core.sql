@@ -38,3 +38,31 @@ values
   -- B-01 business clock: real time unless a demo or test environment moves it.
   ('clock.override_at', 'null')
 on conflict (key) do nothing;
+
+-- M1: chart of accounts (SPEC 6.1). Branch cash accounts 1010-<BR> are created by the
+-- branches_cash_account trigger for every branch. Retained earnings is computed, not an account.
+insert into public.accounts (code, name, type)
+values
+  ('1015', 'Field Cash (unremitted)', 'asset'),
+  ('1020', 'Bank', 'asset'),
+  ('1030', 'Mobile Money', 'asset'),
+  ('1100', 'Loans Receivable – Principal', 'asset'),
+  ('1110', 'Interest Receivable', 'asset'),
+  ('1120', 'Penalties Receivable', 'asset'),
+  ('2000', 'Accounts Payable', 'liability'),
+  ('2100', 'Customer Surplus Payable', 'liability'),
+  ('3000', 'Owner''s Capital', 'equity'),
+  ('3900', 'Opening Balance Equity', 'equity'),
+  ('4000', 'Interest Income', 'income'),
+  ('4010', 'Penalty Income', 'income'),
+  ('4100', 'Recoveries of Written-off Loans', 'income'),
+  ('4900', 'Other Income', 'income'),
+  ('5000', 'Salaries and Wages', 'expense'),
+  ('5010', 'Rent', 'expense'),
+  ('5020', 'Utilities and Internet', 'expense'),
+  ('5030', 'Transport and Fuel', 'expense'),
+  ('5040', 'Legal and Recovery Costs', 'expense'),
+  ('5050', 'Bad Debts Expense', 'expense'),
+  ('5060', 'Bank and Mobile Money Charges', 'expense'),
+  ('5900', 'Other Expenses', 'expense')
+on conflict (code) do nothing;

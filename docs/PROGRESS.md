@@ -2,11 +2,11 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M0 Foundation complete (report: `docs/reports/PHASE-M0.md`); M1 Ledger core next |
-| Current block | M0.6 done; M0 phase report posted |
+| Current phase | M1 Ledger core (M0 complete, report `docs/reports/PHASE-M0.md`, in review on PR #1) |
+| Current block | M1.1 Chart of accounts and journals (done, pushed) |
 | Last approved block | Continuous mode from M0.2 on (Foday 2026-11-04): next block starts automatically once pushed and CI is green |
-| State | M0 pushed; M1.1 starts when CI is green |
-| Next step | M1.1 Chart of accounts, journals, journal lines, invariant triggers (T-20, T-21) |
+| State | M1.1 pushed; M1.2 starts when CI is green |
+| Next step | M1.2 post_journal, next_number (global loan counter, 6-digit EXP), set_sequence_start, period locks (T-22) |
 
 ## Session start checklist (cloud container)
 
@@ -27,3 +27,4 @@
 | 2026-11-04 | M0.4 | App shell: sidebar, top bar, phone header and bottom tabs with More sheet, role-aware navigation, logo via signed URL, skeleton/error states, skip link; 39 e2e checks |
 | 2026-11-04 | M0.5 | /settings for the admin: company header, logo upload, reminder texts, branches, rule settings, demo clock, users (create, edit, deactivate, reset password); null-setting fix; 75 e2e checks |
 | 2026-11-04 | M0.6 | /audit screen, seed:demo (M0 part), phase checks, security review (no findings), M0 phase report |
+| 2026-11-04 | M1.1 | accounts (SPEC 6.1) with branch cash accounts, journals and journal_lines with balance, one-sided, immutable, same-transaction and hash-chain invariants; T-20, T-21; global function grant fix |

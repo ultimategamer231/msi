@@ -3,6 +3,48 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      accounts: {
+        Row: {
+          active: boolean;
+          branch_id: string | null;
+          code: string;
+          created_at: string;
+          id: string;
+          is_cash: boolean;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          branch_id?: string | null;
+          code: string;
+          created_at?: string;
+          id?: string;
+          is_cash?: boolean;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        };
+        Update: {
+          active?: boolean;
+          branch_id?: string | null;
+          code?: string;
+          created_at?: string;
+          id?: string;
+          is_cash?: boolean;
+          name?: string;
+          type?: Database["public"]["Enums"]["account_type"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "accounts_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       app_environment: {
         Row: {
           id: boolean;
@@ -173,6 +215,154 @@ export type Database = {
         };
         Relationships: [];
       };
+      journal_lines: {
+        Row: {
+          account_id: string;
+          component: string | null;
+          credit_cents: number;
+          currency: string;
+          customer_id: string | null;
+          debit_cents: number;
+          fx_rate_micros: number;
+          id: string;
+          journal_id: string;
+          line_no: number;
+          loan_id: string | null;
+          payee_id: string | null;
+          staff_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          account_id: string;
+          component?: string | null;
+          credit_cents?: number;
+          currency?: string;
+          customer_id?: string | null;
+          debit_cents?: number;
+          fx_rate_micros?: number;
+          id?: string;
+          journal_id: string;
+          line_no: number;
+          loan_id?: string | null;
+          payee_id?: string | null;
+          staff_id?: string | null;
+        };
+        Update: {
+          account_id?: string;
+          component?: string | null;
+          credit_cents?: number;
+          currency?: string;
+          customer_id?: string | null;
+          debit_cents?: number;
+          fx_rate_micros?: number;
+          id?: string;
+          journal_id?: string;
+          line_no?: number;
+          loan_id?: string | null;
+          payee_id?: string | null;
+          staff_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "journal_lines_account_id_fkey";
+            columns: ["account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_staff_id_fkey";
+            columns: ["staff_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      journals: {
+        Row: {
+          branch_id: string | null;
+          chain_no: number;
+          content_hash: string;
+          entry_date: string;
+          hash: string;
+          id: string;
+          journal_no: string;
+          memo: string;
+          posted_at: string;
+          posted_by: string | null;
+          posted_txid: number;
+          prev_hash: string;
+          reversal_of: string | null;
+          source_id: string | null;
+          source_type: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          branch_id?: string | null;
+          chain_no: number;
+          content_hash: string;
+          entry_date: string;
+          hash: string;
+          id?: string;
+          journal_no: string;
+          memo: string;
+          posted_at?: string;
+          posted_by?: string | null;
+          posted_txid?: number;
+          prev_hash: string;
+          reversal_of?: string | null;
+          source_id?: string | null;
+          source_type: string;
+        };
+        Update: {
+          branch_id?: string | null;
+          chain_no?: number;
+          content_hash?: string;
+          entry_date?: string;
+          hash?: string;
+          id?: string;
+          journal_no?: string;
+          memo?: string;
+          posted_at?: string;
+          posted_by?: string | null;
+          posted_txid?: number;
+          prev_hash?: string;
+          reversal_of?: string | null;
+          source_id?: string | null;
+          source_type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "journals_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journals_posted_by_fkey";
+            columns: ["posted_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journals_reversal_of_fkey";
+            columns: ["reversal_of"];
+            isOneToOne: true;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           active: boolean;
@@ -299,6 +489,20 @@ export type Database = {
       clock_override_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
+      journal_content_digest: {
+        Args: {
+          p_branch_id: string;
+          p_entry_date: string;
+          p_journal_no: string;
+          p_lines: Json;
+          p_memo: string;
+          p_reversal_of: string;
+          p_source_id: string;
+          p_source_type: string;
+        };
+        Returns: string;
+      };
+      journal_lines_canonical: { Args: { p_journal_id: string }; Returns: Json };
       jsonb_is_short_text: { Args: { p: Json; p_max: number }; Returns: boolean };
       jsonb_is_whole_number: { Args: { p: Json }; Returns: boolean };
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
@@ -311,12 +515,14 @@ export type Database = {
       upsert_branch: { Args: { p_branch: Json }; Returns: string };
       validate_setting: { Args: { p_key: string; p_value: Json }; Returns: undefined };
       verify_audit_chain: { Args: Record<PropertyKey, never>; Returns: number };
+      verify_journal_chain: { Args: Record<PropertyKey, never>; Returns: number };
       write_audit: {
         Args: { p_action: string; p_after: Json; p_before: Json; p_entity_id: string; p_entity_type: string };
         Returns: undefined;
       };
     };
     Enums: {
+      account_type: "asset" | "liability" | "equity" | "income" | "expense";
       app_role: "admin" | "ceo" | "manager" | "accountant" | "cashier" | "loan_officer";
     };
     CompositeTypes: {
@@ -428,6 +634,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      account_type: ["asset", "liability", "equity", "income", "expense"],
       app_role: ["admin", "ceo", "manager", "accountant", "cashier", "loan_officer"],
     },
   },
