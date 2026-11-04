@@ -784,5 +784,98 @@
       "phone": "Enter a phone number with 7 to 15 digits.",
       "tooMany": "At most 3 guarantors."
     }
+  },
+  "loans": {
+    "validation": {
+      "required": "Required.",
+      "amount": "Enter an amount in dollars, for example 1000 or 1,000.00.",
+      "term": "Choose the term.",
+      "tooLong": "This is too long."
+    },
+    "wizard": {
+      "title": "New loan",
+      "loading": "Loading the loan form",
+      "allLoans": "All loans",
+      "intro": "Five short steps. Nothing is saved until you send the application; a manager (or the CEO above the limit) approves it before the cashier pays out.",
+      "noProducts": "No loan product is offered. Ask the administrator to add one under Settings, Loan products.",
+      "stepsLabel": "Application steps",
+      "stepHeading": "Step {number} of {total}: {title}",
+      "steps": {
+        "customer": "Customer",
+        "loan": "Amount and term",
+        "collateral": "Collateral",
+        "guarantors": "Guarantors",
+        "review": "Check and send"
+      },
+      "searchCustomer": "Find the customer",
+      "searchHelp": "Type at least 2 letters or digits of the name, phone, ID number or code.",
+      "matches": "Matching customers",
+      "noMatches": "No active customer matches. Register the customer first.",
+      "changeCustomer": "Change customer",
+      "chooseCustomer": "Choose the customer first.",
+      "product": "Loan product",
+      "productRate": "{rate} per month",
+      "principal": "Amount to lend ($)",
+      "term": "Term",
+      "months": "{count, plural, one {# month} other {# months}}",
+      "officer": "Loan officer",
+      "noOfficer": "No officer",
+      "purpose": "Purpose (optional)",
+      "preview": {
+        "empty": "Enter the amount to see the interest, total and due date.",
+        "interest": "Interest",
+        "total": "Total to repay",
+        "due": "Due date if paid out today",
+        "explain": "Flat interest at {rate} per month, charged when the loan is paid out.",
+        "penalty": "If unpaid, the first penalty of {amount} is charged on {date}.",
+        "manager": "A manager approves loans up to {limit}.",
+        "ceo": "Above {limit}: the CEO approves this loan."
+      },
+      "collateralIntro": "Collateral is optional for this product setting. Pick the borrower's items or add a new one.",
+      "collateralIntroRequired": "Every loan needs collateral (A-10). Pick the borrower's items or add a new one.",
+      "loadingCollateral": "Loading the borrower's items…",
+      "noCollateral": "The borrower has no free items registered yet.",
+      "existingItems": "Borrower's items",
+      "newItem": "new",
+      "remove": "Remove",
+      "addItem": "Add a new item",
+      "collateralNeeded": "Add at least one collateral item.",
+      "item": {
+        "heading": "New collateral item",
+        "type": "Type",
+        "description": "Description",
+        "serialNo": "Serial number (optional)",
+        "plateNo": "Plate number (optional)",
+        "documentNo": "Document number (optional)",
+        "value": "Estimated value ($)",
+        "location": "Where it is kept (optional)",
+        "add": "Add item",
+        "cancel": "Cancel"
+      },
+      "types": {
+        "vehicle": "Vehicle",
+        "land_document": "Land document",
+        "electronics": "Electronics",
+        "goods": "Goods",
+        "savings_lien": "Savings lien",
+        "other": "Other"
+      },
+      "guarantorDoc": "Guarantor's ID scan (optional)",
+      "guarantorDocHelp": "JPG, PNG, WebP or PDF, up to 10 MB.",
+      "summary": {
+        "customer": "Customer",
+        "product": "Product",
+        "principal": "Amount",
+        "term": "Term",
+        "collateral": "Collateral",
+        "guarantors": "Guarantors",
+        "none": "None"
+      },
+      "back": "Back",
+      "next": "Next",
+      "submit": "Send for approval",
+      "saveDraft": "Save as draft",
+      "sending": "Sending…"
+    }
   }
 }

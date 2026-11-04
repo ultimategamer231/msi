@@ -2,6 +2,7 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import type { ReactNode } from "react";
 import { useFieldArray, type UseFormReturn } from "react-hook-form";
 
 import { Field, describedBy, inputClass } from "@/components/forms/fields";
@@ -18,7 +19,16 @@ export interface GuarantorFormValues {
 
 const TEXT_FIELDS = ["fullName", "phone", "relationship", "address", "idNumber"] as const;
 
-export function GuarantorFields({ form }: { form: UseFormReturn<GuarantorFormValues> }) {
+export function GuarantorFields({
+  form,
+  extra,
+  onRemove,
+}: {
+  form: UseFormReturn<GuarantorFormValues>;
+  /** Extra fields shown under each guarantor (the loan wizard adds the ID scan). */
+  extra?: (index: number) => ReactNode;
+  onRemove?: (index: number) => void;
+}) {
   const t = useTranslations("guarantors");
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "guarantors" });
   const errors = form.formState.errors.guarantors;
@@ -40,7 +50,10 @@ export function GuarantorFields({ form }: { form: UseFormReturn<GuarantorFormVal
                 type="button"
                 variant="ghost"
                 size="icon"
-                onClick={() => remove(index)}
+                onClick={() => {
+                  remove(index);
+                  onRemove?.(index);
+                }}
                 aria-label={t("remove", { number: index + 1 })}
               >
                 <Trash2 aria-hidden="true" />
@@ -83,6 +96,7 @@ export function GuarantorFields({ form }: { form: UseFormReturn<GuarantorFormVal
                 </select>
               </Field>
             </div>
+            {extra?.(index)}
           </div>
         );
       })}
