@@ -178,6 +178,309 @@ const DEMO_CUSTOMERS: readonly DemoCustomer[] = [
   },
 ];
 
+// Opening capital (R10) on 01 Nov 2025 = A-103 for the demo anchor. Placeholder amounts until the
+// M8 day-close reconciliation; every demo loan is paid out from Branch 2 cash by Grace Flomo (B-10).
+const DEMO_CAPITAL_DAYS_BEFORE = 103;
+const DEMO_CAPITAL: ReadonlyArray<[string, number]> = [
+  ["1010-BR1", 500000],
+  ["1010-BR2", 1000000],
+  ["1010-BR3", 300000],
+];
+
+interface DemoCollateral {
+  number: number;
+  loanNo: string;
+  owner: string;
+  officerEmail: string;
+  type: string;
+  description: string;
+  serialNo?: string;
+  plateNo?: string;
+  documentNo?: string;
+  valueCents: number;
+  location: string;
+  daysBefore: number;
+}
+
+// docs/DEMO_DATA.md "Collateral", in COL order, registered on the day of their loan.
+const DEMO_COLLATERAL: readonly DemoCollateral[] = [
+  {
+    number: 19,
+    loanNo: "LN-BR2-00002",
+    owner: "LR-0012345",
+    officerEmail: officer.BR2,
+    type: "electronics",
+    description: "Mobile phone",
+    valueCents: 25000,
+    location: "Branch 2 safe",
+    daysBefore: 94,
+  },
+  {
+    number: 22,
+    loanNo: "LN-BR2-00006",
+    owner: "LR-0012307",
+    officerEmail: officer.BR2,
+    type: "electronics",
+    description: "Sewing machine",
+    serialNo: "SM-4410",
+    valueCents: 65000,
+    location: "Branch 2 safe",
+    daysBefore: 30,
+  },
+  {
+    number: 24,
+    loanNo: "LN-BR2-00003",
+    owner: "LR-0012309",
+    officerEmail: officer.BR2,
+    type: "electronics",
+    description: "Mobile phone",
+    serialNo: "IMEI 3561 0902 7781",
+    valueCents: 20000,
+    location: "Branch 2 safe",
+    daysBefore: 33,
+  },
+  {
+    number: 25,
+    loanNo: "LN-BR2-00012",
+    owner: "LR-0012310",
+    officerEmail: officer.BR2,
+    type: "electronics",
+    description: "Chest freezer",
+    serialNo: "CF-20931",
+    valueCents: 40000,
+    location: "Branch 2 store",
+    daysBefore: 32,
+  },
+  {
+    number: 26,
+    loanNo: "LN-BR1-00011",
+    owner: "LR-0012301",
+    officerEmail: officer.BR1,
+    type: "electronics",
+    description: "Laptop",
+    serialNo: "LT-5521-9",
+    valueCents: 60000,
+    location: "Main vault",
+    daysBefore: 59,
+  },
+  {
+    number: 27,
+    loanNo: "LN-BR3-00005",
+    owner: "LR-0012304",
+    officerEmail: officer.BR3,
+    type: "vehicle",
+    description: "Motorbike",
+    plateNo: "MB 3307",
+    valueCents: 90000,
+    location: "Branch 3 office",
+    daysBefore: 23,
+  },
+  {
+    number: 28,
+    loanNo: "LN-BR2-00008",
+    owner: "LR-0012305",
+    officerEmail: officer.BR2,
+    type: "electronics",
+    description: "Flat-screen TV, 55 in",
+    serialNo: "TV-55-80412",
+    valueCents: 45000,
+    location: "Branch 2 safe",
+    daysBefore: 52,
+  },
+  {
+    number: 29,
+    loanNo: "LN-BR1-00013",
+    owner: "Dolo & Sons Trading",
+    officerEmail: officer.BR1,
+    type: "land_document",
+    description: "Land deed",
+    documentNo: "D-2217",
+    valueCents: 600000,
+    location: "Main vault",
+    daysBefore: 15,
+  },
+  {
+    number: 30,
+    loanNo: "LN-BR3-00004",
+    owner: "LR-0012303",
+    officerEmail: officer.BR3,
+    type: "vehicle",
+    description: "Toyota Corolla 2008",
+    plateNo: "BRK 4821",
+    valueCents: 420000,
+    location: "Branch 3 yard",
+    daysBefore: 69,
+  },
+  {
+    number: 31,
+    loanNo: "LN-BR2-00009",
+    owner: "LR-0012345",
+    officerEmail: officer.BR2,
+    type: "electronics",
+    description: "Honda EU22i generator",
+    serialNo: "GA-1000231",
+    valueCents: 140000,
+    location: "Branch 2 safe, shelf B2",
+    daysBefore: 38,
+  },
+  {
+    number: 32,
+    loanNo: "LN-BR2-00007",
+    owner: "LR-0012306",
+    officerEmail: officer.BR2,
+    type: "goods",
+    description: "Rice, 40 bags",
+    valueCents: 110000,
+    location: "Branch 2 store",
+    daysBefore: 31,
+  },
+  {
+    number: 33,
+    loanNo: "LN-BR2-00010",
+    owner: "LR-0012311",
+    officerEmail: officer.BR2,
+    type: "electronics",
+    description: "Sewing machine",
+    serialNo: "SM-7712",
+    valueCents: 70000,
+    location: "Branch 2 safe",
+    daysBefore: 1,
+  },
+  {
+    number: 34,
+    loanNo: "LN-BR1-00014",
+    owner: "LR-0012312",
+    officerEmail: officer.BR1,
+    type: "land_document",
+    description: "Land deed",
+    documentNo: "D-4410",
+    valueCents: 550000,
+    location: "Main vault",
+    daysBefore: 1,
+  },
+];
+
+interface DemoLoan {
+  loanNo: string;
+  customer: string;
+  officerEmail: string;
+  principalCents: number;
+  daysBefore: number;
+  purpose: string;
+  pendingOnly?: boolean;
+  guarantors?: Array<Record<string, string>>;
+}
+
+// docs/DEMO_DATA.md "Loans", in number order (the global loan counter, B-02).
+const DEMO_LOANS: readonly DemoLoan[] = [
+  {
+    loanNo: "LN-BR2-00002",
+    customer: "LR-0012345",
+    officerEmail: officer.BR2,
+    principalCents: 30000,
+    daysBefore: 94,
+    purpose: "Market stock",
+  },
+  {
+    loanNo: "LN-BR2-00003",
+    customer: "LR-0012309",
+    officerEmail: officer.BR2,
+    principalCents: 12500,
+    daysBefore: 33,
+    purpose: "Food stall supplies",
+  },
+  {
+    loanNo: "LN-BR3-00004",
+    customer: "LR-0012303",
+    officerEmail: officer.BR3,
+    principalCents: 150000,
+    daysBefore: 69,
+    purpose: "Taxi repairs",
+  },
+  {
+    loanNo: "LN-BR3-00005",
+    customer: "LR-0012304",
+    officerEmail: officer.BR3,
+    principalCents: 40000,
+    daysBefore: 23,
+    purpose: "Shop stock",
+  },
+  {
+    loanNo: "LN-BR2-00006",
+    customer: "LR-0012307",
+    officerEmail: officer.BR2,
+    principalCents: 50000,
+    daysBefore: 30,
+    purpose: "Fabric",
+  },
+  {
+    loanNo: "LN-BR2-00007",
+    customer: "LR-0012306",
+    officerEmail: officer.BR2,
+    principalCents: 60000,
+    daysBefore: 31,
+    purpose: "Shop stock",
+  },
+  {
+    loanNo: "LN-BR2-00008",
+    customer: "LR-0012305",
+    officerEmail: officer.BR2,
+    principalCents: 50000,
+    daysBefore: 52,
+    purpose: "Salon equipment",
+  },
+  {
+    loanNo: "LN-BR2-00009",
+    customer: "LR-0012345",
+    officerEmail: officer.BR2,
+    principalCents: 100000,
+    daysBefore: 38,
+    purpose: "Market stock",
+    guarantors: [{ full_name: "Joseph Kollie", phone: "0770 555 014", relationship: "Brother" }],
+  },
+  {
+    loanNo: "LN-BR2-00010",
+    customer: "LR-0012311",
+    officerEmail: officer.BR2,
+    principalCents: 50000,
+    daysBefore: 1,
+    purpose: "Sewing work",
+  },
+  {
+    loanNo: "LN-BR1-00011",
+    customer: "LR-0012301",
+    officerEmail: officer.BR1,
+    principalCents: 70000,
+    daysBefore: 59,
+    purpose: "Tailoring materials",
+  },
+  {
+    loanNo: "LN-BR2-00012",
+    customer: "LR-0012310",
+    officerEmail: officer.BR2,
+    principalCents: 25000,
+    daysBefore: 32,
+    purpose: "Spare parts",
+  },
+  {
+    loanNo: "LN-BR1-00013",
+    customer: "Dolo & Sons Trading",
+    officerEmail: officer.BR1,
+    principalCents: 180000,
+    daysBefore: 15,
+    purpose: "Wholesale stock",
+  },
+  {
+    loanNo: "LN-BR1-00014",
+    customer: "LR-0012312",
+    officerEmail: officer.BR1,
+    principalCents: 250000,
+    daysBefore: 1,
+    purpose: "Farm inputs",
+    pendingOnly: true,
+  },
+];
+
 // Staff accounts are created well before the first demo record (Mariama Kollie registered A-133).
 const STAFF_CREATED_DAYS_BEFORE_ANCHOR = 140;
 
@@ -359,6 +662,120 @@ async function main(): Promise<void> {
     await rpc(await signedIn(customer.officerEmail), "create_customer", {
       p_customer: { type: customer.type, ...customer.fields },
     });
+  }
+
+  // 4b. Loans (M3): opening capital, collateral and the DEMO_DATA loans, each created, approved and
+  //     paid out at its story date through the RPCs (the business clock moves to each date).
+  //     Repayments arrive with M4 and penalties with M5, so loans that DEMO_DATA shows as closed or
+  //     overdue with penalties are still open and without penalties at this stage.
+  const at = async (daysBefore: number, time = "10:00") =>
+    rpc(client, "update_setting", {
+      p_key: "clock.override_at",
+      p_value: { at: `${addDays(anchor, -daysBefore)}T${time}:00Z`, frozen: true },
+    });
+  const customerIds = new Map(
+    ownerQuery<{ id_number: string | null; business_name: string | null; id: string }>(
+      "select id, id_number, business_name from public.customers",
+    ).flatMap((row) => [
+      ...(row.id_number === null ? [] : [[row.id_number, row.id] as const]),
+      ...(row.business_name === null ? [] : [[row.business_name, row.id] as const]),
+    ]),
+  );
+  const existingLoans = new Set(
+    ownerQuery<{ loan_no: string }>("select loan_no from public.loans").map((row) => row.loan_no),
+  );
+  if (existingLoans.size === 0) {
+    const accountant = await signedIn("peter.zayzay@msi-demo.test");
+    const manager = await signedIn("rebecca.wolo@msi-demo.test");
+    const cashier = await signedIn("grace.flomo@msi-demo.test");
+    const [{ id: productId } = { id: "" }] = ownerQuery<{ id: string }>(
+      "select id from public.loan_products where name = 'Standard 1-month'",
+    );
+    const decide = async (type: string, match: string) => {
+      const [request] = ownerQuery<{ id: string }>(
+        `select id from public.approval_requests where type = ${sqlText(type)} and status = 'pending'
+           and (payload ->> 'memo' = ${sqlText(match)} or payload ->> 'loan_no' = ${sqlText(match)})`,
+      );
+      if (request === undefined) throw new Error(`No pending ${type} request for ${match}`);
+      await rpc(manager, "decide_approval", { p_id: request.id, p_decision: "approve", p_note: null });
+    };
+
+    // Opening capital before the first loan (placeholder amounts; reconciled with the day close in M8).
+    await at(DEMO_CAPITAL_DAYS_BEFORE, "08:30");
+    for (const [account, cents] of DEMO_CAPITAL) {
+      const memo = `Opening capital ${account}`;
+      await rpc(accountant, "request_capital_in", {
+        p_request: {
+          entry_date: addDays(anchor, -DEMO_CAPITAL_DAYS_BEFORE),
+          account,
+          amount_cents: cents,
+          memo,
+        },
+      });
+      await at(DEMO_CAPITAL_DAYS_BEFORE, "09:00");
+      await decide("capital_in", memo);
+    }
+
+    // Collateral in COL order; numbers below and between were paper records (B-02).
+    const collateralIds = new Map<string, string>();
+    for (const item of DEMO_COLLATERAL) {
+      const [{ last_value: current } = { last_value: 0 }] = ownerQuery<{ last_value: number }>(
+        "select last_value from public.document_sequences where kind = 'collateral'",
+      );
+      if (current < item.number - 1) {
+        await rpc(client, "set_sequence_start", {
+          p_kind: "collateral",
+          p_branch_id: null,
+          p_last_value: item.number - 1,
+        });
+      }
+      await at(item.daysBefore, "09:30");
+      const owner = customerIds.get(item.owner);
+      if (owner === undefined) throw new Error(`No demo customer ${item.owner}`);
+      const id = await rpc(await signedIn(item.officerEmail), "register_collateral", {
+        p_item: {
+          owner_customer_id: owner,
+          type: item.type,
+          description: item.description,
+          serial_no: item.serialNo ?? null,
+          plate_no: item.plateNo ?? null,
+          document_no: item.documentNo ?? null,
+          estimated_value_cents: item.valueCents,
+          location_note: item.location,
+        },
+      });
+      collateralIds.set(item.loanNo, String(id));
+    }
+
+    // Loans in number order. LN-00001 was a paper loan before the system.
+    await rpc(client, "set_sequence_start", { p_kind: "loan", p_branch_id: null, p_last_value: 1 });
+    for (const loan of DEMO_LOANS) {
+      const officerClient = await signedIn(loan.officerEmail);
+      const customerId = customerIds.get(loan.customer);
+      if (customerId === undefined) throw new Error(`No demo customer ${loan.customer}`);
+      await at(loan.daysBefore, "09:00");
+      const loanId = String(
+        await rpc(officerClient, "create_loan_draft", {
+          p_loan: {
+            customer_id: customerId,
+            product_id: productId,
+            principal_cents: loan.principalCents,
+            term_months: 1,
+            purpose: loan.purpose,
+            guarantors: loan.guarantors ?? [],
+          },
+        }),
+      );
+      const itemId = collateralIds.get(loan.loanNo);
+      if (itemId !== undefined)
+        await rpc(officerClient, "link_collateral", { p_loan_id: loanId, p_collateral_id: itemId });
+      await rpc(officerClient, "submit_loan", { p_loan_id: loanId });
+      if (loan.pendingOnly === true) continue;
+      await at(loan.daysBefore, "11:00");
+      await decide("loan_approval", loan.loanNo);
+      await at(loan.daysBefore, "14:00");
+      await rpc(cashier, "disburse_loan", { p_loan_id: loanId, p_method: "cash" });
+    }
   }
 
   // 5. Waiting on A (DEMO_DATA "Approvals waiting"): Emmanuel Tarpeh asks to change Mariama

@@ -320,13 +320,15 @@ async function LoansContent({ searchParams }: { searchParams: PageProps<"/loans"
                       });
                       return (
                         <tr key={row.id} className="border-t border-page">
-                          <td className="tabular px-4 py-3">
+                          <td className="tabular px-4 py-3 whitespace-nowrap">
                             <Link href={`/loans/${row.id}`} className="font-semibold">
                               {row.loan_no}
                             </Link>
                           </td>
                           <td className="px-4 py-3">{customerName(row.customers)}</td>
-                          <td className="px-4 py-3">{branchNames.get(row.branch_id) ?? ""}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {branchNames.get(row.branch_id) ?? ""}
+                          </td>
                           <td className="px-4 py-3">
                             {row.officer_id === null ? "–" : (names.get(row.officer_id) ?? "")}
                           </td>

@@ -36,7 +36,7 @@ select is(tests.try_as('authenticated', :'admin_id',
 select is(public.next_number('receipt', :'br2'), 'RCT-BR2-000120', 'the next receipt follows the paper series (DEMO_DATA)');
 select matches(tests.try_as('authenticated', :'admin_id',
   format($$select public.set_sequence_start('receipt', '%s', 50)$$, :'br2')), '^INVALID_STATE', 'a counter can never move back');
-select is((select count(*)::int from public.audit_log where action = 'sequence.started'), 1, 'setting a start value is audited');
+select is((select count(*)::int from public.audit_log where action = 'sequence.started' and actor_id = :'admin_id'), 1, 'setting a start value is audited');
 
 update public.settings set value = '"2026-01-01"' where key = 'migration.go_live_date';
 select matches(tests.try_as('authenticated', :'admin_id',
