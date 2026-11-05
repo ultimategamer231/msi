@@ -2,6 +2,18 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
+## [M3 Loans] 2026-11-05 (in review, PR #1)
+### Added
+- M3.1: Loan products as configuration with an admin tab in Settings; the standard 1-month product is seeded.
+- M3.2: Interest, rounding and due-date rules in the database (T-01, T-02, T-09); loans with the product's rules copied at submission; balances from the ledger; loan preview.
+- M3.3: Loan applications: draft, send for approval, approval by a manager up to the limit and by the CEO above it, never by the creator (T-17, T-18, T-19); cancel.
+- M3.4: Collateral register and pledge (minimal); payout by the cashier with collateral, funds, date and closed-day checks (T-23, T-35).
+- M3.5: New loan wizard with live preview, collateral and guarantors.
+- M3.6: Loans list, loan page with activity, collateral and guarantors; loans and total owed on the customer profile.
+- M3.7: Loan agreement PDF with verification QR code; demo loans, collateral and opening capital.
+### Fixed
+- M3.6: A cashier's payout was refused at commit because the ledger checks could not see the new lines.
+
 ## [M2 Customers] 2026-11-04 (in review, PR #1)
 ### Added
 - M2.1: Customer register (individual and business) with KYC fields, a duplicate check on phone, second phone and ID number (manager override with a reason), document attachments that are never deleted, and a private documents store.
