@@ -1,0 +1,199 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+ * MSI design tokens. Source: docs/mockups/README.md ("Design tokens") and the
+ * mock-up HTML in docs/mockups/html/. Light mode only in the MVP (SPEC 11).
+ * Components use these tokens only; raw hex values do not appear in components.
+ */
+:root {
+  /* Brand */
+  --msi-primary: #32207e;
+  --msi-primary-dark: #241660;
+  --msi-primary-tint: #e6e1f7;
+  --msi-on-primary-muted: #dcd6f5;
+  --msi-accent: #ffe103;
+  --msi-on-accent: #241660;
+
+  /* Surfaces and lines */
+  --msi-surface: #ffffff;
+  --msi-page: #f1f5f9;
+  --msi-subtle: #f8fafc;
+  --msi-border: #e2e8f0;
+  --msi-input: #cbd5e1;
+
+  /* Text */
+  --msi-text: #0f172a;
+  --msi-text-muted: #475569;
+  --msi-text-soft: #64748b;
+  --msi-text-strong-muted: #334155;
+
+  /* Status (fixed, never themed) */
+  --msi-active-bg: #dcfce7;
+  --msi-active-fg: #166534;
+  --msi-due-bg: #dbeafe;
+  --msi-due-fg: #1e3a8a;
+  --msi-overdue-bg: #ffedd5;
+  --msi-overdue-fg: #7c2d12;
+  --msi-overdue-strong: #c2410c;
+  --msi-recovery-bg: #0f172a;
+  --msi-recovery-fg: #ffffff;
+  --msi-pending-bg: #e2e8f0;
+  --msi-pending-fg: #334155;
+
+  /* Callouts and steps */
+  --msi-warning-bg: #fff7ed;
+  --msi-warning-border: #fdba74;
+  --msi-danger: #b91c1c;
+  --msi-step-done: #16a34a;
+  --msi-step-current: #1d4ed8;
+
+  /* shadcn/ui variable names mapped to MSI tokens */
+  --background: var(--msi-page);
+  --foreground: var(--msi-text);
+  --card: var(--msi-surface);
+  --card-foreground: var(--msi-text);
+  --popover: var(--msi-surface);
+  --popover-foreground: var(--msi-text);
+  --primary: var(--msi-primary);
+  --primary-foreground: #ffffff;
+  --secondary: var(--msi-page);
+  --secondary-foreground: var(--msi-text);
+  --muted: var(--msi-page);
+  --muted-foreground: var(--msi-text-muted);
+  --accent: var(--msi-primary-tint);
+  --accent-foreground: var(--msi-primary-dark);
+  --destructive: var(--msi-overdue-strong);
+  --destructive-foreground: #ffffff;
+  --border: var(--msi-border);
+  --input: var(--msi-input);
+  --ring: var(--msi-primary);
+  --radius: 10px;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: var(--msi-primary);
+  --color-primary-dark: var(--msi-primary-dark);
+  --color-primary-tint: var(--msi-primary-tint);
+  --color-on-primary-muted: var(--msi-on-primary-muted);
+  --color-brand-accent: var(--msi-accent);
+  --color-on-brand-accent: var(--msi-on-accent);
+
+  --color-surface: var(--msi-surface);
+  --color-page: var(--msi-page);
+  --color-subtle: var(--msi-subtle);
+  --color-line: var(--msi-border);
+  --color-line-input: var(--msi-input);
+
+  --color-ink: var(--msi-text);
+  --color-ink-muted: var(--msi-text-muted);
+  --color-ink-soft: var(--msi-text-soft);
+  --color-ink-strong-muted: var(--msi-text-strong-muted);
+
+  --color-status-active-bg: var(--msi-active-bg);
+  --color-status-active-fg: var(--msi-active-fg);
+  --color-status-due-bg: var(--msi-due-bg);
+  --color-status-due-fg: var(--msi-due-fg);
+  --color-status-overdue-bg: var(--msi-overdue-bg);
+  --color-status-overdue-fg: var(--msi-overdue-fg);
+  --color-status-overdue-strong: var(--msi-overdue-strong);
+  --color-status-recovery-bg: var(--msi-recovery-bg);
+  --color-status-recovery-fg: var(--msi-recovery-fg);
+  --color-status-pending-bg: var(--msi-pending-bg);
+  --color-status-pending-fg: var(--msi-pending-fg);
+
+  --color-warning-bg: var(--msi-warning-bg);
+  --color-warning-border: var(--msi-warning-border);
+  --color-danger: var(--msi-danger);
+  --color-step-done: var(--msi-step-done);
+  --color-step-current: var(--msi-step-current);
+
+  /* shadcn/ui utilities (bg-background, text-muted-foreground, ...) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary-foreground: var(--primary-foreground);
+
+  /* Radii from the mock-ups: controls 10px, cards 14px, badges pill */
+  --radius-control: 10px;
+  --radius-card: 14px;
+  --radius-tile: 12px;
+  --radius-badge: 999px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Motion (SPEC 11): 150-250 ms, ease-out */
+  --ease-out-quick: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 250ms;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Keep focused or scrolled-to fields clear of the phone bottom tab bar. */
+    scroll-padding-bottom: 5.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    html {
+      scroll-padding-bottom: 0;
+    }
+  }
+
+  body {
+    background-color: var(--msi-page);
+    color: var(--msi-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--msi-primary);
+    outline-offset: 2px;
+  }
+
+  a {
+    color: var(--msi-primary);
+  }
+
+  a:hover {
+    color: var(--msi-primary-dark);
+  }
+}
+
+@layer utilities {
+  /* Money and counts always use tabular figures */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
