@@ -26,6 +26,7 @@ export const ROUTES = {
   "/login": "public",
   "/verify/[token]": "public",
   "/api/health": "public",
+  "/api/pdf/[kind]/[id]": "staff", // SPEC 10.1; each kind checks the record and role again
 
   "/dashboard": "staff",
   "/customers": "staff",

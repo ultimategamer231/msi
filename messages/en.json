@@ -1052,7 +1052,50 @@
           "mobile_money": "Mobile money",
           "bank": "Bank"
         }
+      },
+      "documents": {
+        "heading": "Documents",
+        "agreement": "Loan agreement (PDF)",
+        "later": "The loan agreement can be printed once the loan is approved."
       }
+    }
+  },
+  "pdf": {
+    "agreement": {
+      "title": "Loan agreement",
+      "loanLine": "For loan {loan}",
+      "parties": "Parties",
+      "lender": "Lender",
+      "borrower": "Borrower",
+      "borrowerId": "Borrower's ID",
+      "borrowerPhone": "Borrower's phone",
+      "borrowerAddress": "Borrower's address",
+      "branch": "Branch and loan officer",
+      "loan": "The loan",
+      "principal": "Amount lent",
+      "interest": "Interest",
+      "total": "Total to repay",
+      "termLabel": "Term",
+      "dueDate": "Due date",
+      "product": "Product",
+      "purpose": "Purpose",
+      "rate": "{rate} flat × {months, plural, one {# month} other {# months}}",
+      "term": "{months, plural, one {# month} other {# months}}",
+      "dueAtPayout": "{months, plural, one {# month} other {# months}} after the payout date",
+      "terms": "Repayment and penalties",
+      "collateral": "Collateral",
+      "item": "Item",
+      "description": "Description",
+      "identifier": "Identifier",
+      "value": "Estimated value",
+      "guarantors": "Guarantors",
+      "none": "None",
+      "signBorrower": "Borrower's signature",
+      "signGuarantor": "Guarantor's signature",
+      "signCompany": "For {company}",
+      "dateLine": "Signed at ______________________ on ____ / ____ / ________",
+      "preparedBy": "Prepared by {name}",
+      "verify": "Check that this document is genuine by scanning the code or visiting:"
     }
   }
 }

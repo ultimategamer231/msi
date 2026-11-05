@@ -648,6 +648,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      issued_documents: {
+        Row: {
+          entity_id: string;
+          generated_at: string;
+          generated_by: string;
+          id: string;
+          is_void: boolean;
+          kind: string;
+          number: string;
+          token: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          entity_id: string;
+          generated_at?: string;
+          generated_by: string;
+          id?: string;
+          is_void?: boolean;
+          kind: string;
+          number: string;
+          token: string;
+        };
+        Update: {
+          entity_id?: string;
+          generated_at?: string;
+          generated_by?: string;
+          id?: string;
+          is_void?: boolean;
+          kind?: string;
+          number?: string;
+          token?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "issued_documents_generated_by_fkey";
+            columns: ["generated_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       journal_lines: {
         Row: {
           account_id: string;
@@ -1372,6 +1414,7 @@ export type Database = {
       };
       id_number_key: { Args: { p_id: string }; Returns: string };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
+      issue_document: { Args: { p_entity_id: string; p_kind: string }; Returns: Json };
       journal_content_digest: {
         Args: {
           p_branch_id: string;

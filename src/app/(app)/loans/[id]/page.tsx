@@ -430,6 +430,21 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
                 </ul>
               )}
             </Card>
+            <Card>
+              <h3 className="text-base font-bold text-ink">{t("documents.heading")}</h3>
+              {["draft", "pending_approval", "rejected", "cancelled"].includes(loan.status) ? (
+                <p className="mt-2 text-sm text-ink-muted">{t("documents.later")}</p>
+              ) : (
+                <a
+                  href={`/api/pdf/loan_agreement/${loan.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-block text-sm font-semibold underline"
+                >
+                  {t("documents.agreement")}
+                </a>
+              )}
+            </Card>
             {canCancel ? (
               <CancelLoanForm
                 loanId={loan.id}

@@ -19,6 +19,7 @@ const ALL: readonly Role[] = ROLES;
  */
 const EXPECTED: Record<Exclude<RouteKey, "/login" | "/verify/[token]" | "/api/health">, readonly Role[]> = {
   "/dashboard": ALL,
+  "/api/pdf/[kind]/[id]": ALL,
   "/customers": ALL,
   "/customers/new": ["loan_officer", "manager", "admin"],
   "/customers/[id]": ALL,

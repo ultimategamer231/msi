@@ -154,4 +154,44 @@ test.describe("loans list and detail (SPEC 9; mock-ups 06, 07, 08; FR-07, FR-08)
     await expectNoHorizontalScroll(page);
     await expectNoSeriousA11yIssues(page);
   });
+
+  test("the loan agreement PDF is numbered once and opens from the loan page (SPEC 10.1)", async ({
+    page,
+  }) => {
+    const fields = person();
+    const customer = await createTestCustomer(fixtureUser("loan_officer"), fields);
+    const loan = await submitTestLoan(fixtureUser("loan_officer"), customer.id, 80000);
+    await pledge(loan.id, customer.id);
+    const manager = await userClient(fixtureUser("manager"));
+    const { data: request } = await manager
+      .from("approval_requests")
+      .select("id")
+      .eq("entity_id", loan.id)
+      .single();
+    await manager.rpc("decide_approval", { p_id: request?.id, p_decision: "approve", p_note: "" });
+
+    await signInAs(page, fixtureUser("loan_officer"));
+    await page.goto(`/loans/${loan.id}`);
+    const link = page.getByRole("link", { name: "Loan agreement (PDF)" });
+    await expect(link).toHaveAttribute("href", `/api/pdf/loan_agreement/${loan.id}`);
+    for (let print = 0; print < 2; print += 1) {
+      const response = await page.request.get(`/api/pdf/loan_agreement/${loan.id}`);
+      expect(response.status()).toBe(200);
+      expect(response.headers()["content-type"]).toBe("application/pdf");
+      expect((await response.body()).subarray(0, 5).toString()).toBe("%PDF-");
+    }
+    const { data: documents } = await serviceClient()
+      .from("issued_documents")
+      .select("number")
+      .eq("entity_id", loan.id);
+    expect(documents).toEqual([{ number: `AGR-${loan.loanNo}` }]);
+
+    const signedOut = await page.context().browser()?.newContext();
+    const anonymous = await signedOut?.request.get(
+      `http://localhost:3000/api/pdf/loan_agreement/${loan.id}`,
+      { maxRedirects: 0 },
+    );
+    expect([302, 303, 307, 401]).toContain(anonymous?.status());
+    await signedOut?.close();
+  });
 });

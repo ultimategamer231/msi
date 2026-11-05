@@ -34,7 +34,9 @@ values
   -- SPEC 10.3 WhatsApp reminder texts (editable by admin).
   ('templates', jsonb_build_object(
       'reminder', 'Dear {name}, your loan {loan_no} of {amount} is due on {due_date}. Outstanding: {outstanding}. Please pay at {branch} or call {branch_phone}. Thank you. – {company}',
-      'reminder_overdue', 'Dear {name}, your loan {loan_no} was due on {due_date} and is {days_overdue} days overdue. Outstanding: {outstanding}, including penalties of {penalties}. Please pay at {branch} or call {branch_phone}. Thank you. – {company}')),
+      'reminder_overdue', 'Dear {name}, your loan {loan_no} was due on {due_date} and is {days_overdue} days overdue. Outstanding: {outstanding}, including penalties of {penalties}. Please pay at {branch} or call {branch_phone}. Thank you. – {company}',
+      -- SPEC 10.1: placeholder legal wording, visibly marked, for MSI's lawyer to replace.
+      'loan_agreement', '[PLACEHOLDER: to be reviewed by MSI''s lawyer before use] The borrower agrees to repay the total amount shown by the due date. Interest is charged once, at payout. If any amount is still unpaid after the due date, a penalty of {penalty_rate} of the amount then owed is added every {penalty_days} days, up to {penalty_max} times. The collateral listed below is held by {company} until the loan is repaid in full and may be sold under the recovery policy if the loan is not repaid. Payments are applied first to penalties, then to interest, then to the amount lent.')),
   -- B-01 business clock: real time unless a demo or test environment moves it.
   ('clock.override_at', 'null')
 on conflict (key) do nothing;
