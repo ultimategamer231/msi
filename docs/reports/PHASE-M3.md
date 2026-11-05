@@ -30,7 +30,7 @@ T-09 (rounding) also passes: pct(3333, 2000) = 667, pct(25, 2000) = 5.
 - Database: 325 passed on a seeded database; `supabase db lint` and `supabase db advisors` clean at warning level
 - E2E: 142 passed (390 and 1280 px, axe on every new screen)
 - Lint, typecheck, build: clean
-- CI: green through M3.6; the last pushes are running
+- CI: green on every M3 push after the M3.3 lint fix (the one failure, a PL/pgSQL lint warning, was fixed in the next commit)
 
 ## Mock-up comparison
 `docs/screenshots/m3/compare-06.png` and `compare-07.png` (demo data as of 12 Feb 2026 09:10). Layout, columns, cards and copy match. Differences:
