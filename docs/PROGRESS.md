@@ -2,11 +2,25 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M3 Loans complete (report `docs/reports/PHASE-M3.md`); M0–M3 in review on PR #1 |
-| Current block | M3.7 done; M3 phase report posted |
-| Last approved block | M3 phase start (Foday 2026-11-04, "Start M3"); blocks continue automatically once pushed and CI is green |
-| State | **Waiting for Foday's approval to start M4** (phases need approval) |
-| Next step | On approval: M4 Payments, starting with M4.1 receive_payment |
+| Current phase | M4 Payments (approved by Foday 2026-11-07); M0–M3 in review on PR #1 |
+| Current block | M4.1 receive_payment |
+| Last approved block | M4 phase start (Foday 2026-11-07, "Start M4"; open questions answered later, recommended defaults apply) |
+| State | Working on M4 |
+| Next step | M4.2 Field payments and remittance |
+
+## M4 plan (Payments: FR-10, FR-11, FR-20; T-06 allocation, T-10, T-11, T-12, T-25, T-28, T-36, T-37)
+
+| Block | Content | Done when |
+| --- | --- | --- |
+| M4.1 | `payments`, `payment_allocations`, `receive_payment` (R2): allocation order (A-05), overpayment, references, idempotency, entry dates, loan closes at zero; `post_journal` gains a reversal link | T-06 allocation, T-10, T-11, T-12, T-37 |
+| M4.2 | `record_field_payment` (R3; B-09 default: cash to 1015, mobile money and bank direct), `confirm_remittance` (R3b) | T-28, T-36 |
+| M4.3 | `request_void_payment` and its decision (R8), `request_journal_reversal` (B-12 default) | T-25 |
+| M4.4 | `/payments/new?loan=` (mock-up 03) with allocation preview, `/payments` list, "Receive payment" on the loan page | e2e |
+| M4.5 | `/receipts/[id]` (mock-up 04) with A5 and 80 mm print CSS, receipt PDF | e2e, screenshots |
+| M4.6 | `/field` and `/field/collect/[loanId]` (mock-ups 01, 02), `/remittance` | e2e |
+| M4.7 | Demo seed repayments (closed loans close), clean-up, handover notes and a prompt for the next session, M4 report | all checks green |
+
+Open questions are answered later (Foday 2026-11-07): B-08 (a), B-09 (a), B-10 (a) and B-12 (yes) use the recommended defaults; B-19 (WhatsApp share on receipts) is not built until approved.
 
 ## M3 plan (Loans: FR-06, FR-07, FR-08, FR-09; T-01, T-02, T-17, T-18, T-19, T-23, T-35)
 
@@ -69,3 +83,5 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-04 | M3.5 | /loans/new wizard (customer search, product, amount and term with live preview, collateral pick or add, guarantors with ID scan, send or save draft); 4 e2e checks |
 | 2026-11-04 | M3.6 | /loans (tabs, search, filters, open total), /loans/[id] (cards, outstanding, details, activity, collateral, guarantors; submit, decide, pay out, cancel), loans and total owed on the customer profile; ledger trigger rights fix; 317 database tests, 140 e2e |
 | 2026-11-05 | M3.7 | issued_documents, issue_document, loan agreement PDF with QR, demo seed loans/collateral/capital, M3 phase report; 325 database tests, 142 e2e |
+| 2026-11-07 | M4 | Phase approved ("Start M4"); questions answered later, recommended defaults apply; clean-up and handover prompt at the end of M4 |
+| 2026-11-07 | M4.1 | payments, payment_allocations, receive_payment (R2), post_journal reversal link; T-06 allocation, T-10, T-11, T-12, T-37; 349 database tests |

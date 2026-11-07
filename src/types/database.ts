@@ -1150,6 +1150,169 @@ export type Database = {
           },
         ];
       };
+      payment_allocations: {
+        Row: {
+          amount_cents: number;
+          component: string;
+          id: string;
+          payment_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_cents: number;
+          component: string;
+          id?: string;
+          payment_id: string;
+        };
+        Update: {
+          amount_cents?: number;
+          component?: string;
+          id?: string;
+          payment_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payment_allocations_payment_id_fkey";
+            columns: ["payment_id"];
+            isOneToOne: false;
+            referencedRelation: "payments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      payments: {
+        Row: {
+          amount_cents: number;
+          branch_id: string;
+          collected_in_field: boolean;
+          customer_id: string;
+          id: string;
+          idempotency_key: string;
+          journal_id: string;
+          loan_id: string;
+          method: string;
+          receipt_no: string;
+          received_at: string;
+          received_by: string;
+          received_on: string;
+          reference: string | null;
+          remittance_confirmed_at: string | null;
+          remittance_confirmed_by: string | null;
+          remittance_journal_id: string | null;
+          remittance_status: string;
+          source: string;
+          status: string;
+          void_journal_id: string | null;
+          voided_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_cents: number;
+          branch_id: string;
+          collected_in_field?: boolean;
+          customer_id: string;
+          id?: string;
+          idempotency_key: string;
+          journal_id: string;
+          loan_id: string;
+          method: string;
+          receipt_no: string;
+          received_at?: string;
+          received_by: string;
+          received_on: string;
+          reference?: string | null;
+          remittance_confirmed_at?: string | null;
+          remittance_confirmed_by?: string | null;
+          remittance_journal_id?: string | null;
+          remittance_status?: string;
+          source?: string;
+          status?: string;
+          void_journal_id?: string | null;
+          voided_at?: string | null;
+        };
+        Update: {
+          amount_cents?: number;
+          branch_id?: string;
+          collected_in_field?: boolean;
+          customer_id?: string;
+          id?: string;
+          idempotency_key?: string;
+          journal_id?: string;
+          loan_id?: string;
+          method?: string;
+          receipt_no?: string;
+          received_at?: string;
+          received_by?: string;
+          received_on?: string;
+          reference?: string | null;
+          remittance_confirmed_at?: string | null;
+          remittance_confirmed_by?: string | null;
+          remittance_journal_id?: string | null;
+          remittance_status?: string;
+          source?: string;
+          status?: string;
+          void_journal_id?: string | null;
+          voided_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payments_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_received_by_fkey";
+            columns: ["received_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_remittance_confirmed_by_fkey";
+            columns: ["remittance_confirmed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_remittance_journal_id_fkey";
+            columns: ["remittance_journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_void_journal_id_fkey";
+            columns: ["void_journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       period_locks: {
         Row: {
           branch_id: string;
@@ -1331,6 +1494,10 @@ export type Database = {
         };
         Returns: undefined;
       };
+      allocate_amount: {
+        Args: { p_amount: number; p_interest: number; p_penalty: number; p_principal: number };
+        Returns: Json;
+      };
       app_now: { Args: Record<PropertyKey, never>; Returns: string };
       apply_customer_edit: {
         Args: {
@@ -1463,20 +1630,41 @@ export type Database = {
           total_out: number;
         }[];
       };
+      loan_owed: {
+        Args: { p_loan_id: string };
+        Returns: {
+          interest_cents: number;
+          penalty_cents: number;
+          principal_cents: number;
+        }[];
+      };
       next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
       pct: { Args: { p_amount_cents: number; p_bps: number }; Returns: number };
       phone_key: { Args: { p_phone: string }; Returns: string };
-      post_journal: {
-        Args: {
-          p_branch: string;
-          p_date: string;
-          p_lines: Json;
-          p_memo: string;
-          p_source_id: string;
-          p_source_type: string;
-        };
-        Returns: string;
-      };
+      post_journal:
+        | {
+            Args: {
+              p_branch: string;
+              p_date: string;
+              p_lines: Json;
+              p_memo: string;
+              p_source_id: string;
+              p_source_type: string;
+            };
+            Returns: string;
+          }
+        | {
+            Args: {
+              p_branch: string;
+              p_date: string;
+              p_lines: Json;
+              p_memo: string;
+              p_reversal_of: string;
+              p_source_id: string;
+              p_source_type: string;
+            };
+            Returns: string;
+          };
       preview_loan_terms: {
         Args: {
           p_disbursed_on?: string;
@@ -1487,6 +1675,18 @@ export type Database = {
         Returns: Json;
       };
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
+      receipt_facts: { Args: { p_payment_id: string }; Returns: Json };
+      receive_payment: {
+        Args: {
+          p_amount_cents: number;
+          p_idempotency_key: string;
+          p_loan_id: string;
+          p_method: string;
+          p_received_on: string;
+          p_reference: string;
+        };
+        Returns: Json;
+      };
       register_collateral: { Args: { p_item: Json }; Returns: string };
       request_capital_in: { Args: { p_request: Json }; Returns: string };
       request_customer_edit: {
@@ -1509,6 +1709,18 @@ export type Database = {
       setting_error: { Args: { p_key: string; p_problem: string }; Returns: undefined };
       store_guarantors: { Args: { p_guarantors: Json; p_loan_id: string }; Returns: number };
       submit_loan: { Args: { p_loan_id: string }; Returns: string };
+      take_payment: {
+        Args: {
+          p_amount_cents: number;
+          p_field: boolean;
+          p_idempotency_key: string;
+          p_loan_id: string;
+          p_method: string;
+          p_received_on: string;
+          p_reference: string;
+        };
+        Returns: Json;
+      };
       trial_balance: {
         Args: { p_as_of: string };
         Returns: {
