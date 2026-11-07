@@ -55,18 +55,18 @@ select is(tests.try_as('authenticated', :'officer_id', format($$select public.re
   null, 'the officer asks for one more month');
 select results_eq($$select payload ->> 'extra_interest_cents', payload ->> 'new_due_date', payload ->> 'owed_after_cents',
                           payload ->> 'next_penalty_on', required_role::text
-                     from public.approval_requests where type = 'loan_extension'$$,
+                     from public.approval_requests where type = 'loan_extension' and entity_id = '$$ || :'loan_id' || $$'$$,
   $$values ('20000'::text, '2026-03-05'::text, '140000'::text, '2026-02-12'::text, 'manager'::text)$$,
   'the request shows 20000 more interest, due 05 Mar, 140000 owed, and the penalty it avoids');
 select matches(tests.try_as('authenticated', :'officer_id', format($$select public.request_extension('%s', 1, 'Again')$$, :'loan_id')),
   '^INVALID_STATE', 'one extension request at a time');
-select matches(tests.try_as('authenticated', :'officer_id', $$select public.decide_approval(
-  (select id from public.approval_requests where type = 'loan_extension'), 'approve', null)$$),
+select matches(tests.try_as('authenticated', :'officer_id', format($$select public.decide_approval(
+  (select id from public.approval_requests where type = 'loan_extension' and entity_id = '%s'), 'approve', null)$$, :'loan_id')),
   '^FORBIDDEN', 'an officer does not decide');
 
 -- T-13: approved by a manager.
-select is(tests.try_as('authenticated', :'manager_id', $$select public.decide_approval(
-  (select id from public.approval_requests where type = 'loan_extension'), 'approve', null)$$), null, 'a manager approves');
+select is(tests.try_as('authenticated', :'manager_id', format($$select public.decide_approval(
+  (select id from public.approval_requests where type = 'loan_extension' and entity_id = '%s'), 'approve', null)$$, :'loan_id')), null, 'a manager approves');
 select results_eq(format($$select status, due_date, due_date_version, recovery_eligible from public.loans where id = '%s'$$, :'loan_id'),
   $$values ('active'::text, '2026-03-05'::date, 2, false)$$, 'T-13: due date +1 month, version 2, active again');
 select results_eq(format($$select interest_cents, principal_cents from public.loan_owed('%s')$$, :'loan_id'),
