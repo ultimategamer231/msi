@@ -14,8 +14,8 @@ import type { ErrorCode } from "@/lib/rpc-errors";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@/lib/zod-resolver";
 
-import { previewPayment, receivePayment, recordFieldPayment, type PreviewResult } from "../actions";
-import { PAYMENT_METHODS, paymentSchema, type PaymentValues } from "../schemas";
+import { previewPayment, receivePayment, recordFieldPayment, type PreviewResult } from "./actions";
+import { PAYMENT_METHODS, paymentSchema, type PaymentValues } from "./schemas";
 
 type Preview = Extract<PreviewResult, { ok: true }>;
 

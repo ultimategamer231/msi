@@ -13,7 +13,7 @@ import { formatDate, formatMoney } from "@/lib/format";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
-import { PaymentForm } from "./payment-form";
+import { PaymentForm } from "../payment-form";
 
 /*
  * /payments/new?loan= (cashier, manager; SPEC 9, mock-up 03): find the loan, then amount, method,

@@ -2,6 +2,18 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
+## [M4 Payments] 2026-11-07 (in review, PR #1)
+### Added
+- M4.1: Office payments with a fixed allocation order (penalty, interest, then amount lent), overpayment refused, references for mobile money and bank, safe retries, date rules; loans close when nothing is owed.
+- M4.2: Field payments by loan officers; field cash waits until the cashier confirms the handover with a counted total.
+- M4.3: Payment voids and journal reversals through approval, never by the requester; voided receipts print VOID.
+- M4.4: Receive payment screen with a live allocation preview; payments list with filters and void requests; Receive payment and "Paid so far" on the loan page.
+- M4.5: Receipt screen, A5 and 80 mm printing, receipt PDF with verification QR code.
+- M4.6: Field screens (today's list, collect) and the Field cash screen for cashiers and managers.
+- M4.7: Demo repayments from DEMO_DATA (receipts RCT-BR2-000116 to 000122; five loans closed).
+### Fixed
+- M4.4: Contrast of help text and inline links on the payment screens.
+
 ## [M3 Loans] 2026-11-05 (in review, PR #1)
 ### Added
 - M3.1: Loan products as configuration with an admin tab in Settings; the standard 1-month product is seeded.

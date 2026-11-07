@@ -14,7 +14,7 @@ import { loanPill } from "@/lib/loans";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 import { LoanPillText } from "../../../loans/loan-pill";
-import { PaymentForm } from "../../../payments/new/payment-form";
+import { PaymentForm } from "../../../payments/payment-form";
 
 /*
  * /field/collect/[loanId] (loan officer; SPEC 9, mock-up 02): the minimal payment form with the

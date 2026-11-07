@@ -8,6 +8,7 @@ Read `docs/SPEC.md` fully before writing code. It is the single source of truth.
 Next.js App Router, TypeScript strict, Tailwind, shadcn/ui, Supabase (Postgres, Auth, Storage, RLS, pg_cron), `@react-pdf/renderer`, `qrcode`, `react-hook-form` + `zod`, `@tanstack/react-table`, `date-fns`, `next-intl` (English, translation-ready), `motion` (subtle motion only), Vitest, Playwright, pnpm. GitHub with branch per milestone and PR at each gate; GitHub Actions CI.
 
 ## Workflow
+- Starting a session: read `docs/PROGRESS.md` first (current state, next step, session start checklist); `docs/NEXT-SESSION-PROMPT.md` is the hand-over prompt.
 - Build one milestone at a time (SPEC section 13). At the end of each: tests green, `pnpm build` clean, screenshots at 390px and 1280px, short changelog, then STOP and wait for approval.
 - Add environment variables only when a milestone needs them.
 - Commit per block with a clear message (Conventional Commits). Push as soon as a block or phase is done and keep the phase's draft pull request up to date. Never push to `main` and never merge without approval.

@@ -2,11 +2,21 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M4 Payments (approved by Foday 2026-11-07); M0–M3 in review on PR #1 |
-| Current block | M4.6 Field screens and remittance |
+| Current phase | M4 Payments complete; M0–M4 in review on PR #1 |
+| Current block | M4.7 Demo repayments, clean-up, handover and M4 report (done) |
 | Last approved block | M4 phase start (Foday 2026-11-07, "Start M4"; open questions answered later, recommended defaults apply) |
-| State | Working on M4 |
-| Next step | M4.7 Demo repayments, clean-up, handover and M4 report |
+| State | **Stopped: waiting for Foday's approval to start M5** (phase report `docs/reports/PHASE-M4.md`) |
+| Next step | On approval: plan M5 Accruals and due lists (blocks below), then build block by block |
+
+## M5 outline (Accruals and due lists: FR-12, FR-13, FR-18; T-03 to T-09, T-13, T-33) — plan in detail at the start of M5
+
+| Block | Content |
+| --- | --- |
+| M5.1 | `loan_outstanding_as_of`, `run_daily_accruals` (penalties per SPEC 5.2 with the late-run rule; B-15 default), overdue status and days overdue; T-03..T-08, T-33 |
+| M5.2 | `pg_cron` schedule, manual run button (manager/admin), job log |
+| M5.3 | `/due` (due today, due in 7 days, overdue; B-07, B-18 defaults), WhatsApp reminder links with `settings.templates.reminder` and the `reminder_opened` audit event; Remind on `/field` |
+| M5.4 | Loan extension through approval (FR-18; T-13) |
+| M5.5 | Demo seed penalties (Mariama $240.00 on A, Esther, Mohammed), demo payment e2e (`RCT-BR2-000123`, $1,440.00 → $940.00), M5 report |
 
 ## M4 plan (Payments: FR-10, FR-11, FR-20; T-06 allocation, T-10, T-11, T-12, T-25, T-28, T-36, T-37)
 
@@ -48,10 +58,13 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 
 ## Session start checklist (cloud container)
 
-1. Read `CLAUDE.md`, the SPEC sections for the current block, and this file.
-2. Start Docker if it is not running: `dockerd > /tmp/dockerd.log 2>&1 &` then `docker info`. If Supabase containers come back unhealthy after a restart: `pnpm supabase stop --no-backup` then `pnpm db:start`.
-3. `pnpm install`, `pnpm db:start` (applies migrations and seeds), `pnpm env:local` (writes `.env.local`); `pnpm test:db` for pgTAP, `pnpm build && CI=1 pnpm test:e2e` for e2e.
-4. Work is safe only once pushed; the container is temporary.
+1. Read `CLAUDE.md`, this file (state and next step), the latest report in `docs/reports/`, and the SPEC sections for the current block. Decisions so far are in `docs/DECISIONS.md`; open questions in `docs/QUESTIONS.md` and `docs/reports/OPEN-QUESTIONS-2026-11-05.md`.
+2. Start Docker if it is not running: `dockerd > /tmp/dockerd.log 2>&1 &`, then wait until `docker info` works. If Supabase containers come back unhealthy after a restart: `pnpm supabase stop --no-backup` then `pnpm db:start`.
+3. `pnpm install`, `pnpm db:start` (applies migrations and seeds), `pnpm env:local` (writes `.env.local`), `pnpm types` after any migration change.
+4. Checks before every commit (CI runs the same and fails on warnings): `pnpm format`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:db`, `pnpm supabase db lint --level warning`, `pnpm supabase db advisors --type all --level warn`. For e2e: `pnpm build`, free port 3000 (`fuser -k 3000/tcp`), then `CI=1 pnpm test:e2e`.
+5. Apply a new migration locally with `pnpm supabase migration up`. If local e2e runs start failing on lists (old test data piling up, for example the approvals inbox), reset with `pnpm supabase db reset`; CI always starts fresh.
+6. Demo data: `pnpm seed:demo --as-of 2026-02-12` on a fresh database. It prints the demo passwords once; never commit them.
+7. Work is safe only once pushed; the container is temporary. Commit per block, push, keep PR #1 up to date, never push to `main`.
 
 ## Log
 
@@ -90,3 +103,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-07 | M4.4 | /payments/new (mock-up 03) with preview_payment, /payments list with void request, Receive payment on the loan page; 386 database tests, 148 e2e |
 | 2026-11-07 | M4.5 | /receipts/[id] (mock-up 04) with A5 and 80 mm print, receipt PDF, VOID stamp; issue_document receipts, receipt_balance_after; 395 database tests |
 | 2026-11-07 | M4.6 | /field (mock-up 01), /field/collect (mock-up 02), /remittance with counted total; Today and Field cash in the menu |
+| 2026-11-07 | M4.7 | Demo repayments (RCT-BR2-000116..000122), shared payment form moved, handover checklist, M4 report and screenshots; 395 database tests, 152 e2e |

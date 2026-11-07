@@ -481,6 +481,28 @@ const DEMO_LOANS: readonly DemoLoan[] = [
   },
 ];
 
+interface DemoPayment {
+  receiptNo: number;
+  loanNo: string;
+  amountCents: number;
+  daysBefore: number;
+  time: string;
+  field?: boolean;
+}
+
+// docs/DEMO_DATA.md "Payments", in receipt order (Branch 2 series; B-10: the receiver's branch).
+// The earlier receipts are numbered below 000120 "in any order"; dates follow each loan's story.
+// Mariama Kollie's $500 payment (RCT-BR2-000123) is not seeded: it is the demo e2e script.
+const DEMO_PAYMENTS: readonly DemoPayment[] = [
+  { receiptNo: 116, loanNo: "LN-BR2-00002", amountCents: 36000, daysBefore: 64, time: "11:15" },
+  { receiptNo: 117, loanNo: "LN-BR1-00011", amountCents: 84000, daysBefore: 28, time: "10:40" },
+  { receiptNo: 118, loanNo: "LN-BR2-00012", amountCents: 10000, daysBefore: 15, time: "14:05" },
+  { receiptNo: 119, loanNo: "LN-BR2-00006", amountCents: 25000, daysBefore: 10, time: "09:50" },
+  { receiptNo: 120, loanNo: "LN-BR2-00006", amountCents: 35000, daysBefore: 1, time: "08:45", field: true },
+  { receiptNo: 121, loanNo: "LN-BR2-00012", amountCents: 20000, daysBefore: 1, time: "09:20" },
+  { receiptNo: 122, loanNo: "LN-BR2-00003", amountCents: 15000, daysBefore: 1, time: "15:10" },
+];
+
 // Staff accounts are created well before the first demo record (Mariama Kollie registered A-133).
 const STAFF_CREATED_DAYS_BEFORE_ANCHOR = 140;
 
@@ -666,8 +688,7 @@ async function main(): Promise<void> {
 
   // 4b. Loans (M3): opening capital, collateral and the DEMO_DATA loans, each created, approved and
   //     paid out at its story date through the RPCs (the business clock moves to each date).
-  //     Repayments arrive with M4 and penalties with M5, so loans that DEMO_DATA shows as closed or
-  //     overdue with penalties are still open and without penalties at this stage.
+  //     Penalties arrive with M5, so loans that DEMO_DATA shows overdue with penalties have none yet.
   const at = async (daysBefore: number, time = "10:00") =>
     rpc(client, "update_setting", {
       p_key: "clock.override_at",
@@ -775,6 +796,47 @@ async function main(): Promise<void> {
       await decide("loan_approval", loan.loanNo);
       await at(loan.daysBefore, "14:00");
       await rpc(cashier, "disburse_loan", { p_loan_id: loanId, p_method: "cash" });
+    }
+  }
+
+  // 4c. Payments (M4), at their story dates: Grace Flomo at the counter, Emmanuel Tarpeh in the
+  //     field (cash not yet handed over). Loans paid in full close (SPEC 5.3). Skipped when any
+  //     payment exists.
+  const [{ count: paymentCount } = { count: 0 }] = ownerQuery<{ count: number }>(
+    "select count(*)::int as count from public.payments",
+  );
+  if (paymentCount === 0) {
+    const cashier = await signedIn("grace.flomo@msi-demo.test");
+    const fieldOfficer = await signedIn("emmanuel.tarpeh@msi-demo.test");
+    const loanIds = new Map(
+      ownerQuery<{ id: string; loan_no: string }>("select id, loan_no from public.loans").map((row) => [
+        row.loan_no,
+        row.id,
+      ]),
+    );
+    const branch2 = branchIds.get("BR2") ?? null;
+    await rpc(client, "set_sequence_start", { p_kind: "receipt", p_branch_id: branch2, p_last_value: 115 });
+    for (const payment of DEMO_PAYMENTS) {
+      const loanId = loanIds.get(payment.loanNo);
+      if (loanId === undefined) throw new Error(`No demo loan ${payment.loanNo}`);
+      await at(payment.daysBefore, payment.time);
+      const args = {
+        p_loan_id: loanId,
+        p_amount_cents: payment.amountCents,
+        p_method: "cash",
+        p_reference: "",
+        p_received_on: addDays(anchor, -payment.daysBefore),
+        p_idempotency_key: `demo-receipt-${payment.receiptNo}`,
+      };
+      const receipt = (await rpc(
+        payment.field === true ? fieldOfficer : cashier,
+        payment.field === true ? "record_field_payment" : "receive_payment",
+        args,
+      )) as { receipt_no?: string };
+      const expected = `RCT-BR2-${String(payment.receiptNo).padStart(6, "0")}`;
+      if (receipt.receipt_no !== expected) {
+        throw new Error(`Expected ${expected} for ${payment.loanNo}, got ${receipt.receipt_no ?? "nothing"}`);
+      }
     }
   }
 
