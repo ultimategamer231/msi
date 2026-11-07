@@ -62,6 +62,11 @@ export const rulesSchema = z.object({
     .length(3)
     .refine((order) => new Set(order).size === 3, { message: "allocation" }),
   goLiveDate: z.union([z.literal(""), z.iso.date({ message: "date" })]),
+  dueUpcomingDays: z
+    .string()
+    .trim()
+    .regex(/^\d{1,2}$/, { message: "days" })
+    .refine((value) => Number(value) >= 1 && Number(value) <= 60, { message: "days" }),
 });
 export type RulesValues = z.infer<typeof rulesSchema>;
 

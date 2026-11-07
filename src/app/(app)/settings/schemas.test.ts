@@ -13,6 +13,7 @@ const RULES = {
   checkFunds: true,
   allocationOrder: ["penalty", "interest", "principal"],
   goLiveDate: "",
+  dueUpcomingDays: "7",
 } as const;
 
 describe("rulesSchema", () => {

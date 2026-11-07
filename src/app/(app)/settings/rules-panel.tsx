@@ -69,7 +69,10 @@ function RulesForm({ rules, currency }: { rules: RulesValues; currency: string }
   };
 
   const toggle = (
-    name: Exclude<keyof RulesValues, "loanManagerLimit" | "expenseLimit" | "allocationOrder" | "goLiveDate">,
+    name: Exclude<
+      keyof RulesValues,
+      "loanManagerLimit" | "expenseLimit" | "allocationOrder" | "goLiveDate" | "dueUpcomingDays"
+    >,
     label: string,
   ) => <CheckboxRow id={`rules-${name}`} label={label} {...form.register(name)} />;
 
@@ -106,6 +109,26 @@ function RulesForm({ rules, currency }: { rules: RulesValues; currency: string }
           {toggle("dayClosesEnforce", t("rules.dayClosesEnforce"))}
           {toggle("checkFunds", t("rules.checkFunds"))}
         </fieldset>
+
+        <Field
+          id="rules-dueUpcomingDays"
+          label={t("rules.dueUpcomingDays")}
+          help={t("rules.dueUpcomingDaysHelp")}
+          error={validation(errors.dueUpcomingDays?.message)}
+        >
+          <input
+            id="rules-dueUpcomingDays"
+            inputMode="numeric"
+            autoComplete="off"
+            className={`${inputClass} tabular max-w-24`}
+            {...describedBy(
+              "rules-dueUpcomingDays",
+              t("rules.dueUpcomingDaysHelp"),
+              validation(errors.dueUpcomingDays?.message),
+            )}
+            {...form.register("dueUpcomingDays")}
+          />
+        </Field>
 
         <fieldset
           className="grid gap-3"

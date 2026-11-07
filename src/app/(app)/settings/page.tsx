@@ -201,6 +201,7 @@ async function RulesTab() {
         checkFunds: bool(settings.get("disbursement.check_funds"), true),
         allocationOrder: order.length === 3 ? order : ["penalty", "interest", "principal"],
         goLiveDate: typeof goLive === "string" ? goLive : "",
+        dueUpcomingDays: String(settings.get("due.upcoming_days") ?? 7),
       }}
       clock={{
         allowed:

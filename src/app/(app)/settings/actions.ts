@@ -216,6 +216,7 @@ export async function saveRules(values: RulesValues): Promise<ActionResult<{ cha
     ["disbursement.check_funds", parsed.data.checkFunds],
     ["payments.allocation_order", parsed.data.allocationOrder],
     ["migration.go_live_date", parsed.data.goLiveDate === "" ? null : parsed.data.goLiveDate],
+    ["due.upcoming_days", Number(parsed.data.dueUpcomingDays)],
   ];
 
   let changed = 0;

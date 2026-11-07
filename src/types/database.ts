@@ -1574,6 +1574,20 @@ export type Database = {
           },
         ];
       };
+      due_list: {
+        Row: {
+          bucket: string | null;
+          days: number | null;
+          due_date: string | null;
+          last_penalty: boolean | null;
+          loan_id: string | null;
+          next_penalty_on: string | null;
+          penalty_out: number | null;
+          total_out: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
       loan_balances: {
         Row: {
           days_overdue: number | null;
@@ -1697,6 +1711,19 @@ export type Database = {
         Args: { p_account_id?: string; p_disbursed_on?: string; p_loan_id: string; p_method: string };
         Returns: Json;
       };
+      due_list_rows: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          bucket: string;
+          days: number;
+          due_date: string;
+          last_penalty: boolean;
+          loan_id: string;
+          next_penalty_on: string;
+          penalty_out: number;
+          total_out: number;
+        }[];
+      };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
       find_duplicate_customers: {
         Args: { p_exclude?: string; p_id_number: string; p_phone: string; p_phone_alt: string };
@@ -1779,6 +1806,7 @@ export type Database = {
           principal_cents: number;
         }[];
       };
+      log_reminder_opened: { Args: { p_kind: string; p_loan_id: string }; Returns: undefined };
       next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
       pct: { Args: { p_amount_cents: number; p_bps: number }; Returns: number };
       phone_key: { Args: { p_phone: string }; Returns: string };

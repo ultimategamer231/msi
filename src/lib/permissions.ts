@@ -27,6 +27,7 @@ export const ROUTES = {
   "/verify/[token]": "public",
   "/api/health": "public",
   "/api/pdf/[kind]/[id]": "staff", // SPEC 10.1; each kind checks the record and role again
+  "/api/reminder/[loanId]": "staff", // SPEC 10.3: logs the tap, then opens WhatsApp
 
   "/dashboard": "staff",
   "/customers": "staff",

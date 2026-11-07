@@ -1,4 +1,4 @@
-import { Phone } from "lucide-react";
+import { MessageCircle, Phone } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
@@ -18,8 +18,7 @@ import { LoanPillText } from "../loans/loan-pill";
 
 /*
  * /field (loan officer; SPEC 9, mock-up 01): my loans due today or overdue with Call and a big
- * Collect button, and the field cash still waiting for handover. The WhatsApp "Remind" button
- * arrives with the reminder template in M5 (SPEC 10.3).
+ * Collect button, a WhatsApp reminder (SPEC 10.3), and the field cash still waiting for handover.
  */
 export default async function FieldPage() {
   const t = await getTranslations("field");
@@ -139,7 +138,7 @@ async function FieldContent() {
                       {formatMoney(balance?.total_out ?? 0)}
                     </p>
                   </div>
-                  <div className="grid grid-cols-[1fr_1.4fr] gap-2">
+                  <div className="grid grid-cols-[1fr_1fr_1.4fr] gap-2">
                     <a
                       href={`tel:${loan.customers.phone.replace(/[^\d+]/g, "")}`}
                       aria-label={t("callLabel", { name })}
@@ -150,6 +149,19 @@ async function FieldContent() {
                     >
                       <Phone aria-hidden="true" className="size-5" />
                       {t("call")}
+                    </a>
+                    <a
+                      href={`/api/reminder/${loan.id}`}
+                      target="_blank"
+                      rel="noopener"
+                      aria-label={t("remindLabel", { name })}
+                      className={cn(
+                        buttonVariants({ variant: "secondary", size: "field" }),
+                        "gap-2 px-2 hover:text-ink",
+                      )}
+                    >
+                      <MessageCircle aria-hidden="true" className="size-5" />
+                      {t("remind")}
                     </a>
                     <Link
                       href={`/field/collect/${loan.id}`}

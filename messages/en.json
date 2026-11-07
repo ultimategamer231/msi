@@ -133,7 +133,8 @@
       "code": "Use 2 to 10 capital letters or digits, starting with a letter, for example BR4.",
       "allocation": "Use each part once.",
       "branchRequired": "Cashiers and loan officers need a branch.",
-      "timestamp": "Enter a date and time."
+      "timestamp": "Enter a date and time.",
+      "days": "Enter a whole number of days from 1 to 60."
     },
     "company": {
       "heading": "Company header",
@@ -209,7 +210,9 @@
       "clockAt": "Date and time (Monrovia)",
       "clockFrozen": "Keep the clock stopped at this time",
       "clockSet": "Set clock",
-      "clockReal": "Use the real time"
+      "clockReal": "Use the real time",
+      "dueUpcomingDays": "Due list window (days)",
+      "dueUpcomingDaysHelp": "How far ahead the due list shows loans that fall due soon."
     },
     "users": {
       "heading": "Users",
@@ -1286,7 +1289,9 @@
     "due": "due {date}",
     "owedNow": "Total owed now",
     "notOpen": "This loan is not open for payments.",
-    "otherBranch": "This loan belongs to another branch. Field payments are taken for loans of your own branch."
+    "otherBranch": "This loan belongs to another branch. Field payments are taken for loans of your own branch.",
+    "remind": "Remind",
+    "remindLabel": "Remind {name} on WhatsApp"
   },
   "remittance": {
     "loading": "Loading field cash…",
@@ -1301,5 +1306,78 @@
     "confirm": "Confirm handover",
     "confirming": "Confirming…",
     "done": "Handover of {amount} confirmed. The cash is now in the branch cash account."
+  },
+  "due": {
+    "loading": "Loading the due list…",
+    "title": "Due and overdue",
+    "asAt": "As at {date}",
+    "print": "Print list",
+    "loans": "{count, plural, one {# loan} other {# loans}}",
+    "cards": {
+      "overdue": "Overdue",
+      "today": "Due today",
+      "soon": "Due in {days} days",
+      "recovery": "In recovery"
+    },
+    "tabsLabel": "Due list tabs",
+    "tabs": {
+      "all": "All",
+      "overdue": "Overdue",
+      "today": "Due today",
+      "soon": "Due in {days} days"
+    },
+    "filters": {
+      "label": "Filter the due list",
+      "branch": "Branch",
+      "anyBranch": "All branches",
+      "officer": "Loan officer",
+      "anyOfficer": "All officers",
+      "apply": "Apply"
+    },
+    "empty": "No loans are due or overdue here.",
+    "tableLabel": "Due list table",
+    "columns": {
+      "loan": "Loan",
+      "borrower": "Borrower",
+      "phone": "Phone",
+      "officer": "Officer",
+      "due": "Due date",
+      "days": "Days",
+      "penalty": "Penalty",
+      "owes": "Owes",
+      "next": "Next penalty",
+      "actions": "Actions"
+    },
+    "pill": {
+      "overdue": "{count, plural, one {# day overdue} other {# days overdue}}",
+      "today": "Due today",
+      "in": "{count, plural, one {In # day} other {In # days}}"
+    },
+    "lastPenalty": "{date} (last)",
+    "dueOn": "due {date}",
+    "owes": "owes {amount}",
+    "call": "Call",
+    "callLabel": "Call {name}",
+    "remind": "WhatsApp",
+    "remindLabel": "WhatsApp reminder to {name}",
+    "recoveryNote": "{count, plural, one {# loan is} other {# loans are}} in recovery and listed on the Recovery screen.",
+    "reminder": {
+      "notOpen": "This loan has no due date to remind about.",
+      "noPhone": "The borrower has no phone number to message.",
+      "forbidden": "You are not allowed to do this."
+    },
+    "job": {
+      "heading": "Daily job",
+      "intro": "Every night the system marks loans overdue, charges penalties on their 7-day marks and flags loans for recovery. Running it again the same day charges nothing twice.",
+      "never": "The job has not run yet.",
+      "line": "{when}: {source} run for {date}, {penalties, plural, one {# penalty} other {# penalties}}, {overdue} newly overdue",
+      "sources": {
+        "cron": "scheduled",
+        "manual": "manual"
+      },
+      "run": "Run the daily job now",
+      "running": "Running…",
+      "done": "Done: {overdue} newly overdue, {penalties, plural, one {# penalty} other {# penalties}} charged, {recovery} flagged for recovery."
+    }
   }
 }

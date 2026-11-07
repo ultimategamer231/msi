@@ -31,6 +31,7 @@ values
   ('migration.go_live_date', 'null'),                  -- A-19: set by admin before go-live
   ('approvals.expense_limit_cents', '10000'),          -- A-20: $100.00
   ('disbursement.check_funds', 'true'),                -- SPEC 5.4.8
+  ('due.upcoming_days', '7'),                          -- B-07: due list "due soon" window
   -- SPEC 10.3 WhatsApp reminder texts (editable by admin).
   ('templates', jsonb_build_object(
       'reminder', 'Dear {name}, your loan {loan_no} of {amount} is due on {due_date}. Outstanding: {outstanding}. Please pay at {branch} or call {branch_phone}. Thank you. – {company}',
