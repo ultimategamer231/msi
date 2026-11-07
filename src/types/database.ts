@@ -1769,6 +1769,7 @@ export type Database = {
           total_out: number;
         }[];
       };
+      loan_next_penalty: { Args: { p_loan_id: string }; Returns: Json };
       loan_outstanding_as_of: { Args: { p_date: string; p_loan_id: string }; Returns: number };
       loan_owed: {
         Args: { p_loan_id: string };
@@ -1857,6 +1858,7 @@ export type Database = {
       };
       round_half_up: { Args: { p_d: number; p_n: number }; Returns: number };
       run_daily_accruals: { Args: { p_as_of?: string }; Returns: Json };
+      scheduled_daily_accruals: { Args: Record<PropertyKey, never>; Returns: Json };
       sequence_scope: { Args: { p_branch: string; p_kind: string }; Returns: string };
       set_sequence_start: {
         Args: { p_branch_id: string; p_kind: string; p_last_value: number };

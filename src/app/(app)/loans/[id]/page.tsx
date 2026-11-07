@@ -64,6 +64,8 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
     peopleResult,
     todayResult,
     paymentsResult,
+    penaltiesResult,
+    nextPenaltyResult,
   ] = await Promise.all([
     supabase
       .from("loans")
@@ -101,13 +103,19 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
       .eq("loan_id", id)
       .eq("status", "posted")
       .order("received_on"),
+    supabase
+      .from("loan_penalty_events")
+      .select("journal_id, period_no, base_cents, charged_on, due_date_version")
+      .eq("loan_id", id),
+    supabase.rpc("loan_next_penalty", { p_loan_id: id }),
   ]);
   if (
     loanResult.error !== null ||
     activityResult.error !== null ||
     pledgesResult.error !== null ||
     todayResult.error !== null ||
-    paymentsResult.error !== null
+    paymentsResult.error !== null ||
+    penaltiesResult.error !== null
   ) {
     throw new Error("Could not read the loan");
   }
@@ -161,6 +169,14 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
   const canReceive =
     ["active", "overdue", "recovery"].includes(loan.status) &&
     (staff.role === "cashier" || staff.role === "manager");
+  const penaltyEvents = new Map(penaltiesResult.data.map((event) => [event.journal_id, event]));
+  const chargedThisTerm = penaltiesResult.data.filter(
+    (event) => event.due_date_version === loan.due_date_version,
+  ).length;
+  const nextPenalty =
+    nextPenaltyResult.error === null && nextPenaltyResult.data !== null
+      ? (nextPenaltyResult.data as { on: string; cents: number })
+      : null;
   const methodLabel =
     loan.disbursement_method === null ? "" : t(`methods.${loan.disbursement_method as "cash"}`);
 
@@ -176,6 +192,13 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
     if (row.source_type === "payment" || row.source_type === "field_payment")
       return t("activity.payment", { component });
     if (row.source_type === "payment_void") return t("activity.paymentVoid", { component });
+    const penalty = penaltyEvents.get(row.journal_id);
+    if (row.source_type === "penalty" && penalty !== undefined)
+      return t("activity.penalty", {
+        week: penalty.period_no,
+        rate: formatRateBps(loan.penalty_rate_bps ?? 0),
+        base: formatMoney(penalty.base_cents),
+      });
     return t("activity.other", { component: row.component ?? "", source: row.source_type });
   };
 
@@ -274,7 +297,7 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
             <p className="mt-1 text-sm text-ink-muted">
               {penaltyCents === 0n
                 ? t("cards.noPenalties")
-                : t("cards.penaltyRule", { max: loan.penalty_max_periods ?? 0 })}
+                : t("cards.penaltyCount", { count: chargedThisTerm, max: loan.penalty_max_periods ?? 0 })}
             </p>
           </Card>
           <Card>
@@ -309,6 +332,14 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
                 penalty: formatMoney(balance?.penalty_out ?? 0),
               })}
             </p>
+            {nextPenalty !== null ? (
+              <p className="tabular mt-1 text-sm">
+                {t("nextPenalty", {
+                  date: formatDate(nextPenalty.on),
+                  amount: formatMoney(nextPenalty.cents),
+                })}
+              </p>
+            ) : null}
           </section>
         ) : null}
 
@@ -373,10 +404,13 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
                   <tbody>
                     {[...activity].reverse().map((row) => (
                       <tr key={`${row.journal_id}-${row.component}`} className="border-t border-page">
-                        <td className="tabular px-4 py-3 whitespace-nowrap">{formatDate(row.entry_date)}</td>
+                        <td className="tabular px-4 py-3 whitespace-nowrap">
+                          {formatDate(penaltyEvents.get(row.journal_id)?.charged_on ?? row.entry_date)}
+                        </td>
                         <td className="px-4 py-3">{activityText(row)}</td>
                         <td className="px-4 py-3">
-                          {row.source_type === "disbursement" && row.component === "interest"
+                          {(row.source_type === "disbursement" && row.component === "interest") ||
+                          row.posted_by === null
                             ? t("activity.system")
                             : (people.get(row.posted_by) ?? "")}
                         </td>

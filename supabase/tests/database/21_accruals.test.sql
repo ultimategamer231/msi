@@ -2,7 +2,7 @@
 -- T-33 run A). The job runs every day here; 22_accruals_late covers late runs (T-33 run B, T-33b).
 begin;
 \ir _helpers.psql
-select plan(26);
+select plan(27);
 
 insert into public.branches (code, name) values ('TA', 'Test Accruals');
 select tests.create_staff('Officer TA', 'loan_officer', 'TA') as officer_id \gset
@@ -90,6 +90,8 @@ select is((select count(*)::int from public.loan_penalty_events where loan_id = 
 select is((select count(*)::int from public.accrual_runs where run_date = '2026-02-12'), 2, 'both runs are logged');
 select is(tests.value_as('authenticated', :'manager_id', format($$select next_penalty_on::text from public.loan_balances where loan_id = '%s'$$, :'loan_t03')), '2026-02-19',
   'the next penalty date is shown');
+select is(tests.value_as('authenticated', :'cashier_id', format($$select public.loan_next_penalty('%s')::text$$, :'loan_t03'))::jsonb,
+  '{"on": "2026-02-19", "period_no": 2, "cents": 28800}'::jsonb, 'and the next penalty: 20% of the 144000 owed now');
 
 -- T-06 / T-33 run A: 50000 paid on 14 Feb goes to penalty, interest, then 6000 principal; next penalty 18800.
 select tests.set_day('2026-02-13');

@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M5 Accruals and due lists (approved by Foday 2026-11-07); M0–M4 in review on PR #1 |
-| Current block | M5.1 Accrual job |
+| Current block | M5.2 Cron schedule and penalties on the loan page |
 | Last approved block | M5 phase start (Foday 2026-11-07, "I approve M5"; open questions answered later, recommended defaults apply) |
 | State | Working on M5 |
-| Next step | M5.2 Cron schedule and penalties on the loan page |
+| Next step | M5.3 Due list, WhatsApp reminders and the manual run |
 
 ## M5 plan (Accruals and due lists: FR-12, FR-13, FR-18; T-03 to T-09, T-13, T-33, T-33b)
 
@@ -107,3 +107,5 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-07 | M4.6 | /field (mock-up 01), /field/collect (mock-up 02), /remittance with counted total; Today and Field cash in the menu |
 | 2026-11-07 | M4.7 | Demo repayments (RCT-BR2-000116..000122), shared payment form moved, handover checklist, M4 report and screenshots; 395 database tests, 152 e2e |
 | 2026-11-07 | M5 | Phase approved ("I approve M5"); plan written; GitHub access from the session lost (403), blocks committed locally until it is restored |
+| 2026-11-07 | M5.1 | Accrual job, penalty events, run log, late-run rule; T-03..T-08, T-33, T-33b; 430 database tests (committed locally, push blocked) |
+| 2026-11-07 | M5.2 | pg_cron schedule, next penalty and penalty rows on the loan page; 435 database tests (committed locally, push blocked) |

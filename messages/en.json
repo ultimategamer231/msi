@@ -992,10 +992,10 @@
         "interestLater": "Set when the application is sent",
         "penalties": "Penalties",
         "noPenalties": "No penalties",
-        "penaltyRule": "At most {max} weekly charges",
         "paid": "Paid so far",
         "noPayments": "No payments yet",
-        "payments": "{count, plural, one {# payment} other {# payments}}, last on {date}"
+        "payments": "{count, plural, one {# payment} other {# payments}}, last on {date}",
+        "penaltyCount": "{count} of {max} weekly charges"
       },
       "outstanding": "Outstanding",
       "components": "Principal {principal} · interest {interest} · penalties {penalty}",
@@ -1030,7 +1030,8 @@
           "penalty": "penalty",
           "interest": "interest",
           "principal": "amount lent"
-        }
+        },
+        "penalty": "Penalty, week {week} ({rate} of {base})"
       },
       "collateral": {
         "heading": "Collateral",
@@ -1078,7 +1079,8 @@
         "heading": "Documents",
         "agreement": "Loan agreement (PDF)",
         "later": "The loan agreement can be printed once the loan is approved."
-      }
+      },
+      "nextPenalty": "Next penalty {date}: {amount}"
     }
   },
   "pdf": {
