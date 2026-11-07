@@ -129,9 +129,11 @@ export type Database = {
           type: string;
           apply_customer_edit: Json | null;
           apply_journal_reversal: Json | null;
+          apply_loan_extension: Json | null;
           apply_payment_void: Json | null;
         };
-        ComputedFields: "apply_customer_edit" | "apply_journal_reversal" | "apply_payment_void";
+        ComputedFields:
+          "apply_customer_edit" | "apply_journal_reversal" | "apply_loan_extension" | "apply_payment_void";
         Insert: {
           decided_at?: string | null;
           decided_by?: string | null;
@@ -958,6 +960,65 @@ export type Database = {
           },
         ];
       };
+      loan_extensions: {
+        Row: {
+          approval_id: string;
+          created_at: string;
+          extra_interest_cents: number;
+          extra_months: number;
+          id: string;
+          journal_id: string | null;
+          loan_id: string;
+          new_due_date: string;
+          old_due_date: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          approval_id: string;
+          created_at?: string;
+          extra_interest_cents: number;
+          extra_months: number;
+          id?: string;
+          journal_id?: string | null;
+          loan_id: string;
+          new_due_date: string;
+          old_due_date: string;
+        };
+        Update: {
+          approval_id?: string;
+          created_at?: string;
+          extra_interest_cents?: number;
+          extra_months?: number;
+          id?: string;
+          journal_id?: string | null;
+          loan_id?: string;
+          new_due_date?: string;
+          old_due_date?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loan_extensions_approval_id_fkey";
+            columns: ["approval_id"];
+            isOneToOne: false;
+            referencedRelation: "approval_requests";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_extensions_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_extensions_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       loan_penalty_events: {
         Row: {
           base_cents: number;
@@ -1662,6 +1723,15 @@ export type Database = {
         };
         Returns: Json;
       };
+      apply_loan_extension: {
+        Args: {
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
       apply_payment_void: {
         Args: {
           p_request: Omit<
@@ -1725,6 +1795,16 @@ export type Database = {
         }[];
       };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
+      extension_terms: {
+        Args: {
+          p_extra_months: number;
+          p_loan: Omit<
+            Database["public"]["Tables"]["loans"]["Row"],
+            Database["public"]["Tables"]["loans"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
       find_duplicate_customers: {
         Args: { p_exclude?: string; p_id_number: string; p_phone: string; p_phone_alt: string };
         Returns: Json;
@@ -1873,6 +1953,10 @@ export type Database = {
       request_capital_in: { Args: { p_request: Json }; Returns: string };
       request_customer_edit: {
         Args: { p_customer_id: string; p_patch: Json; p_reason: string };
+        Returns: string;
+      };
+      request_extension: {
+        Args: { p_extra_months: number; p_loan_id: string; p_reason: string };
         Returns: string;
       };
       request_journal_reversal: { Args: { p_journal_id: string; p_reason: string }; Returns: string };

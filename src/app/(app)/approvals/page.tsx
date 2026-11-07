@@ -241,6 +241,12 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                   receipt: String(payload.receipt_no ?? ""),
                   amount: formatMoney(String(payload.amount_cents ?? "0")),
                 });
+              } else if (row.type === "loan_extension") {
+                title = t("titles.extension", {
+                  name: String(payload.customer_name ?? ""),
+                  loan: String(payload.loan_no ?? ""),
+                  months: Number(payload.extra_months ?? 1),
+                });
               } else if (row.type === "loan_approval") {
                 title = t("titles.loan", {
                   name: String(payload.customer_name ?? ""),
@@ -399,6 +405,46 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                         ) : null}
                         <p className="rounded-control bg-warning-bg px-3 py-2 text-sm text-status-overdue-fg">
                           {t("voidNote")}
+                        </p>
+                      </div>
+                    ) : null}
+                    {row.type === "loan_extension" ? (
+                      <div className="grid gap-3">
+                        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                          <div>
+                            <dt className="text-xs font-medium text-ink-muted">{t("extensionDueNow")}</dt>
+                            <dd className="tabular mt-0.5 font-semibold text-ink">
+                              {typeof payload.old_due_date === "string"
+                                ? formatDate(payload.old_due_date)
+                                : ""}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium text-ink-muted">{t("extensionNewDue")}</dt>
+                            <dd className="tabular mt-0.5 font-semibold text-ink">
+                              {typeof payload.new_due_date === "string"
+                                ? formatDate(payload.new_due_date)
+                                : ""}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium text-ink-muted">{t("reasonGiven")}</dt>
+                            <dd className="mt-0.5 font-semibold text-ink">{row.reason ?? ""}</dd>
+                          </div>
+                        </dl>
+                        <p className="rounded-control bg-subtle px-3 py-2 text-sm text-ink">
+                          {t("extensionNote", {
+                            months: Number(payload.extra_months ?? 1),
+                            interest: formatMoney(String(payload.extra_interest_cents ?? "0")),
+                            owed: formatMoney(String(payload.owed_after_cents ?? "0")),
+                            due:
+                              typeof payload.new_due_date === "string"
+                                ? formatDate(payload.new_due_date)
+                                : "",
+                          })}
+                          {typeof payload.next_penalty_on === "string" && row.status === "pending"
+                            ? ` ${t("extensionNoPenalty", { date: formatDate(payload.next_penalty_on).slice(0, 6) })}`
+                            : ""}
                         </p>
                       </div>
                     ) : null}

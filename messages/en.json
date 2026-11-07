@@ -731,7 +731,8 @@
       "journal": "{memo}, {amount}",
       "loan": "{name}, {loan}, {amount}",
       "reversal": "Reverse {journal}: {memo}, {amount}",
-      "void": "{name}, receipt {receipt}, {amount}"
+      "void": "{name}, receipt {receipt}, {amount}",
+      "extension": "{name}, {loan}, {months, plural, one {# more month} other {# more months}}"
     },
     "photo": "Photo",
     "none": "None",
@@ -781,7 +782,11 @@
       "cash": "Cash",
       "mobile_money": "Mobile money",
       "bank": "Bank"
-    }
+    },
+    "extensionDueNow": "Due date now",
+    "extensionNewDue": "New due date",
+    "extensionNote": "Approving adds {months, plural, one {one month} other {# months}} of interest ({interest}). The borrower would owe {owed}, due {due}.",
+    "extensionNoPenalty": "No penalty starts on {date}."
   },
   "guarantors": {
     "heading": "Guarantors (optional)",
@@ -1034,7 +1039,8 @@
           "interest": "interest",
           "principal": "amount lent"
         },
-        "penalty": "Penalty, week {week} ({rate} of {base})"
+        "penalty": "Penalty, week {week} ({rate} of {base})",
+        "extension": "Extension interest"
       },
       "collateral": {
         "heading": "Collateral",
@@ -1083,7 +1089,20 @@
         "agreement": "Loan agreement (PDF)",
         "later": "The loan agreement can be printed once the loan is approved."
       },
-      "nextPenalty": "Next penalty {date}: {amount}"
+      "nextPenalty": "Next penalty {date}: {amount}",
+      "extend": {
+        "open": "Extend loan",
+        "heading": "Extend this loan",
+        "intro": "Another manager or the CEO approves it. Approval adds interest on the amount lent still owed for each extra month and moves the due date; penalties already charged stay.",
+        "months": "Extra time",
+        "monthsOption": "{count, plural, one {# month} other {# months}}",
+        "reason": "Reason",
+        "reasonRequired": "Give the reason.",
+        "send": "Send for approval",
+        "sending": "Sending…",
+        "cancel": "Cancel",
+        "pending": "An extension of {months, plural, one {# month} other {# months}} is waiting for approval (asked by {name} on {date})."
+      }
     }
   },
   "pdf": {

@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M5 Accruals and due lists (approved by Foday 2026-11-07); M0–M4 in review on PR #1 |
-| Current block | M5.3 Due list, WhatsApp reminders and the manual run |
+| Current block | M5.4 Loan extension |
 | Last approved block | M5 phase start (Foday 2026-11-07, "I approve M5"; open questions answered later, recommended defaults apply) |
 | State | Working on M5 |
-| Next step | M5.4 Loan extension |
+| Next step | M5.5 Demo seed penalties, demo payment check, M5 report |
 
 ## M5 plan (Accruals and due lists: FR-12, FR-13, FR-18; T-03 to T-09, T-13, T-33, T-33b)
 
@@ -110,3 +110,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-07 | M5.1 | Accrual job, penalty events, run log, late-run rule; T-03..T-08, T-33, T-33b; 430 database tests (committed locally, push blocked) |
 | 2026-11-07 | M5.2 | pg_cron schedule, next penalty and penalty rows on the loan page; 435 database tests (committed locally, push blocked) |
 | 2026-11-07 | M5.3 | due_list, /due (mock-up 11), WhatsApp reminders with audit, Remind on /field, manual run panel, due.upcoming_days setting; 444 database tests, 158 e2e (committed locally, push blocked) |
+| 2026-11-07 | M5.4 | request_extension and approval (R5), loan_extensions, Extend on the loan page, inbox card; T-13; 460 database tests (committed locally, push blocked) |

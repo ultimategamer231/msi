@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { DecisionForm } from "../../approvals/decision-form";
 import { LoanPillText } from "../loan-pill";
 
-import { CancelLoanForm, DisburseForm, SubmitDraftButton } from "./loan-actions";
+import { CancelLoanForm, DisburseForm, ExtendLoanForm, SubmitDraftButton } from "./loan-actions";
 
 /*
  * /loans/[id] (all staff; SPEC 9, mock-up 07): summary, outstanding, details, activity from the
@@ -66,11 +66,13 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
     paymentsResult,
     penaltiesResult,
     nextPenaltyResult,
+    extensionResult,
+    extensionSetting,
   ] = await Promise.all([
     supabase
       .from("loans")
       .select(
-        "*, customers!inner(id, code, type, first_name, last_name, business_name, phone), loan_products!inner(name), branches!inner(name)",
+        "*, customers!inner(id, code, type, first_name, last_name, business_name, phone), loan_products!inner(name, max_term_months), branches!inner(name)",
       )
       .eq("id", id)
       .maybeSingle(),
@@ -108,6 +110,14 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
       .select("journal_id, period_no, base_cents, charged_on, due_date_version")
       .eq("loan_id", id),
     supabase.rpc("loan_next_penalty", { p_loan_id: id }),
+    supabase
+      .from("approval_requests")
+      .select("payload, requested_at, requested_by")
+      .eq("type", "loan_extension")
+      .eq("entity_id", id)
+      .eq("status", "pending")
+      .maybeSingle(),
+    supabase.from("settings").select("value").eq("key", "extension.enabled").maybeSingle(),
   ]);
   if (
     loanResult.error !== null ||
@@ -177,6 +187,12 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
     nextPenaltyResult.error === null && nextPenaltyResult.data !== null
       ? (nextPenaltyResult.data as { on: string; cents: number })
       : null;
+  const pendingExtension = extensionResult.data;
+  const canExtend =
+    ["active", "overdue"].includes(loan.status) &&
+    extensionSetting.data?.value !== false &&
+    pendingExtension === null &&
+    (staff.role === "manager" || (staff.role === "loan_officer" && staff.branch?.id === loan.branch_id));
   const methodLabel =
     loan.disbursement_method === null ? "" : t(`methods.${loan.disbursement_method as "cash"}`);
 
@@ -192,6 +208,7 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
     if (row.source_type === "payment" || row.source_type === "field_payment")
       return t("activity.payment", { component });
     if (row.source_type === "payment_void") return t("activity.paymentVoid", { component });
+    if (row.source_type === "extension") return t("activity.extension");
     const penalty = penaltyEvents.get(row.journal_id);
     if (row.source_type === "penalty" && penalty !== undefined)
       return t("activity.penalty", {
@@ -255,15 +272,29 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
             cashAccount={t("cashAccount", { branch: staff.branch?.name ?? "" })}
           />
         ) : null}
-        {canReceive ? (
-          <div>
-            <Link
-              href={`/payments/new?loan=${loan.id}`}
-              className={cn(buttonVariants({ variant: "primary" }), "hover:text-white")}
-            >
-              {t("actions.receive")}
-            </Link>
+        {canReceive || canExtend ? (
+          <div className="flex flex-wrap items-start gap-2">
+            {canReceive ? (
+              <Link
+                href={`/payments/new?loan=${loan.id}`}
+                className={cn(buttonVariants({ variant: "primary" }), "hover:text-white")}
+              >
+                {t("actions.receive")}
+              </Link>
+            ) : null}
+            {canExtend ? (
+              <ExtendLoanForm loanId={loan.id} maxMonths={loan.loan_products.max_term_months} />
+            ) : null}
           </div>
+        ) : null}
+        {pendingExtension !== null ? (
+          <Callout>
+            {t("extend.pending", {
+              months: Number((pendingExtension.payload as { extra_months?: number }).extra_months ?? 1),
+              name: people.get(pendingExtension.requested_by) ?? "",
+              date: formatDate(businessDateOf(pendingExtension.requested_at)),
+            })}
+          </Callout>
         ) : null}
         {loan.status === "approved" && staff.role !== "cashier" ? (
           <Callout>{t("approvedNotice")}</Callout>

@@ -283,3 +283,28 @@ export async function disburseLoan(
     loanId,
   );
 }
+
+/* request_extension (SPEC 5.6; FR-18): a loan officer (own branch) or a manager, with a reason. */
+export async function requestExtension(
+  loanId: string,
+  extraMonths: number,
+  reason: string,
+): Promise<LoanActionResult> {
+  const trimmed = reason.trim().slice(0, 300);
+  if (!Number.isInteger(extraMonths) || extraMonths < 1 || extraMonths > 36) {
+    return { ok: false, code: "INVALID_INPUT" };
+  }
+  const result = await loanRpc(
+    "loans.requestExtension",
+    ["loan_officer", "manager"],
+    (supabase) =>
+      supabase.rpc("request_extension", {
+        p_loan_id: loanId,
+        p_extra_months: extraMonths,
+        p_reason: trimmed,
+      }),
+    loanId,
+  );
+  if (result.ok) revalidatePath("/approvals");
+  return result;
+}

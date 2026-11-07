@@ -8,7 +8,7 @@ import { Field, FormMessage, describedBy, inputClass } from "@/components/forms/
 import { Button } from "@/components/ui/button";
 import type { ErrorCode } from "@/lib/rpc-errors";
 
-import { cancelLoan, disburseLoan, submitDraft } from "../actions";
+import { cancelLoan, disburseLoan, requestExtension, submitDraft } from "../actions";
 
 function useAction() {
   const router = useRouter();
@@ -194,6 +194,84 @@ export function DisburseForm({
         </div>
       )}
       <ErrorText error={error} />
+    </div>
+  );
+}
+
+/* Ask for more time (SPEC 5.6; FR-18): extra months and a reason; another manager or the CEO decides. */
+export function ExtendLoanForm({ loanId, maxMonths }: { loanId: string; maxMonths: number }) {
+  const t = useTranslations("loans.detail.extend");
+  const { pending, error, run } = useAction();
+  const [open, setOpen] = useState(false);
+  const [months, setMonths] = useState(1);
+  const [reason, setReason] = useState("");
+  const [missing, setMissing] = useState(false);
+  if (!open) {
+    return (
+      <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
+        {t("open")}
+      </Button>
+    );
+  }
+  return (
+    <div
+      role="dialog"
+      aria-labelledby="extend-title"
+      className="grid gap-3 rounded-control border border-line bg-surface p-4"
+    >
+      <h3 id="extend-title" className="text-sm font-bold text-ink">
+        {t("heading")}
+      </h3>
+      <p className="text-sm text-ink-muted">{t("intro")}</p>
+      <div className="grid gap-3 sm:grid-cols-[10rem_1fr]">
+        <Field id="extend-months" label={t("months")}>
+          <select
+            id="extend-months"
+            className={inputClass}
+            value={months}
+            onChange={(event) => setMonths(Number(event.target.value))}
+          >
+            {Array.from({ length: maxMonths }, (_, index) => index + 1).map((value) => (
+              <option key={value} value={value}>
+                {t("monthsOption", { count: value })}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field id="extend-reason" label={t("reason")} error={missing ? t("reasonRequired") : undefined}>
+          <input
+            id="extend-reason"
+            value={reason}
+            maxLength={300}
+            onChange={(event) => setReason(event.target.value)}
+            className={inputClass}
+            {...describedBy("extend-reason", undefined, missing ? t("reasonRequired") : undefined)}
+          />
+        </Field>
+      </div>
+      <ErrorText error={error} />
+      <div className="flex flex-wrap gap-2">
+        <Button
+          type="button"
+          disabled={pending}
+          onClick={() => {
+            if (reason.trim() === "") {
+              setMissing(true);
+              return;
+            }
+            setMissing(false);
+            run(
+              () => requestExtension(loanId, months, reason),
+              () => setOpen(false),
+            );
+          }}
+        >
+          {pending ? t("sending") : t("send")}
+        </Button>
+        <Button type="button" variant="ghost" disabled={pending} onClick={() => setOpen(false)}>
+          {t("cancel")}
+        </Button>
+      </div>
     </div>
   );
 }
