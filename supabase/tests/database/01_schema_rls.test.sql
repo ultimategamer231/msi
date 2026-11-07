@@ -49,7 +49,7 @@ select set_eq(
         'request_customer_edit', 'decide_approval', 'request_capital_in', 'upsert_loan_product', 'loan_balance_rows', 'preview_loan_terms',
         'create_loan_draft', 'update_loan_draft', 'submit_loan', 'cancel_loan',
         'register_collateral', 'link_collateral', 'disburse_loan', 'loan_activity', 'issue_document', 'receive_payment',
-        'record_field_payment', 'confirm_remittance'],
+        'record_field_payment', 'confirm_remittance', 'request_void_payment', 'request_journal_reversal'],
   'clients can call exactly the released RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).

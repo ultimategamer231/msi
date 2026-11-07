@@ -229,6 +229,18 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                 title = t("titles.customer", { name: String(payload.name ?? ""), fields: fields.join(", ") });
               } else if (row.type === "manual_journal" || row.type === "capital_in") {
                 title = t("titles.journal", { memo: String(payload.memo ?? ""), amount: formatMoney(total) });
+              } else if (row.type === "journal_reversal") {
+                title = t("titles.reversal", {
+                  journal: String(payload.journal_no ?? ""),
+                  memo: String(payload.memo ?? ""),
+                  amount: formatMoney(total),
+                });
+              } else if (row.type === "payment_void") {
+                title = t("titles.void", {
+                  name: String(payload.customer_name ?? ""),
+                  receipt: String(payload.receipt_no ?? ""),
+                  amount: formatMoney(String(payload.amount_cents ?? "0")),
+                });
               } else if (row.type === "loan_approval") {
                 title = t("titles.loan", {
                   name: String(payload.customer_name ?? ""),
@@ -307,7 +319,9 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                       </div>
                     ) : null}
 
-                    {row.type === "manual_journal" || row.type === "capital_in" ? (
+                    {row.type === "manual_journal" ||
+                    row.type === "capital_in" ||
+                    row.type === "journal_reversal" ? (
                       <div className="grid gap-3">
                         <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                           <div>
@@ -355,6 +369,44 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                           </tbody>
                         </table>
                       </div>
+                    ) : null}
+
+                    {row.type === "payment_void" ? (
+                      <div className="grid gap-3">
+                        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                          <div>
+                            <dt className="text-xs font-medium text-ink-muted">{t("voidReceived")}</dt>
+                            <dd className="mt-0.5 font-semibold text-ink">
+                              {typeof payload.received_on === "string" ? formatDate(payload.received_on) : ""}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium text-ink-muted">{t("voidMethod")}</dt>
+                            <dd className="mt-0.5 font-semibold text-ink">
+                              {t(`methods.${String(payload.method ?? "cash") as "cash"}`)}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium text-ink-muted">{t("voidLoan")}</dt>
+                            <dd className="mt-0.5 font-semibold text-ink">{String(payload.loan_no ?? "")}</dd>
+                          </div>
+                        </dl>
+                        {row.reason !== null ? (
+                          <p className="text-sm text-ink">
+                            <span className="text-ink-muted">{t("reasonGiven")}: </span>
+                            {row.reason}
+                          </p>
+                        ) : null}
+                        <p className="rounded-control bg-warning-bg px-3 py-2 text-sm text-status-overdue-fg">
+                          {t("voidNote")}
+                        </p>
+                      </div>
+                    ) : null}
+                    {row.type === "journal_reversal" && row.reason !== null ? (
+                      <p className="text-sm text-ink">
+                        <span className="text-ink-muted">{t("reasonGiven")}: </span>
+                        {row.reason}
+                      </p>
                     ) : null}
 
                     {row.type === "loan_approval" ? (

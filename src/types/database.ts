@@ -80,8 +80,10 @@ export type Database = {
           status: string;
           type: string;
           apply_customer_edit: Json | null;
+          apply_journal_reversal: Json | null;
+          apply_payment_void: Json | null;
         };
-        ComputedFields: "apply_customer_edit";
+        ComputedFields: "apply_customer_edit" | "apply_journal_reversal" | "apply_payment_void";
         Insert: {
           decided_at?: string | null;
           decided_by?: string | null;
@@ -1508,10 +1510,28 @@ export type Database = {
         };
         Returns: Json;
       };
+      apply_journal_reversal: {
+        Args: {
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
       apply_loan_decision: {
         Args: {
           p_decision: string;
           p_note: string;
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      apply_payment_void: {
+        Args: {
           p_request: Omit<
             Database["public"]["Tables"]["approval_requests"]["Row"],
             Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
@@ -1705,7 +1725,9 @@ export type Database = {
         Args: { p_customer_id: string; p_patch: Json; p_reason: string };
         Returns: string;
       };
+      request_journal_reversal: { Args: { p_journal_id: string; p_reason: string }; Returns: string };
       request_manual_journal: { Args: { p_request: Json }; Returns: string };
+      request_void_payment: { Args: { p_payment_id: string; p_reason: string }; Returns: string };
       require_entry_date: { Args: { p_date: string }; Returns: string };
       require_posting_date: { Args: { p_date: string }; Returns: undefined };
       require_role: {
@@ -1721,6 +1743,7 @@ export type Database = {
       setting_error: { Args: { p_key: string; p_problem: string }; Returns: undefined };
       store_guarantors: { Args: { p_guarantors: Json; p_loan_id: string }; Returns: number };
       submit_loan: { Args: { p_loan_id: string }; Returns: string };
+      swapped_lines: { Args: { p_journal_id: string }; Returns: Json };
       take_payment: {
         Args: {
           p_amount_cents: number;

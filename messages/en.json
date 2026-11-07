@@ -725,7 +725,9 @@
     "titles": {
       "customer": "{name}, {fields}",
       "journal": "{memo}, {amount}",
-      "loan": "{name}, {loan}, {amount}"
+      "loan": "{name}, {loan}, {amount}",
+      "reversal": "Reverse {journal}: {memo}, {amount}",
+      "void": "{name}, receipt {receipt}, {amount}"
     },
     "photo": "Photo",
     "none": "None",
@@ -766,7 +768,16 @@
     "loanTermValue": "{months, plural, one {# month} other {# months}}, {product}",
     "purpose": "Purpose",
     "aboveLimit": "Above the {limit} manager limit, so it needs CEO approval.",
-    "openLoan": "Open loan {loan}"
+    "openLoan": "Open loan {loan}",
+    "voidReceived": "Received on",
+    "voidMethod": "Method",
+    "voidLoan": "Loan",
+    "voidNote": "Approving posts a reversing journal dated today. The receipt is marked VOID; nothing is deleted.",
+    "methods": {
+      "cash": "Cash",
+      "mobile_money": "Mobile money",
+      "bank": "Bank"
+    }
   },
   "guarantors": {
     "heading": "Guarantors (optional)",
