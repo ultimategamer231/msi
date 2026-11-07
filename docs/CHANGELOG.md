@@ -2,6 +2,14 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
+## [M5 Accruals and due lists] 2026-11-07 (in review, PR #1; push pending)
+### Added
+- M5.1: Daily job: overdue marking, weekly penalties with the same amounts whether it runs daily or late, recovery eligibility, run log (T-03 to T-08, T-33, T-33b).
+- M5.2: The job runs every night in the database; the loan page shows penalties, the weekly count and the next penalty.
+- M5.3: Due and overdue list with WhatsApp reminders (logged), reminders on the field list, a manual run for managers, and the due-soon window as a setting.
+- M5.4: Loan extension through approval, with the cost shown on the request (T-13).
+- M5.5: Demo penalties and the pending extension from DEMO_DATA; demo payment check (`pnpm test:demo`).
+
 ## [M4 Payments] 2026-11-07 (in review, PR #1)
 ### Added
 - M4.1: Office payments with a fixed allocation order (penalty, interest, then amount lent), overpayment refused, references for mobile money and bank, safe retries, date rules; loans close when nothing is owed.

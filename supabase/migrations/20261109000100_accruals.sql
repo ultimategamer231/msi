@@ -143,7 +143,8 @@ security definer
 set search_path = public
 as $$
 declare
-  v_started timestamptz := clock_timestamp();
+  v_started timestamptz := app_now();             -- business clock, like every other record (B-01)
+  v_clock timestamptz := clock_timestamp();        -- the real duration is kept on top of it
   v_run uuid := gen_random_uuid();
   v_loan loans;
   v_owed bigint;
@@ -189,7 +190,7 @@ begin
   -- 4. The run log.
   insert into accrual_runs (id, run_date, overdue_marked, penalties_posted, penalty_cents, recovery_flagged,
                             started_at, finished_at, triggered_by, source)
-  values (v_run, p_as_of, v_marked, v_posted, v_cents, v_flagged, v_started, clock_timestamp(), p_triggered_by,
+  values (v_run, p_as_of, v_marked, v_posted, v_cents, v_flagged, v_started, v_started + (clock_timestamp() - v_clock), p_triggered_by,
           p_source);
   perform write_audit('accruals.run', 'accrual_run', v_run::text, null,
     jsonb_build_object('run_date', p_as_of, 'source', p_source, 'overdue_marked', v_marked,

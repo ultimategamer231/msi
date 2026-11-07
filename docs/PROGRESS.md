@@ -2,11 +2,11 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M5 Accruals and due lists (approved by Foday 2026-11-07); M0–M4 in review on PR #1 |
-| Current block | M5.4 Loan extension |
+| Current phase | M5 Accruals and due lists complete; M0–M4 in review on PR #1, M5 committed locally (push blocked, GitHub 403) |
+| Current block | M5.5 Demo seed, demo payment check, M5 report (done) |
 | Last approved block | M5 phase start (Foday 2026-11-07, "I approve M5"; open questions answered later, recommended defaults apply) |
-| State | Working on M5 |
-| Next step | M5.5 Demo seed penalties, demo payment check, M5 report |
+| State | **Stopped: waiting for Foday's approval to start M6** (phase report `docs/reports/PHASE-M5.md`); first push the local M5 commits once GitHub access is restored |
+| Next step | Push M5 (`git push -u origin claude/new-session-6ictcc`), check CI, update PR #1; then on approval plan M6 Collateral and recovery |
 
 ## M5 plan (Accruals and due lists: FR-12, FR-13, FR-18; T-03 to T-09, T-13, T-33, T-33b)
 
@@ -65,7 +65,7 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 3. `pnpm install`, `pnpm db:start` (applies migrations and seeds), `pnpm env:local` (writes `.env.local`), `pnpm types` after any migration change.
 4. Checks before every commit (CI runs the same and fails on warnings): `pnpm format`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:db`, `pnpm supabase db lint --level warning`, `pnpm supabase db advisors --type all --level warn`. For e2e: `pnpm build`, free port 3000 (`fuser -k 3000/tcp`), then `CI=1 pnpm test:e2e`.
 5. Apply a new migration locally with `pnpm supabase migration up`. If local e2e runs start failing on lists (old test data piling up, for example the approvals inbox), reset with `pnpm supabase db reset`; CI always starts fresh.
-6. Demo data: `pnpm seed:demo --as-of 2026-02-12` on a fresh database. It prints the demo passwords once; never commit them.
+6. Demo data: `pnpm seed:demo --as-of 2026-02-12` on a fresh database (about 3.5 minutes: the nightly job runs for each past day). It prints the demo passwords once; never commit them. `DEMO_GRACE_PASSWORD=... pnpm test:demo` then checks Mariama's demo payment (it changes the demo data, so reseed afterwards).
 7. Work is safe only once pushed; the container is temporary. Commit per block, push, keep PR #1 up to date, never push to `main`.
 
 ## Log
@@ -111,3 +111,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-07 | M5.2 | pg_cron schedule, next penalty and penalty rows on the loan page; 435 database tests (committed locally, push blocked) |
 | 2026-11-07 | M5.3 | due_list, /due (mock-up 11), WhatsApp reminders with audit, Remind on /field, manual run panel, due.upcoming_days setting; 444 database tests, 158 e2e (committed locally, push blocked) |
 | 2026-11-07 | M5.4 | request_extension and approval (R5), loan_extensions, Extend on the loan page, inbox card; T-13; 460 database tests (committed locally, push blocked) |
+| 2026-11-07 | M5.5 | Demo seed timeline (nightly job per day, payments, pending extension), demo payment check, screenshots, M5 report; 460 database tests, 160 e2e (committed locally, push blocked) |

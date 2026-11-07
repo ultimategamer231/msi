@@ -688,7 +688,6 @@ async function main(): Promise<void> {
 
   // 4b. Loans (M3): opening capital, collateral and the DEMO_DATA loans, each created, approved and
   //     paid out at its story date through the RPCs (the business clock moves to each date).
-  //     Penalties arrive with M5, so loans that DEMO_DATA shows overdue with penalties have none yet.
   const at = async (daysBefore: number, time = "10:00") =>
     rpc(client, "update_setting", {
       p_key: "clock.override_at",
@@ -799,24 +798,41 @@ async function main(): Promise<void> {
     }
   }
 
-  // 4c. Payments (M4), at their story dates: Grace Flomo at the counter, Emmanuel Tarpeh in the
-  //     field (cash not yet handed over). Loans paid in full close (SPEC 5.3). Skipped when any
-  //     payment exists.
+  // 4c. The days from the first payout to A, in order (M4, M5). Each day starts with the nightly
+  //     job at 01:00 (SPEC 5.5: overdue marking, penalties, recovery flags, run as the scheduler
+  //     would, with no user), then that day's payments: Grace Flomo at the counter, Emmanuel Tarpeh
+  //     in the field (cash not yet handed over). Loans paid in full close (SPEC 5.3). Days the job
+  //     already ran are skipped, and payments are posted only on a database without any.
   const [{ count: paymentCount } = { count: 0 }] = ownerQuery<{ count: number }>(
     "select count(*)::int as count from public.payments",
   );
+  const ranOn = new Set(
+    ownerQuery<{ run_date: string }>("select distinct run_date::text from public.accrual_runs").map(
+      (row) => row.run_date,
+    ),
+  );
+  const cashier = await signedIn("grace.flomo@msi-demo.test");
+  const fieldOfficer = await signedIn("emmanuel.tarpeh@msi-demo.test");
+  const loanIds = new Map(
+    ownerQuery<{ id: string; loan_no: string }>("select id, loan_no from public.loans").map((row) => [
+      row.loan_no,
+      row.id,
+    ]),
+  );
   if (paymentCount === 0) {
-    const cashier = await signedIn("grace.flomo@msi-demo.test");
-    const fieldOfficer = await signedIn("emmanuel.tarpeh@msi-demo.test");
-    const loanIds = new Map(
-      ownerQuery<{ id: string; loan_no: string }>("select id, loan_no from public.loans").map((row) => [
-        row.loan_no,
-        row.id,
-      ]),
-    );
     const branch2 = branchIds.get("BR2") ?? null;
     await rpc(client, "set_sequence_start", { p_kind: "receipt", p_branch_id: branch2, p_last_value: 115 });
-    for (const payment of DEMO_PAYMENTS) {
+  }
+  const firstDay = Math.max(
+    ...DEMO_LOANS.filter((loan) => loan.pendingOnly !== true).map((loan) => loan.daysBefore),
+  );
+  for (let daysBefore = firstDay; daysBefore >= 0; daysBefore -= 1) {
+    if (!ranOn.has(addDays(anchor, -daysBefore))) {
+      await at(daysBefore, "01:00");
+      ownerQuery("select public.scheduled_daily_accruals()::text as run");
+    }
+    if (paymentCount > 0) continue;
+    for (const payment of DEMO_PAYMENTS.filter((item) => item.daysBefore === daysBefore)) {
       const loanId = loanIds.get(payment.loanNo);
       if (loanId === undefined) throw new Error(`No demo loan ${payment.loanNo}`);
       await at(payment.daysBefore, payment.time);
@@ -840,8 +856,23 @@ async function main(): Promise<void> {
     }
   }
 
+  // 4d. Waiting on A: Emmanuel Tarpeh asked on A−1 at 16:40 to extend Joseph B. Gbessay's loan by a
+  //     month (DEMO_DATA "Approvals waiting"; adds $120.00).
+  const josephLoan = loanIds.get("LN-BR2-00007");
+  const [{ count: extensionCount } = { count: 0 }] = ownerQuery<{ count: number }>(
+    "select count(*)::int as count from public.approval_requests where type = 'loan_extension'",
+  );
+  if (josephLoan !== undefined && extensionCount === 0) {
+    await at(1, "16:40");
+    await rpc(fieldOfficer, "request_extension", {
+      p_loan_id: josephLoan,
+      p_extra_months: 1,
+      p_reason: "Shop stock delayed at port",
+    });
+  }
+
   // 5. Waiting on A (DEMO_DATA "Approvals waiting"): Emmanuel Tarpeh asks to change Mariama
-  //    Kollie's phone at about 07:10. Loan, extension and expense requests arrive with M3, M5, M8.
+  //    Kollie's phone at about 07:10. The expense request arrives with M8.
   const [mariama] = ownerQuery<{ id: string; phone: string; pending: number }>(
     `select c.id, c.phone, (select count(*)::int from public.approval_requests r
                              where r.entity_id = c.id and r.status = 'pending') as pending

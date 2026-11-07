@@ -15,6 +15,7 @@
     "test:coverage": "vitest run --coverage",
     "test:db": "supabase test db",
     "test:e2e": "playwright test",
+    "test:demo": "playwright test -c playwright.demo.config.ts",
     "db:start": "supabase start -x studio,imgproxy,mailpit,logflare,vector,supavisor,edge-runtime,realtime",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
