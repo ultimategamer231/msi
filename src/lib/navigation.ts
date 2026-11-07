@@ -34,7 +34,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { key: "field", href: "/field", route: "/field", built: false },
   { key: "customers", href: "/customers", route: "/customers", built: true },
   { key: "loans", href: "/loans", route: "/loans", built: true },
-  { key: "payments", href: "/payments", route: "/payments", built: false },
+  { key: "payments", href: "/payments", route: "/payments", built: true },
   { key: "due", href: "/due", route: "/due", built: false },
   { key: "collateral", href: "/collateral", route: "/collateral", built: false },
   { key: "recovery", href: "/recovery", route: "/recovery", built: false },

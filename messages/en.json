@@ -993,7 +993,8 @@
         "noPenalties": "No penalties",
         "penaltyRule": "At most {max} weekly charges",
         "paid": "Paid so far",
-        "noPayments": "No payments yet"
+        "noPayments": "No payments yet",
+        "payments": "{count, plural, one {# payment} other {# payments}}, last on {date}"
       },
       "outstanding": "Outstanding",
       "components": "Principal {principal} · interest {interest} · penalties {penalty}",
@@ -1021,7 +1022,14 @@
         "other": "{source}: {component}",
         "system": "System",
         "note": "Balances are calculated from the ledger. No entry can be edited; mistakes are reversed with approval.",
-        "table": "Activity table"
+        "table": "Activity table",
+        "payment": "Payment applied to {component}",
+        "paymentVoid": "Payment voided ({component})",
+        "components": {
+          "penalty": "penalty",
+          "interest": "interest",
+          "principal": "amount lent"
+        }
       },
       "collateral": {
         "heading": "Collateral",
@@ -1062,7 +1070,8 @@
           "cash": "Cash",
           "mobile_money": "Mobile money",
           "bank": "Bank"
-        }
+        },
+        "receive": "Receive payment"
       },
       "documents": {
         "heading": "Documents",
@@ -1107,6 +1116,112 @@
       "dateLine": "Signed at ______________________ on ____ / ____ / ________",
       "preparedBy": "Prepared by {name}",
       "verify": "Check that this document is genuine by scanning the code or visiting:"
+    }
+  },
+  "payments": {
+    "title": "Payments",
+    "loading": "Loading payments…",
+    "new": "Receive payment",
+    "empty": "No payments match these filters.",
+    "count": "{count, plural, one {# payment} other {# payments}}",
+    "windowed": "{count, plural, one {# payment} other {# payments}} since {date}.",
+    "includeOlder": "Include older",
+    "hideOlder": "Last 30 days only",
+    "tableLabel": "Payments table",
+    "page": "Page {page} of {pages}",
+    "previous": "Previous",
+    "next": "Next",
+    "field": "Field",
+    "methods": {
+      "cash": "Cash",
+      "mobile_money": "Mobile money",
+      "bank": "Bank"
+    },
+    "columns": {
+      "receipt": "Receipt",
+      "date": "Date",
+      "customer": "Customer",
+      "loan": "Loan",
+      "method": "Method",
+      "amount": "Amount",
+      "by": "Received by",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "posted": "Posted",
+      "voided": "Voided",
+      "voidPending": "Void requested",
+      "awaitingHandover": "Awaiting handover"
+    },
+    "filters": {
+      "label": "Filter payments",
+      "q": "Search",
+      "qPlaceholder": "Receipt, loan number or customer",
+      "method": "Method",
+      "anyMethod": "Any method",
+      "status": "Status",
+      "anyStatus": "Any status",
+      "branch": "Branch",
+      "anyBranch": "All branches",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply",
+      "clear": "Clear"
+    },
+    "receive": {
+      "title": "Receive payment",
+      "loading": "Loading…",
+      "find": "Find loan or customer",
+      "findLabel": "Find a loan",
+      "findPlaceholder": "Name, phone or loan number",
+      "search": "Search",
+      "hits": "{count, plural, =0 {No open loans found} one {# open loan found} other {# open loans found}}",
+      "noHits": "No open loan matches. Only paid-out loans that still owe money can take a payment.",
+      "start": "Search for the customer or the loan number to begin.",
+      "loanMissing": "That loan was not found.",
+      "notOpen": "This loan is not open for payments. Only paid-out loans that still owe money can take a payment.",
+      "owes": "Owes",
+      "daysOverdue": "{count, plural, one {# day overdue} other {# days overdue}}",
+      "notOverdue": "Not overdue",
+      "amount": "Amount (USD)",
+      "date": "Date",
+      "dateHelp": "Payments are dated today.",
+      "method": "Method",
+      "reference": "Transaction reference (required)",
+      "referenceHelpMomo": "The mobile money transaction ID, for example OM-7731904.",
+      "referenceHelpBank": "The bank slip or transfer reference.",
+      "preview": "Allocation preview",
+      "components": {
+        "penalty": "Penalty",
+        "interest": "Interest",
+        "principal": "Amount lent"
+      },
+      "after": "Still owed after payment",
+      "overpayment": "This is more than the {amount} owed. Enter {amount} or less.",
+      "previewUnavailable": "The preview could not be updated. The amount is checked again when you save.",
+      "cancel": "Cancel",
+      "submit": "Receive payment",
+      "saving": "Saving…",
+      "formLabel": "Payment details"
+    },
+    "validation": {
+      "amount": "Enter an amount more than zero, with at most 2 decimals.",
+      "method": "Choose how the money was paid.",
+      "reference": "Enter the transaction reference (at least 4 characters).",
+      "referenceLong": "The reference can have at most 100 characters.",
+      "loan": "Choose the loan first."
+    },
+    "void": {
+      "open": "Request void",
+      "openLabel": "Request void of {receipt}",
+      "confirm": "Void {receipt}? Another manager or the CEO must approve it; the payment is then reversed.",
+      "reason": "Reason",
+      "reasonRequired": "Give the reason.",
+      "send": "Send for approval",
+      "sending": "Sending…",
+      "keep": "Keep it",
+      "sent": "Void requested. Nothing changes until it is approved."
     }
   }
 }

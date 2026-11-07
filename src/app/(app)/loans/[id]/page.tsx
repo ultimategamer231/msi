@@ -6,6 +6,7 @@ import { Suspense, type ReactNode } from "react";
 import { PageSkeleton } from "@/components/layout/page-skeleton";
 import { TopBar } from "@/components/layout/top-bar";
 import { Callout } from "@/components/ui/callout";
+import { buttonVariants } from "@/components/ui/button";
 import { ScrollRegion } from "@/components/ui/scroll-region";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { requirePageAccess } from "@/lib/auth/staff";
@@ -62,6 +63,7 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
     requestResult,
     peopleResult,
     todayResult,
+    paymentsResult,
   ] = await Promise.all([
     supabase
       .from("loans")
@@ -93,12 +95,19 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
       .maybeSingle(),
     supabase.from("profiles").select("id, full_name"),
     supabase.rpc("business_today"),
+    supabase
+      .from("payments")
+      .select("amount_cents, received_on")
+      .eq("loan_id", id)
+      .eq("status", "posted")
+      .order("received_on"),
   ]);
   if (
     loanResult.error !== null ||
     activityResult.error !== null ||
     pledgesResult.error !== null ||
-    todayResult.error !== null
+    todayResult.error !== null ||
+    paymentsResult.error !== null
   ) {
     throw new Error("Could not read the loan");
   }
@@ -146,6 +155,12 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
   const interestCents = loan.interest_cents ?? 0;
   const penaltyCents = BigInt(balance?.penalty_out ?? 0);
   const activity = activityResult.data ?? [];
+  const payments = paymentsResult.data;
+  const paidCents = payments.reduce((sum, payment) => sum + BigInt(payment.amount_cents), 0n);
+  const lastPaidOn = payments.at(-1)?.received_on ?? null;
+  const canReceive =
+    ["active", "overdue", "recovery"].includes(loan.status) &&
+    (staff.role === "cashier" || staff.role === "manager");
   const methodLabel =
     loan.disbursement_method === null ? "" : t(`methods.${loan.disbursement_method as "cash"}`);
 
@@ -157,6 +172,10 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
         rate: formatRateBps(loan.interest_rate_bps ?? 0),
         months: loan.term_months,
       });
+    const component = t(`activity.components.${(row.component ?? "principal") as "principal"}`);
+    if (row.source_type === "payment" || row.source_type === "field_payment")
+      return t("activity.payment", { component });
+    if (row.source_type === "payment_void") return t("activity.paymentVoid", { component });
     return t("activity.other", { component: row.component ?? "", source: row.source_type });
   };
 
@@ -213,6 +232,16 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
             cashAccount={t("cashAccount", { branch: staff.branch?.name ?? "" })}
           />
         ) : null}
+        {canReceive ? (
+          <div>
+            <Link
+              href={`/payments/new?loan=${loan.id}`}
+              className={cn(buttonVariants({ variant: "primary" }), "hover:text-white")}
+            >
+              {t("actions.receive")}
+            </Link>
+          </div>
+        ) : null}
         {loan.status === "approved" && staff.role !== "cashier" ? (
           <Callout>{t("approvedNotice")}</Callout>
         ) : null}
@@ -250,8 +279,12 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
           </Card>
           <Card>
             <p className="text-sm text-ink-muted">{t("cards.paid")}</p>
-            <p className="tabular mt-1 text-2xl font-bold text-ink">{formatMoney(0)}</p>
-            <p className="mt-1 text-sm text-ink-muted">{t("cards.noPayments")}</p>
+            <p className="tabular mt-1 text-2xl font-bold text-ink">{formatMoney(paidCents)}</p>
+            <p className="mt-1 text-sm text-ink-muted">
+              {lastPaidOn === null
+                ? t("cards.noPayments")
+                : t("cards.payments", { count: payments.length, date: formatDate(lastPaidOn) })}
+            </p>
           </Card>
         </div>
 

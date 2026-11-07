@@ -11,6 +11,7 @@ import {
   formatTime,
   formatWeekdayDate,
   parseBusinessDate,
+  shiftBusinessDate,
   toCents,
 } from "./format";
 
@@ -106,6 +107,14 @@ describe("formatShare", () => {
   it("rejects a zero whole and a negative part", () => {
     expect(() => formatShare(1, 0)).toThrow(RangeError);
     expect(() => formatShare(-1, 10)).toThrow(RangeError);
+  });
+});
+
+describe("shiftBusinessDate", () => {
+  it("moves across month and year ends", () => {
+    expect(shiftBusinessDate("2026-03-01", -1)).toBe("2026-02-28");
+    expect(shiftBusinessDate("2026-02-12", -30)).toBe("2026-01-13");
+    expect(shiftBusinessDate("2025-12-31", 1)).toBe("2026-01-01");
   });
 });
 

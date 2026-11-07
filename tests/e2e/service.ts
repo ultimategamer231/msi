@@ -110,3 +110,47 @@ export async function fundCash(account: string, amountCents: number): Promise<vo
   });
   if (decideError !== null) throw decideError;
 }
+
+/** A paid-out loan, made through the same RPCs staff use: applied, pledged, approved, paid out (R1). */
+export async function activeTestLoan(
+  fields: Record<string, string>,
+  principalCents: number,
+): Promise<{ id: string; loanNo: string; customerId: string }> {
+  const customer = await createTestCustomer(fixtureUser("loan_officer"), fields);
+  const loan = await submitTestLoan(fixtureUser("loan_officer"), customer.id, principalCents);
+  const officer = await userClient(fixtureUser("loan_officer"));
+  const { data: itemId, error } = await officer.rpc("register_collateral", {
+    p_item: {
+      owner_customer_id: customer.id,
+      type: "electronics",
+      description: "Samsung TV 43 inch",
+      estimated_value_cents: principalCents * 2,
+      location_note: "Branch 2 safe",
+    },
+  });
+  if (error !== null) throw error;
+  const { error: linkError } = await officer.rpc("link_collateral", {
+    p_loan_id: loan.id,
+    p_collateral_id: itemId,
+  });
+  if (linkError !== null) throw linkError;
+  await fundCash("1010-BR2", principalCents);
+  const manager = await userClient(fixtureUser("manager"));
+  const { data: request, error: readError } = await manager
+    .from("approval_requests")
+    .select("id")
+    .eq("type", "loan_approval")
+    .eq("entity_id", loan.id)
+    .single();
+  if (readError !== null) throw readError;
+  const { error: decideError } = await manager.rpc("decide_approval", {
+    p_id: request.id,
+    p_decision: "approve",
+    p_note: "",
+  });
+  if (decideError !== null) throw decideError;
+  const cashier = await userClient(fixtureUser("cashier"));
+  const { error: payoutError } = await cashier.rpc("disburse_loan", { p_loan_id: loan.id, p_method: "cash" });
+  if (payoutError !== null) throw payoutError;
+  return { ...loan, customerId: customer.id };
+}

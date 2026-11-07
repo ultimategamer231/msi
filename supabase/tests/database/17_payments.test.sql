@@ -1,7 +1,7 @@
 -- M4.1: office payments (SPEC 5.2 allocation, 5.4; R2; T-06 allocation, T-10, T-11, T-12, T-37).
 begin;
 \ir _helpers.psql
-select plan(24);
+select plan(26);
 
 insert into public.branches (code, name) values ('TP', 'Test Payments');
 select id as br from public.branches where code = 'TP' \gset
@@ -70,6 +70,14 @@ select matches(tests.try_as('authenticated', :'cashier_id', format(
 select matches(tests.try_as('authenticated', :'cashier_id', format(
   $$select public.receive_payment('%s', 5000, 'cash', null, '2026-02-11', 'key-date-0001')$$, :'loan_id')),
   '^DATE_NOT_ALLOWED', 'a cashier cannot back-date a payment');
+
+-- The screen's preview uses the same split the posting will (mock-up 03).
+select is(tests.value_as('authenticated', :'cashier_id', format($$select public.preview_payment('%s', 50000)::text$$, :'loan_id'))::jsonb,
+  '{"owed": {"penalty": 24000, "interest": 20000, "principal": 100000, "total": 144000},
+    "allocation": {"penalty": 24000, "interest": 20000, "principal": 6000}, "after_cents": 94000, "overpayment": false}'::jsonb,
+  'the preview shows penalty, interest, principal and what is still owed after');
+select is((tests.value_as('authenticated', :'cashier_id', format($$select public.preview_payment('%s', 144001)::text$$, :'loan_id'))::jsonb) ->> 'overpayment',
+  'true', 'the preview flags an overpayment');
 
 -- T-06 (allocation part): 50000 after the week-1 penalty.
 select is(tests.try_as('authenticated', :'cashier_id', format(

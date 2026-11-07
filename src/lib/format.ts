@@ -121,6 +121,12 @@ function partsToText({ year, month, day }: DateParts): string {
   return `${String(day).padStart(2, "0")} ${MONTHS[month - 1] ?? ""} ${year}`;
 }
 
+/** Calendar arithmetic on a business date: shiftBusinessDate("2026-03-01", -1) → "2026-02-28". */
+export function shiftBusinessDate(businessDate: string, days: number): string {
+  const { year, month, day } = parseBusinessDate(businessDate);
+  return new Date(Date.UTC(year, month - 1, day + days)).toISOString().slice(0, 10);
+}
+
 /** "2026-02-05" → "05 Feb 2026". */
 export function formatDate(businessDate: string): string {
   return partsToText(parseBusinessDate(businessDate));
