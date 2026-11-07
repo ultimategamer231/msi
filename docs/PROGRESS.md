@@ -2,21 +2,23 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M4 Payments complete; M0–M4 in review on PR #1 |
-| Current block | M4.7 Demo repayments, clean-up, handover and M4 report (done) |
-| Last approved block | M4 phase start (Foday 2026-11-07, "Start M4"; open questions answered later, recommended defaults apply) |
-| State | **Stopped: waiting for Foday's approval to start M5** (phase report `docs/reports/PHASE-M4.md`) |
-| Next step | On approval: plan M5 Accruals and due lists (blocks below), then build block by block |
+| Current phase | M5 Accruals and due lists (approved by Foday 2026-11-07); M0–M4 in review on PR #1 |
+| Current block | M5.1 Accrual job |
+| Last approved block | M5 phase start (Foday 2026-11-07, "I approve M5"; open questions answered later, recommended defaults apply) |
+| State | Working on M5 |
+| Next step | M5.2 Cron schedule and penalties on the loan page |
 
-## M5 outline (Accruals and due lists: FR-12, FR-13, FR-18; T-03 to T-09, T-13, T-33) — plan in detail at the start of M5
+## M5 plan (Accruals and due lists: FR-12, FR-13, FR-18; T-03 to T-09, T-13, T-33, T-33b)
 
-| Block | Content |
-| --- | --- |
-| M5.1 | `loan_outstanding_as_of`, `run_daily_accruals` (penalties per SPEC 5.2 with the late-run rule; B-15 default), overdue status and days overdue; T-03..T-08, T-33 |
-| M5.2 | `pg_cron` schedule, manual run button (manager/admin), job log |
-| M5.3 | `/due` (due today, due in 7 days, overdue; B-07, B-18 defaults), WhatsApp reminder links with `settings.templates.reminder` and the `reminder_opened` audit event; Remind on `/field` |
-| M5.4 | Loan extension through approval (FR-18; T-13) |
-| M5.5 | Demo seed penalties (Mariama $240.00 on A, Esther, Mohammed), demo payment e2e (`RCT-BR2-000123`, $1,440.00 → $940.00), M5 report |
+| Block | Content | Done when |
+| --- | --- | --- |
+| M5.1 | `loan_penalty_events`, `accrual_runs`, `loan_outstanding_as_of` (B-15 rule), `run_daily_accruals` (overdue marking, penalties R4 by the late-run rule, recovery eligibility, run log; manager/admin), balances gain last payment and next penalty dates | T-03, T-04, T-05, T-06 (penalty part), T-07, T-08, T-33, T-33b match `tools/vectors.py` |
+| M5.2 | `pg_cron` schedule (01:00 UTC) calling the job without a user; penalty lines and the next penalty on the loan page | cron job registered; e2e |
+| M5.3 | `due_list` view (B-07 setting `due.upcoming_days`, B-18 buckets), `/due` (mock-up 11) with WhatsApp reminders (SPEC 10.3, `reminder_opened` audit), Remind on `/field`, manual "Run daily job" with the last runs | e2e at 390 and 1280 |
+| M5.4 | `request_extension` and its decision (R5; FR-18, A-09), Extend on the loan page, inbox card (B-16 wording) | T-13 |
+| M5.5 | Demo seed: daily job for each past day (DEMO_DATA penalties, overdue and recovery flags), demo payment check (RCT-BR2-000123, $1,440.00 → $940.00), screenshots, M5 report | all checks green |
+
+Open questions use the recommended defaults (Foday 2026-11-07, "I approve M5"): B-07 window 7 days as a setting, B-15 base rule plus T-33b, B-16 "The borrower would owe…", B-18 buckets 1–7, 8–30, 31+.
 
 ## M4 plan (Payments: FR-10, FR-11, FR-20; T-06 allocation, T-10, T-11, T-12, T-25, T-28, T-36, T-37)
 
@@ -104,3 +106,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-07 | M4.5 | /receipts/[id] (mock-up 04) with A5 and 80 mm print, receipt PDF, VOID stamp; issue_document receipts, receipt_balance_after; 395 database tests |
 | 2026-11-07 | M4.6 | /field (mock-up 01), /field/collect (mock-up 02), /remittance with counted total; Today and Field cash in the menu |
 | 2026-11-07 | M4.7 | Demo repayments (RCT-BR2-000116..000122), shared payment form moved, handover checklist, M4 report and screenshots; 395 database tests, 152 e2e |
+| 2026-11-07 | M5 | Phase approved ("I approve M5"); plan written; GitHub access from the session lost (403), blocks committed locally until it is restored |

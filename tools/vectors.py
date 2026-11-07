@@ -59,3 +59,15 @@ a = allocate(50000, k1, I, P); prinA = P - a['principal']; k2A = pct(prinA, 2000
 b = allocate(50000, 0, I, P); prinB = P - b['principal']; k2B = pct(prinB + k1, 2000)
 print('T-33 run A owed', prinA + k2A, '| run B owed', prinB + k1 + k2B, '| k2', k2A, k2B)
 assert k2A == k2B == 18800 and prinA + k2A == prinB + k1 + k2B == 112800
+
+# T-33b oracle (B-15): the job first runs three periods late. Daily: k1 on the full 120000, the
+# payment of 50000 after k1 pays penalty, interest, then principal; k2 and k3 on what is then owed.
+# Late: each base is what was owed at the end of its charge date, earlier penalties included.
+k1 = pct(P + I, 2000)
+a = allocate(50000, k1, I, P); owed = (P - a['principal'])
+k2 = pct(owed, 2000); owed += k2
+k3 = pct(owed, 2000); owed += k3
+late_owed2 = (P + I - 50000) + k1; late_k2 = pct(late_owed2, 2000)
+late_k3 = pct(late_owed2 + late_k2, 2000)
+print('T-33b daily', k1, k2, k3, 'owed', owed, '| late', k1, late_k2, late_k3)
+assert (k2, k3, owed) == (late_k2, late_k3, 135360) == (18800, 22560, 135360)

@@ -45,6 +45,54 @@ export type Database = {
           },
         ];
       };
+      accrual_runs: {
+        Row: {
+          finished_at: string;
+          id: string;
+          overdue_marked: number;
+          penalties_posted: number;
+          penalty_cents: number;
+          recovery_flagged: number;
+          run_date: string;
+          source: string;
+          started_at: string;
+          triggered_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          finished_at: string;
+          id?: string;
+          overdue_marked?: number;
+          penalties_posted?: number;
+          penalty_cents?: number;
+          recovery_flagged?: number;
+          run_date: string;
+          source: string;
+          started_at: string;
+          triggered_by?: string | null;
+        };
+        Update: {
+          finished_at?: string;
+          id?: string;
+          overdue_marked?: number;
+          penalties_posted?: number;
+          penalty_cents?: number;
+          recovery_flagged?: number;
+          run_date?: string;
+          source?: string;
+          started_at?: string;
+          triggered_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "accrual_runs_triggered_by_fkey";
+            columns: ["triggered_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       app_environment: {
         Row: {
           id: boolean;
@@ -910,6 +958,68 @@ export type Database = {
           },
         ];
       };
+      loan_penalty_events: {
+        Row: {
+          base_cents: number;
+          charged_on: string;
+          created_at: string;
+          due_date_version: number;
+          id: string;
+          journal_id: string;
+          loan_id: string;
+          penalty_cents: number;
+          period_no: number;
+          run_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          base_cents: number;
+          charged_on: string;
+          created_at?: string;
+          due_date_version: number;
+          id?: string;
+          journal_id: string;
+          loan_id: string;
+          penalty_cents: number;
+          period_no: number;
+          run_id?: string | null;
+        };
+        Update: {
+          base_cents?: number;
+          charged_on?: string;
+          created_at?: string;
+          due_date_version?: number;
+          id?: string;
+          journal_id?: string;
+          loan_id?: string;
+          penalty_cents?: number;
+          period_no?: number;
+          run_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loan_penalty_events_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_penalty_events_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_penalty_events_run_fk";
+            columns: ["run_id"];
+            isOneToOne: false;
+            referencedRelation: "accrual_runs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       loan_products: {
         Row: {
           active: boolean;
@@ -1482,6 +1592,14 @@ export type Database = {
     Functions: {
       account_balance: { Args: { p_account_id: string }; Returns: number };
       account_component: { Args: { p_code: string }; Returns: string };
+      accruals_run: { Args: { p_as_of: string; p_source: string; p_triggered_by: string }; Returns: Json };
+      accrue_loan_penalties: {
+        Args: { p_as_of: string; p_loan_id: string; p_run_id: string };
+        Returns: {
+          posted: number;
+          posted_cents: number;
+        }[];
+      };
       add_customer_documents: { Args: { p_customer_id: string; p_files: Json }; Returns: undefined };
       add_months_clamped: { Args: { p_date: string; p_months: number }; Returns: string };
       admin_record_password_reset: { Args: { p_user_id: string }; Returns: undefined };
@@ -1651,6 +1769,7 @@ export type Database = {
           total_out: number;
         }[];
       };
+      loan_outstanding_as_of: { Args: { p_date: string; p_loan_id: string }; Returns: number };
       loan_owed: {
         Args: { p_loan_id: string };
         Returns: {
@@ -1737,6 +1856,7 @@ export type Database = {
         Returns: Database["public"]["Enums"]["app_role"];
       };
       round_half_up: { Args: { p_d: number; p_n: number }; Returns: number };
+      run_daily_accruals: { Args: { p_as_of?: string }; Returns: Json };
       sequence_scope: { Args: { p_branch: string; p_kind: string }; Returns: string };
       set_sequence_start: {
         Args: { p_branch_id: string; p_kind: string; p_last_value: number };
