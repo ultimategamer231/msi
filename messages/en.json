@@ -1223,5 +1223,35 @@
       "keep": "Keep it",
       "sent": "Void requested. Nothing changes until it is approved."
     }
+  },
+  "receipts": {
+    "loading": "Loading the receipt…",
+    "received": "Payment received",
+    "voided": "Voided receipt",
+    "official": "OFFICIAL RECEIPT · {branch}",
+    "number": "Receipt no.",
+    "date": "Date",
+    "from": "Received from",
+    "loan": "Loan",
+    "method": "Method",
+    "amount": "Amount paid",
+    "applied": {
+      "penalty": "Applied to penalty",
+      "interest": "Applied to interest",
+      "principal": "Applied to amount lent"
+    },
+    "balanceAfter": "Balance after payment",
+    "receivedBy": "Received by",
+    "inField": "Collected in the field",
+    "printed": "Printed {when}",
+    "scan": "Scan to verify",
+    "qrAlt": "QR code to verify receipt {receipt}",
+    "void": "VOID",
+    "voidNote": "This payment was voided and reversed. This receipt is no longer valid.",
+    "printA5": "Print A5",
+    "print80": "Print 80 mm",
+    "pdf": "PDF",
+    "done": "Done",
+    "notFound": "This receipt does not exist."
   }
 }

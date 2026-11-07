@@ -34,7 +34,7 @@ export async function AppSidebar() {
   const companyName = company?.name ?? "";
 
   return (
-    <aside className="sticky top-0 hidden h-dvh w-58 shrink-0 flex-col gap-1 bg-primary-dark px-3 py-5 text-white lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-58 shrink-0 flex-col gap-1 bg-primary-dark px-3 py-5 text-white lg:flex print:hidden">
       <div className="px-1 pb-4">
         <div className="flex items-center gap-2.5 rounded-tile bg-surface px-3 py-2.5">
           <LogoTile

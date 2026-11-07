@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 
 import { fixtureUser } from "./fixtures";
 import { expectNoHorizontalScroll, expectNoSeriousA11yIssues, fillExactly, signInAs } from "./helpers";
-import { activeTestLoan, serviceClient } from "./service";
+import { activeTestLoan, serviceClient, userClient } from "./service";
 
 function person() {
   const n = randomInt(100000, 999999).toString();
@@ -62,6 +62,32 @@ test.describe("receive payment and the payments list (SPEC 9; mock-up 03; FR-10,
       status: "posted",
     });
     expect(payment?.receipt_no).toMatch(/^RCT-BR2-\d{6}$/);
+    const receiptNo = payment?.receipt_no ?? "";
+
+    // The receipt (mock-up 04, SPEC 10.1): numbers from the database, printable, with a PDF.
+    await expect(page.getByRole("heading", { name: "Payment received", level: 1 })).toBeVisible();
+    const sheet = page.getByRole("article", { name: receiptNo });
+    await expect(sheet.getByText(`Mobile money · ${reference}`)).toBeVisible();
+    await expect(sheet.getByText("$500.00")).toBeVisible();
+    await expect(sheet.getByText("$300.00")).toBeVisible();
+    await expect(sheet.getByText("$700.00")).toBeVisible();
+    await expect(sheet.getByRole("img", { name: `QR code to verify receipt ${receiptNo}` })).toBeVisible();
+    await expectNoSeriousA11yIssues(page);
+    if (testInfo.project.name === "phone-390") await expectNoHorizontalScroll(page);
+    const pdf = new URL(page.url()).pathname.replace("/receipts/", "/api/pdf/receipt/");
+    await expect(page.getByRole("link", { name: "PDF" })).toHaveAttribute("href", pdf);
+    for (const paper of ["", "?paper=80mm"]) {
+      const response = await page.request.get(`${pdf}${paper}`);
+      expect(response.status()).toBe(200);
+      expect(response.headers()["content-type"]).toBe("application/pdf");
+      expect((await response.body()).subarray(0, 5).toString()).toBe("%PDF-");
+    }
+    const { data: documents } = await serviceClient()
+      .from("issued_documents")
+      .select("number, is_void")
+      .eq("kind", "receipt")
+      .eq("number", receiptNo);
+    expect(documents).toEqual([{ number: receiptNo, is_void: false }]);
   });
 
   test("an overpayment is flagged before saving and refused (T-10)", async ({ page }) => {
@@ -116,5 +142,26 @@ test.describe("receive payment and the payments list (SPEC 9; mock-up 03; FR-10,
       .eq("entity_id", payment.id)
       .single();
     expect(request).toMatchObject({ status: "pending", reason: "Entered on the wrong loan" });
+
+    // Another manager approves (T-25): the receipt now reads VOID.
+    const manager = await userClient(fixtureUser("manager"));
+    const { data: pending } = await manager
+      .from("approval_requests")
+      .select("id")
+      .eq("type", "payment_void")
+      .eq("entity_id", payment.id)
+      .single();
+    const { error } = await manager.rpc("decide_approval", {
+      p_id: pending?.id ?? "",
+      p_decision: "approve",
+      p_note: "",
+    });
+    expect(error).toBeNull();
+    await page.goto(`/receipts/${payment.id}`);
+    await expect(page.getByRole("heading", { name: "Voided receipt", level: 1 })).toBeVisible();
+    await expect(
+      page.getByText("This payment was voided and reversed. This receipt is no longer valid."),
+    ).toBeVisible();
+    await expect(page.getByText("OFFICIAL RECEIPT · Branch 2 · VOID")).toBeVisible();
   });
 });

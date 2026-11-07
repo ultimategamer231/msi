@@ -33,7 +33,7 @@ export async function TopBar({
   const branch = staff.branch?.name ?? t("allBranches");
 
   return (
-    <header className="flex items-center justify-between gap-3 bg-primary px-4 pt-5 pb-4 text-white lg:border-b lg:border-line lg:bg-surface lg:px-6 lg:py-3.5 lg:text-inherit">
+    <header className="flex items-center justify-between gap-3 bg-primary px-4 pt-5 pb-4 text-white lg:border-b lg:border-line lg:bg-surface lg:px-6 lg:py-3.5 lg:text-inherit print:hidden">
       <div className="min-w-0">
         <p className="truncate text-[13px] font-medium text-primary-tint lg:hidden">
           {staff.fullName} · {tRoles(staff.role)} · {branch}

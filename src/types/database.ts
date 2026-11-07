@@ -1697,6 +1697,7 @@ export type Database = {
       };
       preview_payment: { Args: { p_amount_cents: number; p_loan_id: string }; Returns: Json };
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
+      receipt_balance_after: { Args: { p_payment_id: string }; Returns: number };
       receipt_facts: { Args: { p_payment_id: string }; Returns: Json };
       receive_payment: {
         Args: {

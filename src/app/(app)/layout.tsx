@@ -24,7 +24,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </Suspense>
       <main
         id="main"
-        className="flex min-w-0 flex-1 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-0"
+        className="flex min-w-0 flex-1 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-0 print:pb-0"
       >
         {children}
       </main>

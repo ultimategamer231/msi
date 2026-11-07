@@ -197,3 +197,43 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Receipt printing (SPEC 9 /receipts/[id], 10.1): only the receipt sheet prints. A5 by default;
+ * the "80 mm" button marks the sheet for the thermal page size before calling print.
+ */
+@page receipt-a5 {
+  size: A5;
+  margin: 10mm;
+}
+
+@page receipt-80mm {
+  size: 80mm 297mm;
+  margin: 3mm;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .receipt-sheet {
+    page: receipt-a5;
+    box-shadow: none;
+    border: 0;
+    margin: 0;
+    max-width: none;
+    animation: none;
+  }
+
+  .receipt-sheet[data-paper="80mm"] {
+    page: receipt-80mm;
+    width: 74mm;
+    padding: 0;
+    font-size: 11px;
+  }
+
+  .receipt-sheet * {
+    animation: none !important;
+  }
+}
