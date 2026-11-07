@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M4 Payments (approved by Foday 2026-11-07); M0–M3 in review on PR #1 |
-| Current block | M4.1 receive_payment |
+| Current block | M4.2 Field payments and remittance |
 | Last approved block | M4 phase start (Foday 2026-11-07, "Start M4"; open questions answered later, recommended defaults apply) |
 | State | Working on M4 |
-| Next step | M4.2 Field payments and remittance |
+| Next step | M4.3 Void and journal reversal |
 
 ## M4 plan (Payments: FR-10, FR-11, FR-20; T-06 allocation, T-10, T-11, T-12, T-25, T-28, T-36, T-37)
 
@@ -85,3 +85,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-05 | M3.7 | issued_documents, issue_document, loan agreement PDF with QR, demo seed loans/collateral/capital, M3 phase report; 325 database tests, 142 e2e |
 | 2026-11-07 | M4 | Phase approved ("Start M4"); questions answered later, recommended defaults apply; clean-up and handover prompt at the end of M4 |
 | 2026-11-07 | M4.1 | payments, payment_allocations, receive_payment (R2), post_journal reversal link; T-06 allocation, T-10, T-11, T-12, T-37; 349 database tests |
+| 2026-11-07 | M4.2 | record_field_payment (R3, B-09 default), confirm_remittance (R3b); T-28, T-36; 365 database tests |

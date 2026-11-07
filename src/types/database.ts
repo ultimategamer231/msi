@@ -1540,6 +1540,7 @@ export type Database = {
       claim_upload: { Args: { p_images_only?: boolean; p_path: string }; Returns: Json };
       clean_guarantors: { Args: { p_guarantors: Json }; Returns: Json };
       clock_override_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
+      confirm_remittance: { Args: { p_counted_total_cents: number; p_payment_ids: string[] }; Returns: Json };
       create_customer: { Args: { p_customer: Json }; Returns: string };
       create_loan_draft: { Args: { p_loan: Json }; Returns: string };
       customer_clean: { Args: { p_input: Json }; Returns: Json };
@@ -1677,6 +1678,17 @@ export type Database = {
       public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
       receipt_facts: { Args: { p_payment_id: string }; Returns: Json };
       receive_payment: {
+        Args: {
+          p_amount_cents: number;
+          p_idempotency_key: string;
+          p_loan_id: string;
+          p_method: string;
+          p_received_on: string;
+          p_reference: string;
+        };
+        Returns: Json;
+      };
+      record_field_payment: {
         Args: {
           p_amount_cents: number;
           p_idempotency_key: string;

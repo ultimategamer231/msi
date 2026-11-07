@@ -312,8 +312,9 @@ begin
 
   -- Receipt and cash follow the receiver's branch; staff without a branch use the loan's (B-10).
   v_branch := coalesce(auth_branch(), v_loan.branch_id);
-  if p_field and p_method = 'cash' then
-    select * into v_account from accounts where code = '1015' and active;     -- R3: field cash until handed over
+  if p_field and p_method = 'cash'
+     and coalesce((select (value #>> '{}')::boolean from settings where key = 'field.require_remittance'), true) then
+    select * into v_account from accounts where code = '1015' and active;     -- R3: field cash until handed over (A-12)
     v_remittance := 'pending';
   elsif p_method = 'cash' then
     select * into v_account from accounts where is_cash and active and branch_id = v_branch;
