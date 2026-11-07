@@ -13,6 +13,7 @@ import { paymentSchema, type PaymentValues } from "./schemas";
 
 const RECEIVE_ROLES: readonly Role[] = ["cashier", "manager"];
 const VOID_ROLES: readonly Role[] = ["cashier", "manager", "accountant"];
+const PREVIEW_ROLES: readonly Role[] = ["cashier", "manager", "loan_officer"];
 const uuid = /^[0-9a-f-]{36}$/;
 
 async function staffIn(roles: readonly Role[]): Promise<Staff | null> {
@@ -32,7 +33,7 @@ export type PreviewResult =
 
 /* preview_payment: the split take_payment would post (SPEC 5.2); no allocation rule in TypeScript. */
 export async function previewPayment(loanId: string, amount: string): Promise<PreviewResult> {
-  const staff = await staffIn(RECEIVE_ROLES);
+  const staff = await staffIn(PREVIEW_ROLES);
   if (staff === null) return { ok: false, code: "FORBIDDEN" };
   const cents = amount.trim() === "" ? 0n : parseDollarsToCents(amount);
   if (!uuid.test(loanId) || cents === null) return { ok: false, code: "INVALID_INPUT" };
@@ -99,6 +100,76 @@ export async function receivePayment(values: PaymentValues): Promise<ReceiveResu
   revalidatePath("/loans");
   revalidatePath("/payments");
   return { ok: true, paymentId };
+}
+
+/* record_field_payment (SPEC 5.4.2, R3): a loan officer, loans of their branch, today (B-09 default). */
+export async function recordFieldPayment(values: PaymentValues): Promise<ReceiveResult> {
+  const staff = await staffIn(["loan_officer"]);
+  if (staff === null) return { ok: false, code: "FORBIDDEN" };
+  const parsed = paymentSchema.safeParse(values);
+  const cents = parsed.success ? parseDollarsToCents(parsed.data.amount) : null;
+  if (!parsed.success || cents === null) return { ok: false, code: "INVALID_INPUT" };
+  const data = parsed.data;
+  const supabase = await createSupabaseServerClient();
+  const { data: today, error: todayError } = await supabase.rpc("business_today");
+  if (todayError !== null) return { ok: false, code: "UNKNOWN" };
+  const { data: receipt, error } = await supabase.rpc("record_field_payment", {
+    p_loan_id: data.loanId,
+    p_amount_cents: Number(cents),
+    p_method: data.method,
+    p_reference: data.method === "cash" ? "" : data.reference,
+    p_received_on: today,
+    p_idempotency_key: data.requestKey,
+  });
+  if (error !== null) {
+    const code = errorCodeFrom(error);
+    if (code === "UNKNOWN")
+      logServerError({
+        code: `RPC_${error.code ?? ""}`,
+        userId: staff.id,
+        where: "payments.recordFieldPayment",
+      });
+    return { ok: false, code };
+  }
+  const paymentId = String((receipt as { payment_id: string }).payment_id);
+  revalidatePath("/field");
+  revalidatePath(`/loans/${data.loanId}`);
+  return { ok: true, paymentId };
+}
+
+export type RemittanceResult = { ok: true } | { ok: false; code: ErrorCode };
+
+/* confirm_remittance (SPEC 5.4.3, R3b): the counted cash must equal the selected collections (T-36). */
+export async function confirmRemittance(paymentIds: string[], counted: string): Promise<RemittanceResult> {
+  const staff = await staffIn(RECEIVE_ROLES);
+  if (staff === null) return { ok: false, code: "FORBIDDEN" };
+  const cents = parseDollarsToCents(counted);
+  if (
+    paymentIds.length === 0 ||
+    paymentIds.length > 500 ||
+    !paymentIds.every((id) => uuid.test(id)) ||
+    cents === null
+  )
+    return { ok: false, code: "INVALID_INPUT" };
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.rpc("confirm_remittance", {
+    p_payment_ids: paymentIds,
+    p_counted_total_cents: Number(cents),
+  });
+  if (error !== null) {
+    const code = errorCodeFrom(error);
+    if (code === "UNKNOWN")
+      logServerError({
+        code: `RPC_${error.code ?? ""}`,
+        userId: staff.id,
+        where: "payments.confirmRemittance",
+      });
+    return { ok: false, code };
+  }
+  revalidatePath("/remittance");
+  revalidatePath("/payments");
+  revalidatePath("/field");
+  return { ok: true };
 }
 
 export type VoidResult = { ok: true } | { ok: false; code: ErrorCode };

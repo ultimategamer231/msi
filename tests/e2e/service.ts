@@ -134,7 +134,8 @@ export async function activeTestLoan(
     p_collateral_id: itemId,
   });
   if (linkError !== null) throw linkError;
-  await fundCash("1010-BR2", principalCents);
+  // Tests run in parallel and pay out of the same branch cash, so each one adds a buffer.
+  await fundCash("1010-BR2", principalCents + 500000);
   const manager = await userClient(fixtureUser("manager"));
   const { data: request, error: readError } = await manager
     .from("approval_requests")

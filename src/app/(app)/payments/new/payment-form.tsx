@@ -8,32 +8,39 @@ import { useForm, useWatch } from "react-hook-form";
 
 import { Field, FormMessage, describedBy, inputClass } from "@/components/forms/fields";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Callout } from "@/components/ui/callout";
 import { formatMoney } from "@/lib/format";
 import type { ErrorCode } from "@/lib/rpc-errors";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@/lib/zod-resolver";
 
-import { previewPayment, receivePayment, type PreviewResult } from "../actions";
+import { previewPayment, receivePayment, recordFieldPayment, type PreviewResult } from "../actions";
 import { PAYMENT_METHODS, paymentSchema, type PaymentValues } from "../schemas";
 
 type Preview = Extract<PreviewResult, { ok: true }>;
 
 /*
- * The receive-payment form (mock-up 03). The request key is made once when the page opens, so a
- * double tap or a retry after a lost connection returns the same receipt (T-12). The allocation
- * preview is asked from the database as the amount changes (SPEC 5.2).
+ * The payment form: at the office (mock-up 03, receive_payment) and in the field (mock-up 02,
+ * record_field_payment). The request key is made once when the page opens, so a double tap or a
+ * retry after a lost connection returns the same receipt (T-12). The allocation preview is asked
+ * from the database as the amount changes (SPEC 5.2). Both are dated today.
  */
 export function PaymentForm({
   loanId,
+  initial,
+  variant = "office",
   cancelHref,
   todayLabel,
-  initial,
+  handoverNote = false,
 }: {
   loanId: string;
-  cancelHref: string;
-  todayLabel: string;
   initial: Preview;
+  variant?: "office" | "field";
+  cancelHref?: string;
+  todayLabel?: string;
+  handoverNote?: boolean;
 }) {
+  const field = variant === "field";
   const t = useTranslations("payments.receive");
   const tMethods = useTranslations("payments.methods");
   const tValidation = useTranslations("payments.validation");
@@ -86,15 +93,19 @@ export function PaymentForm({
         void form.handleSubmit((values) => {
           setError(null);
           startTransition(async () => {
-            const result = await receivePayment(values);
+            const result = await (field ? recordFieldPayment(values) : receivePayment(values));
             if (result.ok) router.push(`/receipts/${result.paymentId}`);
             else setError(result.code);
           });
         })(event)
       }
     >
-      <div className="grid grid-cols-2 gap-3">
-        <Field id="payment-amount" label={t("amount")} error={text(errors.amount?.message)}>
+      <div className={cn("grid gap-3", todayLabel !== undefined && "grid-cols-2")}>
+        <Field
+          id="payment-amount"
+          label={t(field ? "fieldAmount" : "amount")}
+          error={text(errors.amount?.message)}
+        >
           <input
             id="payment-amount"
             inputMode="decimal"
@@ -108,20 +119,24 @@ export function PaymentForm({
             }}
           />
         </Field>
-        <Field id="payment-date" label={t("date")} help={t("dateHelp")}>
-          <input
-            id="payment-date"
-            value={todayLabel}
-            disabled
-            readOnly
-            className={inputClass}
-            {...describedBy("payment-date", "help", undefined)}
-          />
-        </Field>
+        {todayLabel !== undefined ? (
+          <Field id="payment-date" label={t("date")} help={t("dateHelp")}>
+            <input
+              id="payment-date"
+              value={todayLabel}
+              disabled
+              readOnly
+              className={inputClass}
+              {...describedBy("payment-date", "help", undefined)}
+            />
+          </Field>
+        ) : null}
       </div>
 
       <fieldset className="grid gap-1.5">
-        <legend className="mb-1.5 text-xs font-semibold text-ink-muted">{t("method")}</legend>
+        <legend className="mb-1.5 text-xs font-semibold text-ink-muted">
+          {t(field ? "fieldMethod" : "method")}
+        </legend>
         <div className="grid grid-cols-3 gap-2">
           {PAYMENT_METHODS.map((option) => (
             <label
@@ -164,17 +179,20 @@ export function PaymentForm({
         className="rounded-control bg-subtle p-4"
       >
         <h3 id="allocation-heading" className="text-sm font-bold text-ink">
-          {t("preview")}
+          {t(field ? "fieldPreview" : "preview")}
         </h3>
         <dl className="mt-2 grid gap-1.5 text-sm">
-          {rows.map(([component, cents]) => (
+          {rows.map(([component, cents], index) => (
             <div key={component} className="flex justify-between gap-3">
-              <dt className="text-ink">{t(`components.${component}`)}</dt>
+              <dt className="text-ink">
+                {field ? `${index + 1}. ` : ""}
+                {t(`components.${component}`)}
+              </dt>
               <dd className="tabular font-semibold text-ink">{formatMoney(cents)}</dd>
             </div>
           ))}
           <div className="mt-1 flex justify-between gap-3 border-t border-line pt-2">
-            <dt className="text-ink-muted">{t("after")}</dt>
+            <dt className="text-ink-muted">{t(field ? "fieldAfter" : "after")}</dt>
             <dd className="tabular text-base font-bold text-ink">{formatMoney(preview.afterCents)}</dd>
           </div>
         </dl>
@@ -188,14 +206,18 @@ export function PaymentForm({
         ) : null}
       </section>
 
+      {handoverNote && method === "cash" ? <Callout tone="warning">{t("fieldHandover")}</Callout> : null}
+
       {error !== null ? <FormMessage tone="error">{tErrors(error)}</FormMessage> : null}
 
-      <div className="grid grid-cols-[1fr_2fr] gap-3">
-        <Link href={cancelHref} className={cn(buttonVariants({ variant: "secondary" }), "hover:text-ink")}>
-          {t("cancel")}
-        </Link>
-        <Button type="submit" disabled={pending}>
-          {pending ? t("saving") : t("submit")}
+      <div className={cn("grid gap-3", cancelHref !== undefined && "grid-cols-[1fr_2fr]")}>
+        {cancelHref !== undefined ? (
+          <Link href={cancelHref} className={cn(buttonVariants({ variant: "secondary" }), "hover:text-ink")}>
+            {t("cancel")}
+          </Link>
+        ) : null}
+        <Button type="submit" disabled={pending} size={field ? "field" : "default"}>
+          {pending ? t("saving") : t(field ? "fieldSubmit" : "submit")}
         </Button>
       </div>
     </form>

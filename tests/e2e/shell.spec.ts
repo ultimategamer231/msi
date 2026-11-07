@@ -26,7 +26,14 @@ test.describe("app shell (SPEC 9 layout, mock-ups 05-15 and 01-03)", () => {
   test("desktop: only pages that exist and the role may open are listed", async ({ page, isMobile }) => {
     test.skip(isMobile, "desktop layout");
     const links = page.getByRole("complementary").getByRole("navigation").getByRole("link");
-    await expect(links).toHaveText(["Dashboard", "Customers", "Loans", "Payments", "Approvals"]);
+    await expect(links).toHaveText([
+      "Dashboard",
+      "Customers",
+      "Loans",
+      "Payments",
+      "Field cash",
+      "Approvals",
+    ]);
   });
 
   test("phone: purple header with context line, bottom tabs and the More sheet", async ({

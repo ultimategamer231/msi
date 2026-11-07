@@ -11,6 +11,7 @@ export type NavIcon =
   | "customers"
   | "loans"
   | "payments"
+  | "remittance"
   | "due"
   | "collateral"
   | "recovery"
@@ -31,10 +32,11 @@ export interface NavItem {
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { key: "dashboard", href: "/dashboard", route: "/dashboard", built: true },
-  { key: "field", href: "/field", route: "/field", built: false },
+  { key: "field", href: "/field", route: "/field", built: true },
   { key: "customers", href: "/customers", route: "/customers", built: true },
   { key: "loans", href: "/loans", route: "/loans", built: true },
   { key: "payments", href: "/payments", route: "/payments", built: true },
+  { key: "remittance", href: "/remittance", route: "/remittance", built: true },
   { key: "due", href: "/due", route: "/due", built: false },
   { key: "collateral", href: "/collateral", route: "/collateral", built: false },
   { key: "recovery", href: "/recovery", route: "/recovery", built: false },

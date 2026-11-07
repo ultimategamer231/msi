@@ -62,6 +62,7 @@
     "customers": "Customers",
     "loans": "Loans",
     "payments": "Payments",
+    "remittance": "Field cash",
     "due": "Due and overdue",
     "collateral": "Collateral",
     "recovery": "Recovery",
@@ -1203,7 +1204,13 @@
       "cancel": "Cancel",
       "submit": "Receive payment",
       "saving": "Saving…",
-      "formLabel": "Payment details"
+      "formLabel": "Payment details",
+      "fieldAmount": "Amount received (USD)",
+      "fieldMethod": "Payment method",
+      "fieldPreview": "Where this payment goes",
+      "fieldAfter": "Still owed after this",
+      "fieldSubmit": "Save payment and issue receipt",
+      "fieldHandover": "The borrower gets a receipt now. The cash shows as \"with you\" until the cashier confirms the handover."
     },
     "validation": {
       "amount": "Enter an amount more than zero, with at most 2 decimals.",
@@ -1253,5 +1260,44 @@
     "pdf": "PDF",
     "done": "Done",
     "notFound": "This receipt does not exist."
+  },
+  "field": {
+    "loading": "Loading your list…",
+    "greeting": "Good day, {name}",
+    "toVisit": "To visit",
+    "loans": "{count, plural, one {# loan} other {# loans}}",
+    "outstanding": "Outstanding",
+    "visitsHeading": "Loans due today or overdue",
+    "empty": "Nothing due today. Loans you look after appear here on their due date.",
+    "lent": "{amount} lent",
+    "owes": "Owes",
+    "owesWithPenalty": "Owes (incl. {penalty} penalty)",
+    "call": "Call",
+    "callLabel": "Call {name}",
+    "collect": "Collect",
+    "collectLabel": "Collect from {name}",
+    "cashWithYou": "Cash with you: {amount}",
+    "cashNone": "No field cash waiting for handover.",
+    "cashNote": "{count, plural, one {# collection} other {# collections}} since {date}. Hand over to the cashier.",
+    "collectTitle": "Collect payment",
+    "back": "Today's list",
+    "due": "due {date}",
+    "owedNow": "Total owed now",
+    "notOpen": "This loan is not open for payments.",
+    "otherBranch": "This loan belongs to another branch. Field payments are taken for loans of your own branch."
+  },
+  "remittance": {
+    "loading": "Loading field cash…",
+    "title": "Field cash",
+    "intro": "Collections officers made in the field, waiting for the cash to be handed over. Tick what you received, count it and enter the total.",
+    "branchesLabel": "Branches",
+    "empty": "No field cash is waiting for handover.",
+    "officerLine": "{name} · {count, plural, one {# collection} other {# collections}}",
+    "selected": "{count, plural, =0 {Nothing selected} one {# collection selected} other {# collections selected}}",
+    "counted": "Counted cash (USD)",
+    "countedRequired": "Enter the cash you counted.",
+    "confirm": "Confirm handover",
+    "confirming": "Confirming…",
+    "done": "Handover of {amount} confirmed. The cash is now in the branch cash account."
   }
 }
