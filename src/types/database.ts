@@ -1860,6 +1860,16 @@ export type Database = {
         };
         Returns: Json;
       };
+      apply_write_off: {
+        Args: {
+          p_board_reference: string;
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
       audit_row_digest: {
         Args: {
           p: Omit<
@@ -2147,6 +2157,7 @@ export type Database = {
       request_journal_reversal: { Args: { p_journal_id: string; p_reason: string }; Returns: string };
       request_manual_journal: { Args: { p_request: Json }; Returns: string };
       request_void_payment: { Args: { p_payment_id: string; p_reason: string }; Returns: string };
+      request_write_off: { Args: { p_loan_id: string; p_reason: string }; Returns: string };
       require_entry_date: { Args: { p_date: string }; Returns: string };
       require_posting_date: { Args: { p_date: string }; Returns: undefined };
       require_role: {
@@ -2169,6 +2180,17 @@ export type Database = {
         Args: {
           p_amount_cents: number;
           p_field: boolean;
+          p_idempotency_key: string;
+          p_loan_id: string;
+          p_method: string;
+          p_received_on: string;
+          p_reference: string;
+        };
+        Returns: Json;
+      };
+      take_recovery_payment: {
+        Args: {
+          p_amount_cents: number;
           p_idempotency_key: string;
           p_loan_id: string;
           p_method: string;
