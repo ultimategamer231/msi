@@ -2,6 +2,15 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
+## [M6 Collateral and recovery] 2026-11-08 (in review, PR #1; push pending)
+### Added
+- M6.1: Collateral register rules: duplicate identifiers flagged, photos and documents, custody log entries, return to the owner once loans have ended; recovery case numbers RC-000001 (T-24).
+- M6.2: Collateral register, item page and registration screens.
+- M6.3: Recovery cases with stages, court steps, collateral sale with allocation and surplus, surplus payout (T-14, T-15).
+- M6.4: Write-off through CEO approval with the board reference; later recoveries (T-16).
+- M6.5: Recovery screens, recovery and write-off actions on the loan page, write-off card in the inbox.
+- M6.6: Demo custody log, releases and recovery case RC-000001 from DEMO_DATA.
+
 ## [M5 Accruals and due lists] 2026-11-07 (in review, PR #1; push pending)
 ### Added
 - M5.1: Daily job: overdue marking, weekly penalties with the same amounts whether it runs daily or late, recovery eligibility, run log (T-03 to T-08, T-33, T-33b).

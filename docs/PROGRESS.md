@@ -2,11 +2,11 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M6 Collateral and recovery (approved by Foday 2026-11-08); M0–M4 in review on PR #1, M5 and M6 committed locally until GitHub access is back |
-| Current block | M6.5 Recovery screens |
+| Current phase | M6 Collateral and recovery complete; M0–M4 on PR #1; M5 and M6 committed locally until GitHub access is back |
+| Current block | M6.6 Demo seed, screenshots, M6 report (done) |
 | Last approved block | M6 phase start (Foday 2026-11-08, "Let's start M6"; open questions answered later, recommended defaults apply) |
-| State | Working on M6 (push blocked: GitHub 403; commits are local) |
-| Next step | M6.6 Demo seed, screenshots, M6 report |
+| State | **Stopped: waiting for Foday's approval to start M7** (phase report `docs/reports/PHASE-M6.md`); push the local M5 and M6 commits first once GitHub access is restored |
+| Next step | Push (`git push -u origin claude/new-session-6ictcc`), check CI, update PR #1; then on approval plan M7 Statements and documents |
 
 ## M6 plan (Collateral and recovery: FR-15, FR-16, FR-17, FR-19; T-14, T-15, T-16, T-24)
 
@@ -131,3 +131,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-08 | M6.3 | recovery_cases, recovery_actions, open/advance, sale preview, record_collateral_sale (R7), pay_surplus (R7b), case closes with its loan; T-14, T-15 (local) |
 | 2026-11-08 | M6.4 | request_write_off, CEO approval with board reference (R6), recoveries to 4100; T-16; 514 database tests (local) |
 | 2026-11-08 | M6.5 | /recovery, /recovery/[caseId] (mock-up 13), loan page recovery and write-off actions, write-off inbox card; 514 database tests, 166 e2e (local) |
+| 2026-11-08 | M6.6 | Demo custody log, releases, RC-000001; screenshots; M6 report; 514 database tests, 166 e2e (local) |

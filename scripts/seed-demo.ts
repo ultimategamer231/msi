@@ -320,7 +320,7 @@ const DEMO_COLLATERAL: readonly DemoCollateral[] = [
     description: "Honda EU22i generator",
     serialNo: "GA-1000231",
     valueCents: 140000,
-    location: "Branch 2 safe, shelf B2",
+    location: "Office desk",
     daysBefore: 38,
   },
   {
@@ -501,6 +501,15 @@ const DEMO_PAYMENTS: readonly DemoPayment[] = [
   { receiptNo: 120, loanNo: "LN-BR2-00006", amountCents: 35000, daysBefore: 1, time: "08:45", field: true },
   { receiptNo: 121, loanNo: "LN-BR2-00012", amountCents: 20000, daysBefore: 1, time: "09:20" },
   { receiptNo: 122, loanNo: "LN-BR2-00003", amountCents: 15000, daysBefore: 1, time: "15:10" },
+];
+
+// DEMO_DATA "Collateral": items returned to their owners after their loans closed (Grace Flomo
+// hands them over; the owner collects). COL-000022 (Musu Freeman) stays "ready to return".
+const DEMO_RELEASES: ReadonlyArray<{ number: number; daysBefore: number; time: string; witness: string }> = [
+  { number: 19, daysBefore: 64, time: "11:30", witness: "Mariama Kollie" },
+  { number: 26, daysBefore: 23, time: "10:15", witness: "Prince Karmo" },
+  { number: 25, daysBefore: 1, time: "09:40", witness: "Alieu Sesay" },
+  { number: 24, daysBefore: 1, time: "15:30", witness: "Comfort Weah" },
 ];
 
 // Staff accounts are created well before the first demo record (Mariama Kollie registered A-133).
@@ -854,6 +863,66 @@ async function main(): Promise<void> {
         throw new Error(`Expected ${expected} for ${payment.loanNo}, got ${receipt.receipt_no ?? "nothing"}`);
       }
     }
+  }
+
+  // 4c (continued). The day-by-day story of collateral and recovery (M6), after the timeline above
+  //     has posted that day's payments: COL-000031's custody log on A−38 (valued by Rebecca Wolo,
+  //     moved to the safe by Grace Flomo), releases after loans closed, and Mohammed Sheriff's case
+  //     RC-000001 (opened A−8 by Rebecca Wolo on the first eligible day; demand notice A−5).
+  const items = new Map(
+    ownerQuery<{ id: string; code: string; status: string }>(
+      "select id, code, status from public.collaterals",
+    ).map((row) => [row.code, row]),
+  );
+  const code = (number: number) => `COL-${String(number).padStart(6, "0")}`;
+  const generator = items.get(code(31));
+  const [{ count: valuedCount } = { count: 0 }] = ownerQuery<{ count: number }>(
+    `select count(*)::int as count from public.collateral_events where event_type = 'valued'
+       and collateral_id = ${sqlText(generator?.id ?? "00000000-0000-0000-0000-000000000000")}`,
+  );
+  if (generator !== undefined && valuedCount === 0) {
+    const manager = await signedIn("rebecca.wolo@msi-demo.test");
+    await at(38, "14:25");
+    await rpc(manager, "log_collateral_event", {
+      p_collateral_id: generator.id,
+      p_event: { event_type: "valued", value_cents: 140000, note: "Estimated value $1,400.00" },
+    });
+    await at(38, "15:00");
+    await rpc(cashier, "log_collateral_event", {
+      p_collateral_id: generator.id,
+      p_event: { event_type: "moved", to_location: "Branch 2 safe, shelf B2" },
+    });
+  }
+  for (const release of DEMO_RELEASES) {
+    const item = items.get(code(release.number));
+    if (item === undefined || item.status !== "held") continue;
+    await at(release.daysBefore, release.time);
+    await rpc(cashier, "release_collateral", {
+      p_collateral_id: item.id,
+      p_note: "Returned to the owner after the loan was repaid",
+      p_witness_name: release.witness,
+    });
+  }
+  const mohammedLoan = loanIds.get("LN-BR3-00004");
+  const [{ count: caseCount } = { count: 0 }] = ownerQuery<{ count: number }>(
+    "select count(*)::int as count from public.recovery_cases",
+  );
+  if (mohammedLoan !== undefined && caseCount === 0) {
+    const manager = await signedIn("rebecca.wolo@msi-demo.test");
+    // The job flagged the loan on A−8 (due + 30); recovery opens that day, the notice three days later.
+    await at(8, "10:30");
+    const caseId = String(
+      await rpc(manager, "open_recovery_case", {
+        p_loan_id: mohammedLoan,
+        p_note: "No payment and no reply since the due date; first eligible day",
+      }),
+    );
+    await at(5, "11:00");
+    await rpc(manager, "advance_recovery_stage", {
+      p_case_id: caseId,
+      p_stage: "notice_sent",
+      p_note: "Demand notice delivered by hand by David Kerkula",
+    });
   }
 
   // 4d. Waiting on A: Emmanuel Tarpeh asked on A−1 at 16:40 to extend Joseph B. Gbessay's loan by a
