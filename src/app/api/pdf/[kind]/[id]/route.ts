@@ -14,24 +14,22 @@ import { errorCodeFrom } from "@/lib/rpc-errors";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { fillTemplate } from "@/lib/template";
 
+import { collateralPdf, demandNoticePdf, logoBytes, statementPdf } from "./documents";
+
 /*
  * PDF documents (SPEC 10.1): /api/pdf/<kind>/<id>. Signed-in staff only; issue_document numbers
  * the document and gives it a verification token on first print, and returns the same row on a
- * reprint. Loan agreement (M3) and receipt (M4; `?paper=80mm` for the thermal roll); other kinds
- * follow in M5–M7.
+ * reprint. Loan agreement (M3), receipt (M4; `?paper=80mm` for the thermal roll), and the M7
+ * statement (`?from=&to=`), demand notice, collateral receipt and release letter (./documents).
  */
-const KINDS = ["loan_agreement", "receipt"] as const;
-
-async function logoBytes(url: string | null): Promise<Buffer | null> {
-  if (url === null) return null;
-  try {
-    const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) return null;
-    return Buffer.from(await response.arrayBuffer());
-  } catch {
-    return null;
-  }
-}
+const KINDS = [
+  "loan_agreement",
+  "receipt",
+  "statement",
+  "demand_notice",
+  "collateral_receipt",
+  "collateral_release",
+] as const;
 
 export async function GET(
   request: NextRequest,
@@ -44,6 +42,10 @@ export async function GET(
     return new Response("Not found.", { status: 404 });
   }
   if (kind === "receipt") return receiptPdf(request, id);
+  if (kind === "statement") return statementPdf(request, staff.staff, id);
+  if (kind === "demand_notice") return demandNoticePdf(request, staff.staff, id);
+  if (kind === "collateral_receipt" || kind === "collateral_release")
+    return collateralPdf(request, staff.staff, kind, id);
 
   const supabase = await createSupabaseServerClient();
   const { data: document, error } = await supabase.rpc("issue_document", { p_kind: kind, p_entity_id: id });
