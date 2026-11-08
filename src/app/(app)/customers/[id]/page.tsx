@@ -84,7 +84,7 @@ async function CustomerContent({ params, searchParams }: PageProps<"/customers/[
     supabase.rpc("app_now"),
     supabase
       .from("loans")
-      .select("id, loan_no, status, principal_cents, due_date, closed_on")
+      .select("id, loan_no, status, principal_cents, due_date, closed_on, disbursed_on")
       .eq("customer_id", id)
       .neq("status", "cancelled")
       .order("created_at", { ascending: false }),
@@ -256,6 +256,16 @@ async function CustomerContent({ params, searchParams }: PageProps<"/customers/[
               >
                 {t("newLoan")}
               </Link>
+            ) : null}
+            {(loansResult.data ?? []).some((loan) => loan.disbursed_on !== null) ? (
+              <a
+                href={`/api/pdf/statement/${customer.id}`}
+                target="_blank"
+                rel="noreferrer"
+                className={cn(buttonVariants({ variant: "secondary" }), "hover:text-ink")}
+              >
+                {t("statement")}
+              </a>
             ) : null}
             {canEdit && !editing && pending === null ? (
               <Link

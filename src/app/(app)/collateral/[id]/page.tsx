@@ -20,7 +20,7 @@ import { AddFilesForm, CustodyEventForm, ReleaseForm } from "./item-forms";
 /*
  * /collateral/[id] (all staff; SPEC 9, 5.9, mock-up 10): details, the loan it secures with how much
  * of the balance it covers, photos and documents, the custody log (append-only), custody events,
- * and release once every loan it secured has ended. The collateral receipt PDF comes with M7.
+ * release once every loan it secured has ended, and the collateral receipt and release letter PDFs.
  */
 const ENDED = ["closed", "written_off", "cancelled", "rejected"];
 
@@ -236,6 +236,35 @@ async function ItemContent({ params }: PageProps<"/collateral/[id]">) {
                   ) : null}
                 </div>
               )}
+            </Card>
+            <Card labelledBy="item-documents">
+              <h3 id="item-documents" className="text-base font-bold text-ink">
+                {t("documents.heading")}
+              </h3>
+              <ul className="mt-2 space-y-2 text-sm font-semibold">
+                <li>
+                  <a
+                    href={`/api/pdf/collateral_receipt/${item.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline"
+                  >
+                    {t("documents.receipt")}
+                  </a>
+                </li>
+                {item.status === "released" ? (
+                  <li>
+                    <a
+                      href={`/api/pdf/collateral_release/${item.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline"
+                    >
+                      {t("documents.release")}
+                    </a>
+                  </li>
+                ) : null}
+              </ul>
             </Card>
           </div>
 

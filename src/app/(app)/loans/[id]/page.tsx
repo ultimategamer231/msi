@@ -585,14 +585,43 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
               {["draft", "pending_approval", "rejected", "cancelled"].includes(loan.status) ? (
                 <p className="mt-2 text-sm text-ink-muted">{t("documents.later")}</p>
               ) : (
-                <a
-                  href={`/api/pdf/loan_agreement/${loan.id}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-2 inline-block text-sm font-semibold underline"
-                >
-                  {t("documents.agreement")}
-                </a>
+                <ul className="mt-2 space-y-2 text-sm font-semibold">
+                  <li>
+                    <a
+                      href={`/api/pdf/loan_agreement/${loan.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline"
+                    >
+                      {t("documents.agreement")}
+                    </a>
+                  </li>
+                  {loan.disbursed_on !== null ? (
+                    <li>
+                      <a
+                        href={`/api/pdf/statement/${loan.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline"
+                      >
+                        {t("documents.statement")}
+                      </a>
+                    </li>
+                  ) : null}
+                  {["overdue", "recovery"].includes(loan.status) &&
+                  ["manager", "ceo", "loan_officer"].includes(staff.role) ? (
+                    <li>
+                      <a
+                        href={`/api/pdf/demand_notice/${loan.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline"
+                      >
+                        {t("documents.demandNotice")}
+                      </a>
+                    </li>
+                  ) : null}
+                </ul>
               )}
             </Card>
             {canCancel ? (

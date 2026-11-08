@@ -13,6 +13,7 @@ import { customerName } from "@/lib/customers";
 import { businessDateOf, formatDate, formatMoney } from "@/lib/format";
 import { centsToInput } from "@/lib/money-input";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import { SaleForm, StepForm, SurplusForm, WriteOffForm } from "../case-forms";
@@ -145,6 +146,16 @@ async function CaseContent({ params }: PageProps<"/recovery/[caseId]">) {
         {decides && isOpen ? (
           <div className="flex flex-wrap items-start gap-2">
             <StepForm caseId={row.id} stages={nextStages} />
+            {["overdue", "recovery"].includes(loan.status) ? (
+              <a
+                href={`/api/pdf/demand_notice/${loan.id}`}
+                target="_blank"
+                rel="noreferrer"
+                className={cn(buttonVariants({ variant: "secondary" }), "hover:text-ink")}
+              >
+                {t("demandNotice")}
+              </a>
+            ) : null}
             {canWriteOff ? (
               <WriteOffForm loanId={loan.id} override={!["disposal", "closed"].includes(row.stage)} />
             ) : null}

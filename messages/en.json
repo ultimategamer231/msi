@@ -678,7 +678,8 @@
         "owes": "Owes",
         "status": "Status"
       },
-      "loansTable": "Loans table"
+      "loansTable": "Loans table",
+      "statement": "Statement (PDF)"
     }
   },
   "when": {
@@ -1110,7 +1111,9 @@
       "documents": {
         "heading": "Documents",
         "agreement": "Loan agreement (PDF)",
-        "later": "The loan agreement can be printed once the loan is approved."
+        "later": "The loan agreement can be printed once the loan is approved.",
+        "statement": "Statement of account (PDF)",
+        "demandNotice": "Demand notice (PDF)"
       },
       "nextPenalty": "Next penalty {date}: {amount}",
       "extend": {
@@ -1700,6 +1703,11 @@
         "saving": "Saving…",
         "cancel": "Cancel",
         "done": "Returned. The release is in the custody log."
+      },
+      "documents": {
+        "heading": "Printouts",
+        "receipt": "Collateral receipt (PDF)",
+        "release": "Release letter (PDF)"
       }
     }
   },
@@ -1824,7 +1832,8 @@
         "later": "(later)",
         "nextStep": "Next step.",
         "closedOn": "Case closed {date}."
-      }
+      },
+      "demandNotice": "Demand notice (PDF)"
     },
     "openCases": {
       "heading": "{count, plural, =0 {No open cases} one {# open case} other {# open cases}}",
@@ -1835,6 +1844,25 @@
       "heading": "Recently closed cases",
       "empty": "No case has closed yet.",
       "table": "Closed cases table"
+    }
+  },
+  "verify": {
+    "genuine": "Genuine document: issued by us and on record.",
+    "void": "This document was voided. It is no longer valid.",
+    "notFoundTitle": "Document not found",
+    "notFound": "We have no document for this code. Check that the full link was scanned, or contact the branch that issued it.",
+    "number": "Number",
+    "date": "Date",
+    "amount": "Amount",
+    "customer": "Customer",
+    "note": "Only these details are shown here. For anything else, contact the branch.",
+    "kinds": {
+      "receipt": "Payment receipt",
+      "statement": "Statement of account",
+      "loan_agreement": "Loan agreement",
+      "demand_notice": "Demand notice",
+      "collateral_receipt": "Collateral receipt",
+      "collateral_release": "Collateral release letter"
     }
   }
 }
