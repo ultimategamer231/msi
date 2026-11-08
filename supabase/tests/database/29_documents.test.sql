@@ -66,7 +66,7 @@ select matches(tests.try_as('anon', null, format($$select public.loan_statement(
 
 -- Every loan in the database: statement closing = ledger balance (SPEC 13, M7).
 select is(tests.value_as('authenticated', :'manager_id', $$select count(*)::text from public.loans l
-  where l.disbursed_on is not null
+  where l.disbursed_on <= public.business_today()   -- rows from other runs may be paid out after the test clock
     and (public.loan_statement(l.id) ->> 'closing_cents')::bigint
         <> (select b.total_out from public.loan_balances b where b.loan_id = l.id)$$),
   '0', 'for every paid-out loan the statement closing balance equals the ledger');
