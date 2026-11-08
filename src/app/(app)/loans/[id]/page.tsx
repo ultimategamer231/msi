@@ -11,7 +11,7 @@ import { ScrollRegion } from "@/components/ui/scroll-region";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { requirePageAccess } from "@/lib/auth/staff";
 import { customerName } from "@/lib/customers";
-import { businessDateOf, formatDate, formatMoney, formatRateBps } from "@/lib/format";
+import { businessDateOf, formatDate, formatMoney, formatRateBps, shiftBusinessDate } from "@/lib/format";
 import { loanPill } from "@/lib/loans";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { DecisionForm } from "../../approvals/decision-form";
 import { LoanPillText } from "../loan-pill";
 
+import { OpenCaseForm, WriteOffForm } from "../../recovery/case-forms";
 import { CancelLoanForm, DisburseForm, ExtendLoanForm, SubmitDraftButton } from "./loan-actions";
 
 /*
@@ -68,6 +69,8 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
     nextPenaltyResult,
     extensionResult,
     extensionSetting,
+    caseResult,
+    writeOffResult,
   ] = await Promise.all([
     supabase
       .from("loans")
@@ -118,6 +121,20 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
       .eq("status", "pending")
       .maybeSingle(),
     supabase.from("settings").select("value").eq("key", "extension.enabled").maybeSingle(),
+    supabase
+      .from("recovery_cases")
+      .select("id, case_no, stage, closed_on")
+      .eq("loan_id", id)
+      .order("opened_on", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from("approval_requests")
+      .select("id")
+      .eq("type", "write_off")
+      .eq("entity_id", id)
+      .eq("status", "pending")
+      .maybeSingle(),
   ]);
   if (
     loanResult.error !== null ||
@@ -188,6 +205,19 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
       ? (nextPenaltyResult.data as { on: string; cents: number })
       : null;
   const pendingExtension = extensionResult.data;
+  const recoveryCase = caseResult.data;
+  const decidesRecovery = staff.role === "manager" || staff.role === "ceo";
+  const canOpenCase = decidesRecovery && loan.status === "overdue" && loan.recovery_eligible;
+  const recoveryFrom =
+    decidesRecovery && loan.status === "overdue" && !loan.recovery_eligible && loan.due_date !== null
+      ? shiftBusinessDate(loan.due_date, loan.recovery_after_days ?? 30)
+      : null;
+  const caseAtDisposal = recoveryCase !== null && ["disposal", "closed"].includes(recoveryCase.stage);
+  const canWriteOff =
+    ["active", "overdue", "recovery"].includes(loan.status) &&
+    owed > 0n &&
+    writeOffResult.data === null &&
+    (staff.role === "manager" || (staff.role === "accountant" && caseAtDisposal));
   const canExtend =
     ["active", "overdue"].includes(loan.status) &&
     extensionSetting.data?.value !== false &&
@@ -209,6 +239,8 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
       return t("activity.payment", { component });
     if (row.source_type === "payment_void") return t("activity.paymentVoid", { component });
     if (row.source_type === "extension") return t("activity.extension");
+    if (row.source_type === "collateral_sale") return t("activity.sale", { component });
+    if (row.source_type === "write_off") return t("activity.writeOff", { component });
     const penalty = penaltyEvents.get(row.journal_id);
     if (row.source_type === "penalty" && penalty !== undefined)
       return t("activity.penalty", {
@@ -272,7 +304,12 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
             cashAccount={t("cashAccount", { branch: staff.branch?.name ?? "" })}
           />
         ) : null}
-        {canReceive || canExtend ? (
+        {canReceive ||
+        canExtend ||
+        canOpenCase ||
+        recoveryCase !== null ||
+        canWriteOff ||
+        recoveryFrom !== null ? (
           <div className="flex flex-wrap items-start gap-2">
             {canReceive ? (
               <Link
@@ -285,6 +322,21 @@ async function LoanContent({ params, searchParams }: PageProps<"/loans/[id]">) {
             {canExtend ? (
               <ExtendLoanForm loanId={loan.id} maxMonths={loan.loan_products.max_term_months} />
             ) : null}
+            {canOpenCase ? <OpenCaseForm loanId={loan.id} /> : null}
+            {recoveryFrom !== null ? (
+              <span className="inline-flex min-h-11 items-center rounded-control border border-line px-4 text-sm text-ink-muted lg:min-h-10">
+                {t("actions.recoveryFrom", { date: formatDate(recoveryFrom) })}
+              </span>
+            ) : null}
+            {recoveryCase !== null && decidesRecovery ? (
+              <Link
+                href={`/recovery/${recoveryCase.id}`}
+                className={cn(buttonVariants({ variant: "secondary" }), "hover:text-ink")}
+              >
+                {t("actions.viewCase", { case: recoveryCase.case_no })}
+              </Link>
+            ) : null}
+            {canWriteOff ? <WriteOffForm loanId={loan.id} override={!caseAtDisposal} /> : null}
           </div>
         ) : null}
         {pendingExtension !== null ? (

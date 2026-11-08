@@ -732,7 +732,8 @@
       "loan": "{name}, {loan}, {amount}",
       "reversal": "Reverse {journal}: {memo}, {amount}",
       "void": "{name}, receipt {receipt}, {amount}",
-      "extension": "{name}, {loan}, {months, plural, one {# more month} other {# more months}}"
+      "extension": "{name}, {loan}, {months, plural, one {# more month} other {# more months}}",
+      "writeOff": "Write off {name}, {loan}, {amount}"
     },
     "photo": "Photo",
     "none": "None",
@@ -764,7 +765,9 @@
       "confirmReject": "Reject \"{title}\"?",
       "confirmReason": "Reason: {reason}",
       "yesReject": "Yes, reject",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "boardPlaceholder": "Board reference (required to approve) or reason to reject",
+      "boardRequired": "Enter the board reference to approve a write-off."
     },
     "loanAmount": "Amount",
     "loanInterest": "Interest",
@@ -786,7 +789,22 @@
     "extensionDueNow": "Due date now",
     "extensionNewDue": "New due date",
     "extensionNote": "Approving adds {months, plural, one {one month} other {# months}} of interest ({interest}). The borrower would owe {owed}, due {due}.",
-    "extensionNoPenalty": "No penalty starts on {date}."
+    "extensionNoPenalty": "No penalty starts on {date}.",
+    "writeOffPenalty": "Penalties",
+    "writeOffInterest": "Interest",
+    "writeOffPrincipal": "Amount lent",
+    "writeOffCase": "Recovery case",
+    "writeOffNoCase": "No case at disposal",
+    "writeOffNote": "Approving moves {amount} to bad debts and closes the loan. Money received later is recorded as a recovery.",
+    "writeOffOverride": "No recovery case has reached disposal; the manager gave the reason above. Approving moves {amount} to bad debts and closes the loan.",
+    "recoveryStages": {
+      "opened": "Case opened",
+      "notice_sent": "Demand notice sent",
+      "court_filed": "Court filed",
+      "judgment": "Judgment",
+      "disposal": "Disposal",
+      "closed": "Closed"
+    }
   },
   "guarantors": {
     "heading": "Guarantors (optional)",
@@ -1040,7 +1058,9 @@
           "principal": "amount lent"
         },
         "penalty": "Penalty, week {week} ({rate} of {base})",
-        "extension": "Extension interest"
+        "extension": "Extension interest",
+        "sale": "Collateral sale applied to {component}",
+        "writeOff": "Written off: {component}"
       },
       "collateral": {
         "heading": "Collateral",
@@ -1082,7 +1102,10 @@
           "mobile_money": "Mobile money",
           "bank": "Bank"
         },
-        "receive": "Receive payment"
+        "receive": "Receive payment",
+        "openRecovery": "Open recovery case",
+        "recoveryFrom": "Recovery possible from {date}",
+        "viewCase": "Recovery case {case}"
       },
       "documents": {
         "heading": "Documents",
@@ -1583,6 +1606,140 @@
         "cancel": "Cancel",
         "done": "Returned. The release is in the custody log."
       }
+    }
+  },
+  "recovery": {
+    "loading": "Loading recovery…",
+    "title": "Recovery",
+    "eligible": {
+      "heading": "{count, plural, =0 {No loans eligible for recovery} one {# loan eligible for recovery} other {# loans eligible for recovery}}",
+      "intro": "Loans {count} days or more past due become eligible after the daily job. Opening a case stops penalties and holds the collateral.",
+      "empty": "No loan is eligible today.",
+      "line": "{days} days overdue · owes {owed}"
+    },
+    "open": {
+      "button": "Open recovery case",
+      "heading": "Open a recovery case",
+      "intro": "Penalties stop and the loan's collateral is held for the case. The case gets an RC number.",
+      "note": "Note (optional)",
+      "confirm": "Open case",
+      "saving": "Opening…",
+      "cancel": "Cancel"
+    },
+    "columns": {
+      "case": "Case",
+      "borrower": "Borrower",
+      "loan": "Loan",
+      "stage": "Stage",
+      "opened": "Opened",
+      "owes": "Owes"
+    },
+    "step": {
+      "button": "Record court step",
+      "heading": "Record the next step",
+      "stage": "Step",
+      "courtRef": "Court reference (optional)",
+      "note": "What was done",
+      "noteRequired": "Write what was done.",
+      "file": "Document (optional)",
+      "save": "Save step",
+      "saving": "Saving…",
+      "saved": "Step recorded.",
+      "cancel": "Cancel"
+    },
+    "sale": {
+      "heading": "Sell collateral",
+      "noItems": "No item is held for this case.",
+      "item": "Item",
+      "amount": "Sale price ($)",
+      "buyer": "Buyer's name",
+      "method": "Paid by",
+      "courtRef": "Court reference (optional)",
+      "order": "Proceeds are applied to penalty, then interest, then principal.",
+      "components": {
+        "penalty": "Penalty",
+        "interest": "Interest",
+        "principal": "Principal"
+      },
+      "applied": "Total applied",
+      "shortfall": "Shortfall of {amount} stays on the loan. A write-off needs CEO and board approval.",
+      "surplus": "{amount} is more than owed and is held for the borrower (Customer Surplus Payable).",
+      "record": "Record sale",
+      "confirm": "Record the sale for ${amount} to {buyer}? This cannot be edited.",
+      "yes": "Yes, record sale",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "done": "Sale recorded."
+    },
+    "surplus": {
+      "method": "Paid by",
+      "pay": "Pay ${amount} to the borrower",
+      "saving": "Paying…",
+      "done": "Surplus paid."
+    },
+    "writeOff": {
+      "button": "Request write-off",
+      "heading": "Ask the CEO to write off this loan",
+      "intro": "The CEO approves with the board reference. What is still owed moves to bad debts.",
+      "introOverride": "No case has reached disposal yet, so give a full reason (at least 20 characters).",
+      "reason": "Reason",
+      "reasonRequired": "Give the reason.",
+      "reasonLong": "Give a reason of at least 20 characters.",
+      "send": "Send to the CEO",
+      "saving": "Sending…",
+      "sent": "Sent to the CEO.",
+      "cancel": "Cancel"
+    },
+    "case": {
+      "loading": "Loading the case…",
+      "title": "Recovery case",
+      "back": "Recovery cases",
+      "caseNo": "Case {case}",
+      "inRecovery": "In recovery",
+      "closed": "Closed",
+      "writeOffPending": "A write-off is waiting for the CEO.",
+      "owed": {
+        "heading": "What is owed",
+        "principal": "Principal",
+        "interest": "Interest",
+        "penalties": "Penalties",
+        "rounds": "Penalty rounds",
+        "roundsValue": "{count} of {max}",
+        "dates": "Due {due}. Recovery opened {opened}."
+      },
+      "collateral": {
+        "heading": "Collateral",
+        "none": "No collateral was pledged.",
+        "status": {
+          "seized": "Held for the case",
+          "sold": "Sold",
+          "pledged": "Pledged",
+          "released": "Released"
+        }
+      },
+      "surplus": {
+        "heading": "Surplus for the borrower",
+        "intro": "{amount} from the sale is more than was owed and belongs to the borrower."
+      },
+      "stages": {
+        "heading": "Stages",
+        "disposal": "Collateral sold, loan settled or written off",
+        "done": "(done)",
+        "next": "(next)",
+        "later": "(later)",
+        "nextStep": "Next step.",
+        "closedOn": "Case closed {date}."
+      }
+    },
+    "openCases": {
+      "heading": "{count, plural, =0 {No open cases} one {# open case} other {# open cases}}",
+      "empty": "No case is open.",
+      "table": "Open cases table"
+    },
+    "closedCases": {
+      "heading": "Recently closed cases",
+      "empty": "No case has closed yet.",
+      "table": "Closed cases table"
     }
   }
 }

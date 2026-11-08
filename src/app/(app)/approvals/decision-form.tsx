@@ -14,14 +14,23 @@ import { decideApproval } from "./actions";
  * Approve, or reject with a mandatory reason (mock-up 12). A rejection asks for confirmation
  * first (SPEC 9: destructive-looking actions confirm, with a reason).
  */
-export function DecisionForm({ requestId, title }: { requestId: string; title: string }) {
+export function DecisionForm({
+  requestId,
+  title,
+  boardReference = false,
+}: {
+  requestId: string;
+  title: string;
+  /** A write-off: the note is the board reference and is required to approve (SPEC 5.8). */
+  boardReference?: boolean;
+}) {
   const t = useTranslations("approvals.decision");
   const tErrors = useTranslations("errors");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [note, setNote] = useState("");
   const [confirming, setConfirming] = useState(false);
-  const [missingNote, setMissingNote] = useState(false);
+  const [missingNote, setMissingNote] = useState<"approve" | "reject" | null>(null);
   const [error, setError] = useState<ErrorCode | null>(null);
   const noteId = `note-${requestId}`;
 
@@ -61,7 +70,18 @@ export function DecisionForm({ requestId, title }: { requestId: string; title: s
         </div>
       ) : (
         <div className="grid gap-2 sm:grid-cols-[auto_auto_1fr] sm:items-start">
-          <Button type="button" disabled={pending} onClick={() => decide("approve")}>
+          <Button
+            type="button"
+            disabled={pending}
+            onClick={() => {
+              if (boardReference && note.trim() === "") {
+                setMissingNote("approve");
+                return;
+              }
+              setMissingNote(null);
+              decide("approve");
+            }}
+          >
             {pending ? t("sending") : t("approve")}
           </Button>
           <Button
@@ -70,10 +90,10 @@ export function DecisionForm({ requestId, title }: { requestId: string; title: s
             disabled={pending}
             onClick={() => {
               if (note.trim() === "") {
-                setMissingNote(true);
+                setMissingNote("reject");
                 return;
               }
-              setMissingNote(false);
+              setMissingNote(null);
               setConfirming(true);
             }}
           >
@@ -87,14 +107,14 @@ export function DecisionForm({ requestId, title }: { requestId: string; title: s
               id={noteId}
               value={note}
               maxLength={500}
-              placeholder={t("notePlaceholder")}
+              placeholder={t(boardReference ? "boardPlaceholder" : "notePlaceholder")}
               onChange={(event) => setNote(event.target.value)}
               className={inputClass}
-              {...describedBy(noteId, undefined, missingNote ? t("noteRequired") : undefined)}
+              {...describedBy(noteId, undefined, missingNote !== null ? t("noteRequired") : undefined)}
             />
-            {missingNote ? (
+            {missingNote !== null ? (
               <p id={`${noteId}-error`} className="text-xs font-medium text-status-overdue-strong">
-                {t("noteRequired")}
+                {t(missingNote === "approve" ? "boardRequired" : "noteRequired")}
               </p>
             ) : null}
           </div>

@@ -241,6 +241,12 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                   receipt: String(payload.receipt_no ?? ""),
                   amount: formatMoney(String(payload.amount_cents ?? "0")),
                 });
+              } else if (row.type === "write_off") {
+                title = t("titles.writeOff", {
+                  name: String(payload.customer_name ?? ""),
+                  loan: String(payload.loan_no ?? ""),
+                  amount: formatMoney(String(payload.total_cents ?? "0")),
+                });
               } else if (row.type === "loan_extension") {
                 title = t("titles.extension", {
                   name: String(payload.customer_name ?? ""),
@@ -408,6 +414,41 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                         </p>
                       </div>
                     ) : null}
+                    {row.type === "write_off" ? (
+                      <div className="grid gap-3">
+                        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+                          {(
+                            [
+                              ["writeOffPenalty", formatMoney(String(payload.penalty_cents ?? "0"))],
+                              ["writeOffInterest", formatMoney(String(payload.interest_cents ?? "0"))],
+                              ["writeOffPrincipal", formatMoney(String(payload.principal_cents ?? "0"))],
+                              [
+                                "writeOffCase",
+                                payload.case_no === null || payload.case_no === undefined
+                                  ? t("writeOffNoCase")
+                                  : `${String(payload.case_no)} · ${t(`recoveryStages.${String(payload.case_stage) as "opened"}`)}`,
+                              ],
+                            ] as const
+                          ).map(([key, value]) => (
+                            <div key={key}>
+                              <dt className="text-xs font-medium text-ink-muted">{t(key)}</dt>
+                              <dd className="tabular mt-0.5 font-semibold text-ink">{value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                        {row.reason !== null ? (
+                          <p className="text-sm text-ink">
+                            <span className="text-ink-muted">{t("reasonGiven")}: </span>
+                            {row.reason}
+                          </p>
+                        ) : null}
+                        <p className="rounded-control bg-warning-bg px-3 py-2 text-sm text-status-overdue-fg">
+                          {t(payload.override === true ? "writeOffOverride" : "writeOffNote", {
+                            amount: formatMoney(String(payload.total_cents ?? "0")),
+                          })}
+                        </p>
+                      </div>
+                    ) : null}
                     {row.type === "loan_extension" ? (
                       <div className="grid gap-3">
                         <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -498,7 +539,11 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                     ) : null}
 
                     {row.status === "pending" && tab === "waiting" ? (
-                      <DecisionForm requestId={row.id} title={title} />
+                      <DecisionForm
+                        requestId={row.id}
+                        title={title}
+                        boardReference={row.type === "write_off"}
+                      />
                     ) : null}
                     {row.status !== "pending" && row.decided_at !== null ? (
                       <p className="text-sm text-ink-muted">

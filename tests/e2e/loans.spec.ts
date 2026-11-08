@@ -44,7 +44,7 @@ test.describe("loans list and detail (SPEC 9; mock-ups 06, 07, 08; FR-07, FR-08)
     const customer = await createTestCustomer(fixtureUser("loan_officer"), fields);
     const loan = await submitTestLoan(fixtureUser("loan_officer"), customer.id, 100000);
     await pledge(loan.id, customer.id);
-    await fundCash("1010-BR2", 100000);
+    await fundCash("1010-BR2", 600000); // with a buffer: parallel tests pay out of the same cash
 
     await signInAs(page, fixtureUser("manager"));
     await page.goto(`/loans/${loan.id}`);
