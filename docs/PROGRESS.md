@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M6 Collateral and recovery (approved by Foday 2026-11-08); M0–M4 in review on PR #1, M5 and M6 committed locally until GitHub access is back |
-| Current block | M6.1 Collateral register in SQL |
+| Current block | M6.2 Collateral screens |
 | Last approved block | M6 phase start (Foday 2026-11-08, "Let's start M6"; open questions answered later, recommended defaults apply) |
 | State | Working on M6 (push blocked: GitHub 403; commits are local) |
-| Next step | M6.2 Collateral screens |
+| Next step | M6.3 Recovery cases and collateral sale |
 
 ## M6 plan (Collateral and recovery: FR-15, FR-16, FR-17, FR-19; T-14, T-15, T-16, T-24)
 
@@ -127,3 +127,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-07 | M5.5 | Demo seed timeline (nightly job per day, payments, pending extension), demo payment check, screenshots, M5 report; 460 database tests, 160 e2e (committed locally, push blocked) |
 | 2026-11-08 | M6 | Phase approved ("Let's start M6"); plan written |
 | 2026-11-08 | M6.1 | Collateral register SQL: duplicates, documents, custody events, release, RC numbering; 476 database tests (local) |
+| 2026-11-08 | M6.2 | /collateral (mock-up 09), /collateral/new with photos and duplicate warning, /collateral/[id] (mock-up 10) with custody events and release (local) |

@@ -1398,5 +1398,191 @@
       "running": "Running…",
       "done": "Done: {overdue} newly overdue, {penalties, plural, one {# penalty} other {# penalties}} charged, {recovery} flagged for recovery."
     }
+  },
+  "collateral": {
+    "loading": "Loading the collateral register…",
+    "title": "Collateral",
+    "register": "Register collateral",
+    "tabsLabel": "Collateral tabs",
+    "tabs": {
+      "all": "All",
+      "held": "Held",
+      "in_recovery": "In recovery",
+      "to_return": "To return",
+      "released": "Released"
+    },
+    "status": {
+      "held": "Held",
+      "in_recovery": "In recovery",
+      "to_return": "Ready to return",
+      "released": "Released",
+      "sold": "Sold",
+      "lost": "Lost"
+    },
+    "filters": {
+      "label": "Search the register",
+      "q": "Search",
+      "qPlaceholder": "Serial, plate, chassis, deed no., owner or loan",
+      "type": "Type",
+      "anyType": "All types",
+      "apply": "Apply",
+      "clear": "Clear"
+    },
+    "count": "{count, plural, one {# item} other {# items}}",
+    "empty": "No items match.",
+    "tableLabel": "Collateral table",
+    "columns": {
+      "item": "Item",
+      "description": "Description",
+      "identifier": "Identifier",
+      "owner": "Owner",
+      "loan": "Loan",
+      "location": "Location",
+      "value": "Value",
+      "status": "Status"
+    },
+    "identifiers": {
+      "serial": "S/N {value}",
+      "plate": "Plate {value}",
+      "chassis": "Chassis {value}",
+      "document": "Doc. {value}",
+      "none": "None"
+    },
+    "returnedOn": "Returned {date}",
+    "loanEnded": "Loan closed",
+    "noLoan": "Not pledged",
+    "windowed": "Showing items held now and items released in the last {days} days.",
+    "allShown": "Showing every item.",
+    "includeOlder": "Include older",
+    "hideOlder": "Recent only",
+    "validation": {
+      "required": "This field is required.",
+      "tooLong": "This is too long.",
+      "amount": "Enter an amount in dollars, for example 1,400.00.",
+      "owner": "Choose the owner.",
+      "location": "Say where the item is now.",
+      "note": "Write a note."
+    },
+    "new": {
+      "loading": "Loading…",
+      "title": "Register collateral",
+      "back": "Collateral register",
+      "intro": "Record the item, its identifiers and where it is kept. It can then be pledged to a loan of the same owner.",
+      "label": "New collateral item",
+      "owner": "Owner",
+      "searchOwner": "Find the owner (name, phone or ID)",
+      "matches": "Matching customers",
+      "changeOwner": "Change",
+      "fields": {
+        "type": "Type",
+        "description": "Description",
+        "serialNo": "Serial number (optional)",
+        "plateNo": "Plate number (optional)",
+        "chassisNo": "Chassis number (optional)",
+        "documentNo": "Deed or document number (optional)",
+        "value": "Estimated value ($)",
+        "location": "Where it is kept"
+      },
+      "photos": "Photos and documents (optional)",
+      "photosHelp": "JPG, PNG, WebP or PDF, up to 10 MB each, at most 10.",
+      "duplicates": "The same identifier is already on {items}. Check before registering it again.",
+      "submit": "Register item",
+      "submitAnyway": "Register anyway",
+      "saving": "Saving…"
+    },
+    "item": {
+      "loading": "Loading the item…",
+      "title": "Collateral item",
+      "back": "Collateral register",
+      "releaseLater": "It can be returned to the owner once {loan} has ended.",
+      "details": {
+        "type": "Type",
+        "serial": "Serial number",
+        "plate": "Plate number",
+        "chassis": "Chassis number",
+        "document": "Document number",
+        "value": "Estimated value",
+        "owner": "Owner",
+        "location": "Location",
+        "branch": "Branch"
+      },
+      "loan": {
+        "heading": "Linked loan",
+        "none": "Not pledged to any loan.",
+        "ended": "The loans it secured have ended.",
+        "pledged": "{name} · pledged {date}",
+        "cover": "Owes {owed}. The item's estimated value is {share} of the balance."
+      },
+      "files": {
+        "heading": "Photos and documents",
+        "none": "No photos or documents yet.",
+        "label": "Add photos or documents",
+        "kind": "Kind",
+        "files": "Files",
+        "help": "JPG, PNG, WebP or PDF, up to 10 MB each.",
+        "submit": "Add",
+        "adding": "Adding…",
+        "added": "Added.",
+        "kinds": {
+          "photo": "Photo",
+          "document": "Document",
+          "other": "Other"
+        }
+      },
+      "log": {
+        "heading": "Custody log",
+        "intro": "Entries cannot be edited or deleted.",
+        "table": "Custody log table",
+        "moved": "{from} to {to}",
+        "noWitness": "None",
+        "columns": {
+          "when": "When",
+          "event": "Event",
+          "detail": "Detail",
+          "by": "By",
+          "witness": "Witness"
+        },
+        "types": {
+          "received": "Received",
+          "moved": "Moved",
+          "valued": "Valued",
+          "released": "Released",
+          "seized": "Seized",
+          "sold": "Sold",
+          "lost": "Lost",
+          "note": "Note"
+        }
+      },
+      "event": {
+        "open": "Add custody event",
+        "heading": "Add custody event",
+        "type": "Event",
+        "types": {
+          "moved": "Moved",
+          "valued": "Valued",
+          "note": "Note",
+          "lost": "Lost"
+        },
+        "toLocation": "New location",
+        "value": "New estimated value ($)",
+        "note": "Note",
+        "noteOptional": "Note (optional)",
+        "witness": "Witness (optional)",
+        "save": "Save",
+        "saving": "Saving…",
+        "cancel": "Cancel",
+        "saved": "Saved in the custody log."
+      },
+      "release": {
+        "open": "Return to owner",
+        "heading": "Return this item to its owner",
+        "witness": "Collected by",
+        "note": "Note (optional)",
+        "confirm": "Confirm return",
+        "saving": "Saving…",
+        "cancel": "Cancel",
+        "done": "Returned. The release is in the custody log."
+      }
+    }
   }
 }
