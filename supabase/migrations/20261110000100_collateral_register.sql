@@ -245,7 +245,7 @@ begin
     raise exception 'INVALID_STATE: the text is too long' using errcode = '22023';
   end if;
   update loan_collaterals set status = 'released', released_on = business_today()
-   where collateral_id = v_item.id and status = 'pledged';
+   where collateral_id = v_item.id and status in ('pledged', 'seized');
   update collaterals set status = 'released' where id = v_item.id;
   insert into collateral_events (collateral_id, event_type, from_location, note, witness_name, actor_id)
   values (v_item.id, 'released', v_item.location_note, coalesce(v_note, 'Returned to the owner'), v_witness, auth.uid());

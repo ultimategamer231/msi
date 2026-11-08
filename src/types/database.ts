@@ -1585,6 +1585,120 @@ export type Database = {
           },
         ];
       };
+      recovery_actions: {
+        Row: {
+          action_date: string;
+          actor_id: string | null;
+          attachment_id: string | null;
+          case_id: string;
+          court_ref: string | null;
+          created_at: string;
+          id: string;
+          note: string | null;
+          stage: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          action_date: string;
+          actor_id?: string | null;
+          attachment_id?: string | null;
+          case_id: string;
+          court_ref?: string | null;
+          created_at?: string;
+          id?: string;
+          note?: string | null;
+          stage: string;
+        };
+        Update: {
+          action_date?: string;
+          actor_id?: string | null;
+          attachment_id?: string | null;
+          case_id?: string;
+          court_ref?: string | null;
+          created_at?: string;
+          id?: string;
+          note?: string | null;
+          stage?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "recovery_actions_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recovery_actions_attachment_id_fkey";
+            columns: ["attachment_id"];
+            isOneToOne: false;
+            referencedRelation: "attachments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recovery_actions_case_id_fkey";
+            columns: ["case_id"];
+            isOneToOne: false;
+            referencedRelation: "recovery_cases";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      recovery_cases: {
+        Row: {
+          case_no: string;
+          closed_on: string | null;
+          court_ref: string | null;
+          created_at: string;
+          id: string;
+          loan_id: string;
+          opened_by: string;
+          opened_on: string;
+          stage: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          case_no: string;
+          closed_on?: string | null;
+          court_ref?: string | null;
+          created_at?: string;
+          id?: string;
+          loan_id: string;
+          opened_by: string;
+          opened_on: string;
+          stage?: string;
+          updated_at?: string;
+        };
+        Update: {
+          case_no?: string;
+          closed_on?: string | null;
+          court_ref?: string | null;
+          created_at?: string;
+          id?: string;
+          loan_id?: string;
+          opened_by?: string;
+          opened_on?: string;
+          stage?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "recovery_cases_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recovery_cases_opened_by_fkey";
+            columns: ["opened_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       settings: {
         Row: {
           key: string;
@@ -1689,6 +1803,10 @@ export type Database = {
           p_user_id: string;
         };
         Returns: undefined;
+      };
+      advance_recovery_stage: {
+        Args: { p_case_id: string; p_court_ref?: string; p_files?: Json; p_note: string; p_stage: string };
+        Returns: string;
       };
       allocate_amount: {
         Args: { p_amount: number; p_interest: number; p_penalty: number; p_principal: number };
@@ -1903,9 +2021,15 @@ export type Database = {
           principal_cents: number;
         }[];
       };
+      loan_surplus_cents: { Args: { p_loan_id: string }; Returns: number };
       log_collateral_event: { Args: { p_collateral_id: string; p_event: Json }; Returns: string };
       log_reminder_opened: { Args: { p_kind: string; p_loan_id: string }; Returns: undefined };
       next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
+      open_recovery_case: { Args: { p_loan_id: string; p_note: string }; Returns: string };
+      pay_surplus: {
+        Args: { p_amount_cents: number; p_loan_id: string; p_method?: string };
+        Returns: string;
+      };
       pct: { Args: { p_amount_cents: number; p_bps: number }; Returns: number };
       phone_key: { Args: { p_phone: string }; Returns: string };
       post_journal:
@@ -1932,6 +2056,7 @@ export type Database = {
             };
             Returns: string;
           };
+      preview_collateral_sale: { Args: { p_amount_cents: number; p_case_id: string }; Returns: Json };
       preview_loan_terms: {
         Args: {
           p_disbursed_on?: string;
@@ -1956,6 +2081,18 @@ export type Database = {
         };
         Returns: Json;
       };
+      record_collateral_sale: {
+        Args: {
+          p_buyer_name: string;
+          p_case_id: string;
+          p_collateral_id: string;
+          p_court_ref?: string;
+          p_method: string;
+          p_sale_amount_cents: number;
+          p_sold_on?: string;
+        };
+        Returns: Json;
+      };
       record_field_payment: {
         Args: {
           p_amount_cents: number;
@@ -1967,6 +2104,32 @@ export type Database = {
         };
         Returns: Json;
       };
+      recovery_account: {
+        Args: {
+          p_loan: Omit<
+            Database["public"]["Tables"]["loans"]["Row"],
+            Database["public"]["Tables"]["loans"]["ComputedFields"]
+          >;
+          p_method: string;
+        };
+        Returns: {
+          active: boolean;
+          branch_id: string | null;
+          code: string;
+          created_at: string;
+          id: string;
+          is_cash: boolean;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "accounts";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      recovery_stage_rank: { Args: { p_stage: string }; Returns: number };
       register_collateral: { Args: { p_item: Json }; Returns: string };
       release_collateral: {
         Args: { p_collateral_id: string; p_note: string; p_witness_name?: string };

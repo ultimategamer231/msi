@@ -52,7 +52,8 @@ select set_eq(
         'record_field_payment', 'confirm_remittance', 'request_void_payment', 'request_journal_reversal',
         'preview_payment', 'receipt_balance_after', 'run_daily_accruals', 'loan_next_penalty',
         'due_list_rows', 'log_reminder_opened', 'request_extension', 'find_duplicate_collateral',
-        'add_collateral_documents', 'log_collateral_event', 'release_collateral'],
+        'add_collateral_documents', 'log_collateral_event', 'release_collateral', 'preview_collateral_sale',
+        'open_recovery_case', 'advance_recovery_stage', 'record_collateral_sale', 'loan_surplus_cents', 'pay_surplus'],
   'clients can call exactly the released RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).
