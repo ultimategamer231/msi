@@ -2,11 +2,24 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M5 Accruals and due lists complete; M0–M4 in review on PR #1, M5 committed locally (push blocked, GitHub 403) |
-| Current block | M5.5 Demo seed, demo payment check, M5 report (done) |
-| Last approved block | M5 phase start (Foday 2026-11-07, "I approve M5"; open questions answered later, recommended defaults apply) |
-| State | **Stopped: waiting for Foday's approval to start M6** (phase report `docs/reports/PHASE-M5.md`); first push the local M5 commits once GitHub access is restored |
-| Next step | Push M5 (`git push -u origin claude/new-session-6ictcc`), check CI, update PR #1; then on approval plan M6 Collateral and recovery |
+| Current phase | M6 Collateral and recovery (approved by Foday 2026-11-08); M0–M4 in review on PR #1, M5 and M6 committed locally until GitHub access is back |
+| Current block | M6.1 Collateral register in SQL |
+| Last approved block | M6 phase start (Foday 2026-11-08, "Let's start M6"; open questions answered later, recommended defaults apply) |
+| State | Working on M6 (push blocked: GitHub 403; commits are local) |
+| Next step | M6.2 Collateral screens |
+
+## M6 plan (Collateral and recovery: FR-15, FR-16, FR-17, FR-19; T-14, T-15, T-16, T-24)
+
+| Block | Content | Done when |
+| --- | --- | --- |
+| M6.1 | Collateral register in SQL: duplicate-identifier check, photos and documents, custody events (moved, valued, note, lost), `release_collateral` (all linked loans closed or written off); RC numbering (B-04) | T-24 still passes; pgTAP |
+| M6.2 | `/collateral` (mock-up 09: tabs held, in recovery, to return, released), `/collateral/new`, `/collateral/[id]` (mock-up 10: details, linked loan with cover, photos, custody log, add event, release) | e2e at 390 and 1280 |
+| M6.3 | `recovery_cases`, `recovery_actions` (stages opened, notice sent, court filed, judgment, disposal, closed; B-05), `open_recovery_case` (eligible loans; penalties stop; items seized), `advance_recovery_stage`, `preview_collateral_sale`, `record_collateral_sale` (R7, surplus to 2100), `pay_surplus` (R7b) | T-14, T-15 |
+| M6.4 | `request_write_off` and CEO approval with board reference (R6), later recoveries to 4100 | T-16 |
+| M6.5 | `/recovery` and `/recovery/[caseId]` (mock-up 13: owed, stages, record step, sale preview and sale, surplus, write-off), Open recovery on the loan page, write-off inbox card | e2e |
+| M6.6 | Demo seed (custody events, releases, ready-to-return item, RC-000001 opened A−8, notice A−5), screenshots, M6 report | all checks green |
+
+Open questions use the recommended defaults (Foday 2026-11-08, "Let's start M6"): B-04 RC-000001 numbering, B-05 a "Case opened" stage first, B-17 expense label later in M8.
 
 ## M5 plan (Accruals and due lists: FR-12, FR-13, FR-18; T-03 to T-09, T-13, T-33, T-33b)
 
@@ -112,3 +125,5 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-07 | M5.3 | due_list, /due (mock-up 11), WhatsApp reminders with audit, Remind on /field, manual run panel, due.upcoming_days setting; 444 database tests, 158 e2e (committed locally, push blocked) |
 | 2026-11-07 | M5.4 | request_extension and approval (R5), loan_extensions, Extend on the loan page, inbox card; T-13; 460 database tests (committed locally, push blocked) |
 | 2026-11-07 | M5.5 | Demo seed timeline (nightly job per day, payments, pending extension), demo payment check, screenshots, M5 report; 460 database tests, 160 e2e (committed locally, push blocked) |
+| 2026-11-08 | M6 | Phase approved ("Let's start M6"); plan written |
+| 2026-11-08 | M6.1 | Collateral register SQL: duplicates, documents, custody events, release, RC numbering; 476 database tests (local) |

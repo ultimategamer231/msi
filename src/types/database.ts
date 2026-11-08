@@ -1675,6 +1675,7 @@ export type Database = {
           posted_cents: number;
         }[];
       };
+      add_collateral_documents: { Args: { p_collateral_id: string; p_files: Json }; Returns: Json };
       add_customer_documents: { Args: { p_customer_id: string; p_files: Json }; Returns: undefined };
       add_months_clamped: { Args: { p_date: string; p_months: number }; Returns: string };
       admin_record_password_reset: { Args: { p_user_id: string }; Returns: undefined };
@@ -1805,6 +1806,22 @@ export type Database = {
         };
         Returns: Json;
       };
+      find_duplicate_collateral: {
+        Args: {
+          p_chassis_no: string;
+          p_document_no: string;
+          p_exclude?: string;
+          p_plate_no: string;
+          p_serial_no: string;
+        };
+        Returns: {
+          code: string;
+          description: string;
+          id: string;
+          matched: string;
+          status: string;
+        }[];
+      };
       find_duplicate_customers: {
         Args: { p_exclude?: string; p_id_number: string; p_phone: string; p_phone_alt: string };
         Returns: Json;
@@ -1886,6 +1903,7 @@ export type Database = {
           principal_cents: number;
         }[];
       };
+      log_collateral_event: { Args: { p_collateral_id: string; p_event: Json }; Returns: string };
       log_reminder_opened: { Args: { p_kind: string; p_loan_id: string }; Returns: undefined };
       next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
       pct: { Args: { p_amount_cents: number; p_bps: number }; Returns: number };
@@ -1950,6 +1968,10 @@ export type Database = {
         Returns: Json;
       };
       register_collateral: { Args: { p_item: Json }; Returns: string };
+      release_collateral: {
+        Args: { p_collateral_id: string; p_note: string; p_witness_name?: string };
+        Returns: undefined;
+      };
       request_capital_in: { Args: { p_request: Json }; Returns: string };
       request_customer_edit: {
         Args: { p_customer_id: string; p_patch: Json; p_reason: string };
