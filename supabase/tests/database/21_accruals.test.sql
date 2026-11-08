@@ -87,7 +87,7 @@ select results_eq(
 -- T-07: the same day again posts nothing.
 select is((tests.run(:'manager_id')) ->> 'penalties_posted', '0', 'T-07: a rerun posts nothing');
 select is((select count(*)::int from public.loan_penalty_events where loan_id = :'loan_t03'), 1, 'T-07: still one event');
-select is((select count(*)::int from public.accrual_runs where run_date = '2026-02-12'), 2, 'both runs are logged');
+select is((select count(*)::int from public.accrual_runs where run_date = '2026-02-12' and triggered_by = :'manager_id'), 2, 'both runs are logged');
 select is(tests.value_as('authenticated', :'manager_id', format($$select next_penalty_on::text from public.loan_balances where loan_id = '%s'$$, :'loan_t03')), '2026-02-19',
   'the next penalty date is shown');
 select is(tests.value_as('authenticated', :'cashier_id', format($$select public.loan_next_penalty('%s')::text$$, :'loan_t03'))::jsonb,

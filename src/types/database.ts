@@ -702,6 +702,10 @@ export type Database = {
       };
       issued_documents: {
         Row: {
+          amount_cents: number | null;
+          customer_id: string | null;
+          details: Json | null;
+          doc_date: string | null;
           entity_id: string;
           generated_at: string;
           generated_by: string;
@@ -713,6 +717,10 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          amount_cents?: number | null;
+          customer_id?: string | null;
+          details?: Json | null;
+          doc_date?: string | null;
           entity_id: string;
           generated_at?: string;
           generated_by: string;
@@ -723,6 +731,10 @@ export type Database = {
           token: string;
         };
         Update: {
+          amount_cents?: number | null;
+          customer_id?: string | null;
+          details?: Json | null;
+          doc_date?: string | null;
           entity_id?: string;
           generated_at?: string;
           generated_by?: string;
@@ -733,6 +745,13 @@ export type Database = {
           token?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "issued_documents_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "issued_documents_generated_by_fkey";
             columns: ["generated_by"];
@@ -1972,7 +1991,9 @@ export type Database = {
       };
       id_number_key: { Args: { p_id: string }; Returns: string };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
-      issue_document: { Args: { p_entity_id: string; p_kind: string }; Returns: Json };
+      issue_document:
+        | { Args: { p_entity_id: string; p_kind: string }; Returns: Json }
+        | { Args: { p_entity_id: string; p_kind: string; p_options: Json }; Returns: Json };
       journal_content_digest: {
         Args: {
           p_branch_id: string;
@@ -2031,9 +2052,11 @@ export type Database = {
           principal_cents: number;
         }[];
       };
+      loan_statement: { Args: { p_from?: string; p_loan_id: string; p_to?: string }; Returns: Json };
       loan_surplus_cents: { Args: { p_loan_id: string }; Returns: number };
       log_collateral_event: { Args: { p_collateral_id: string; p_event: Json }; Returns: string };
       log_reminder_opened: { Args: { p_kind: string; p_loan_id: string }; Returns: undefined };
+      mask_name: { Args: { p_name: string }; Returns: string };
       next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
       open_recovery_case: { Args: { p_loan_id: string; p_note: string }; Returns: string };
       pay_surplus: {
@@ -2225,6 +2248,7 @@ export type Database = {
       };
       validate_setting: { Args: { p_key: string; p_value: Json }; Returns: undefined };
       verify_audit_chain: { Args: Record<PropertyKey, never>; Returns: number };
+      verify_document: { Args: { p_token: string }; Returns: Json };
       verify_journal_chain: { Args: Record<PropertyKey, never>; Returns: number };
       write_audit: {
         Args: { p_action: string; p_after: Json; p_before: Json; p_entity_id: string; p_entity_type: string };

@@ -32,11 +32,13 @@ values
   ('approvals.expense_limit_cents', '10000'),          -- A-20: $100.00
   ('disbursement.check_funds', 'true'),                -- SPEC 5.4.8
   ('due.upcoming_days', '7'),                          -- B-07: due list "due soon" window
+  ('recovery.notice_days', '7'),                       -- M7: days a demand notice gives to pay
   -- SPEC 10.3 WhatsApp reminder texts (editable by admin).
   ('templates', jsonb_build_object(
       'reminder', 'Dear {name}, your loan {loan_no} of {amount} is due on {due_date}. Outstanding: {outstanding}. Please pay at {branch} or call {branch_phone}. Thank you. – {company}',
       'reminder_overdue', 'Dear {name}, your loan {loan_no} was due on {due_date} and is {days_overdue} days overdue. Outstanding: {outstanding}, including penalties of {penalties}. Please pay at {branch} or call {branch_phone}. Thank you. – {company}',
       -- SPEC 10.1: placeholder legal wording, visibly marked, for MSI's lawyer to replace.
+      'demand_notice', '[PLACEHOLDER: to be reviewed by MSI''s lawyer before use] Our records show that loan {loan_no} was due on {due_date} and is {days_overdue} days overdue. The amount now owed is {outstanding}, including penalties of {penalties}. Please pay the full amount at {branch} by {deadline}. If it is not paid by then, {company} may proceed under the loan agreement and its recovery policy, including the sale of the collateral listed below, and the costs of recovery may be added to what is owed.',
       'loan_agreement', '[PLACEHOLDER: to be reviewed by MSI''s lawyer before use] The borrower agrees to repay the total amount shown by the due date. Interest is charged once, at payout. If any amount is still unpaid after the due date, a penalty of {penalty_rate} of the amount then owed is added every {penalty_days} days, up to {penalty_max} times. The collateral listed below is held by {company} until the loan is repaid in full and may be sold under the recovery policy if the loan is not repaid. Payments are applied first to penalties, then to interest, then to the amount lent.')),
   -- B-01 business clock: real time unless a demo or test environment moves it.
   ('clock.override_at', 'null')

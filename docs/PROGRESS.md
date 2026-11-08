@@ -2,11 +2,22 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M6 Collateral and recovery complete; M0–M4 on PR #1; M5 and M6 committed locally until GitHub access is back |
-| Current block | M6.6 Demo seed, screenshots, M6 report (done) |
-| Last approved block | M6 phase start (Foday 2026-11-08, "Let's start M6"; open questions answered later, recommended defaults apply) |
-| State | **Stopped: waiting for Foday's approval to start M7** (phase report `docs/reports/PHASE-M6.md`); push the local M5 and M6 commits first once GitHub access is restored |
-| Next step | Push (`git push -u origin claude/new-session-6ictcc`), check CI, update PR #1; then on approval plan M7 Statements and documents |
+| Current phase | M7 Statements and documents (approved by Foday 2026-11-08); M0–M6 committed; GitHub account suspended, work kept locally and in bundles |
+| Current block | M7.1 Statement and document functions |
+| Last approved block | M7 phase start (Foday 2026-11-08) |
+| State | Working on M7 (cannot push: GitHub account suspended) |
+| Next step | M7.2 PDFs |
+
+## M7 plan (Statements and documents: FR-14, FR-25)
+
+| Block | Content | Done when |
+| --- | --- | --- |
+| M7.1 | `loan_statement` (opening balance, every movement with running balance, totals, outstanding by component, next due date), `issue_document` for statements, demand notices, collateral receipts and release letters (each with a stored summary for verification), `verify_document` (public: number, date, amount, masked name, void), demand notice template | pgTAP: running balance equals the ledger |
+| M7.2 | PDFs: statement (loan and customer), demand notice, collateral receipt (with photos), collateral release letter | e2e: each PDF opens |
+| M7.3 | `/verify/[token]` public page; Statement, Demand notice, Collateral receipt and Release letter links on the loan, customer, collateral and recovery pages | e2e at 390 and 1280 |
+| M7.4 | Statement check over every seeded loan, screenshots, M7 report | all checks green |
+
+Approved by Foday 2026-11-08 ("let's continue the coding" after the M6 report). GitHub is suspended: commits stay local and the backup bundle is refreshed for Foday.
 
 ## M6 plan (Collateral and recovery: FR-15, FR-16, FR-17, FR-19; T-14, T-15, T-16, T-24)
 
@@ -132,3 +143,5 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-08 | M6.4 | request_write_off, CEO approval with board reference (R6), recoveries to 4100; T-16; 514 database tests (local) |
 | 2026-11-08 | M6.5 | /recovery, /recovery/[caseId] (mock-up 13), loan page recovery and write-off actions, write-off inbox card; 514 database tests, 166 e2e (local) |
 | 2026-11-08 | M6.6 | Demo custody log, releases, RC-000001; screenshots; M6 report; 514 database tests, 166 e2e (local) |
+| 2026-11-08 | M6 | M5 and M6 pushed at 02:44 UTC; the GitHub account was then suspended (Foday is appealing); full bundle sent |
+| 2026-11-08 | M7 | Phase approved; plan written |

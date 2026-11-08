@@ -21,7 +21,7 @@ select tests.try_as('authenticated', :'officer_id', $$select public.create_custo
 select id as customer_id from public.customers where id_number = 'TC-100001' \gset
 select tests.become('authenticated', :'officer_id');
 select public.register_collateral(jsonb_build_object('owner_customer_id', :'customer_id', 'type', 'vehicle',
-  'description', 'Toyota Corolla 2008', 'plate_no', 'BRK 4821', 'estimated_value_cents', 420000,
+  'description', 'Toyota Corolla 2008', 'plate_no', 'TC9 4821', 'estimated_value_cents', 420000,
   'location_note', 'Branch yard')) as item_id \gset
 select public.create_loan_draft(jsonb_build_object('customer_id', :'customer_id', 'product_id', :'product_id',
   'principal_cents', 50000, 'term_months', 1)) as loan_a \gset
@@ -41,10 +41,10 @@ select matches(tests.try_as('authenticated', :'officer_id', format($$select publ
 
 -- Duplicate identifiers (SPEC 5.9): case and spaces do not hide a match.
 select is(tests.value_as('authenticated', :'officer_id',
-  $$select string_agg(matched, ',') from public.find_duplicate_collateral(null, ' brk 4821 ', null, null)$$),
+  $$select string_agg(matched, ',') from public.find_duplicate_collateral(null, ' tc9 4821 ', null, null)$$),
   'plate_no', 'the same plate on another active item is found');
 select is(tests.value_as('authenticated', :'officer_id',
-  format($$select count(*)::text from public.find_duplicate_collateral(null, 'BRK 4821', null, null, '%s')$$, :'item_id')),
+  format($$select count(*)::text from public.find_duplicate_collateral(null, 'TC9 4821', null, null, '%s')$$, :'item_id')),
   '0', 'the item itself is not its own duplicate');
 
 -- Custody events.

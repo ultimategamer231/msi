@@ -32,8 +32,8 @@ select is(
 select set_eq(
   $$select p.proname::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'EXECUTE')$$,
-  array['public_branding'],
-  'the anonymous role can call only public_branding (sign-in page header)');
+  array['public_branding', 'verify_document'],
+  'the anonymous role can call only public_branding (sign-in page header) and verify_document (QR check)');
 
 select ok(
   not has_function_privilege('authenticated', 'public.write_audit(text,text,text,jsonb,jsonb)', 'EXECUTE'),
@@ -54,7 +54,7 @@ select set_eq(
         'due_list_rows', 'log_reminder_opened', 'request_extension', 'find_duplicate_collateral',
         'add_collateral_documents', 'log_collateral_event', 'release_collateral', 'preview_collateral_sale',
         'open_recovery_case', 'advance_recovery_stage', 'record_collateral_sale', 'loan_surplus_cents', 'pay_surplus',
-        'request_write_off'],
+        'request_write_off', 'loan_statement', 'verify_document'],
   'clients can call exactly the released RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).
