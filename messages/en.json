@@ -735,7 +735,8 @@
       "void": "{name}, receipt {receipt}, {amount}",
       "extension": "{name}, {loan}, {months, plural, one {# more month} other {# more months}}",
       "writeOff": "Write off {name}, {loan}, {amount}",
-      "expense": "{number}: {description}, {amount}"
+      "expense": "{number}: {description}, {amount}",
+      "dayClose": "{branch}, {date}"
     },
     "photo": "Photo",
     "none": "None",
@@ -812,7 +813,11 @@
     "expensePayee": "Payee",
     "expensePaidFrom": "Paid from",
     "expenseNoPayee": "No payee",
-    "expenseOnCredit": "On credit (owed to the payee)"
+    "expenseOnCredit": "On credit (owed to the payee)",
+    "dayExpected": "Expected cash",
+    "dayCounted": "Counted",
+    "dayVariance": "Variance",
+    "dayLockNote": "Approving locks this day for the branch; nothing more can be posted to it unless it is reopened."
   },
   "guarantors": {
     "heading": "Guarantors (optional)",
@@ -1989,6 +1994,75 @@
       "edit": "Edit",
       "editLabel": "Edit {name}",
       "cancel": "Cancel"
+    }
+  },
+  "dayClose": {
+    "title": "Day close",
+    "loading": "Loading the day",
+    "heading": "Day close, {branch}",
+    "print": "Print summary",
+    "pick": "Choose the day",
+    "branch": "Branch",
+    "date": "Day",
+    "show": "Show",
+    "status": {
+      "open": "Not closed",
+      "submitted": "Waiting for approval",
+      "closed": "Closed"
+    },
+    "describe": {
+      "repayment": "{name}, repayment ({loan})",
+      "payout": "{name}, loan payout"
+    },
+    "expected": {
+      "heading": "Expected cash",
+      "opening": "Opening cash",
+      "collections": "Cash collections ({count, plural, one {# receipt} other {# receipts}})",
+      "payout": "Payout, {loan}",
+      "expenses": "Expenses",
+      "total": "Expected in drawer"
+    },
+    "count": {
+      "heading": "Count",
+      "counted": "Cash counted in drawer ($)",
+      "countRequired": "Enter the cash counted, for example 1,795.00.",
+      "variance": "Variance",
+      "noteRequired": "Reason for variance (required)",
+      "noteOptional": "Note (optional)",
+      "noteMissing": "Give a reason for the variance.",
+      "close": "Close day",
+      "closing": "Closing…",
+      "lockNote": "Closing locks this day once a manager approves. Changes after that go through a manager reopening it.",
+      "waitingForCashier": "The cashier has not closed this day yet.",
+      "waitingForManager": "Waiting for a manager to approve.",
+      "countedBy": "Counted by {name}",
+      "reason": "Reason",
+      "approvedBy": "Approved by {name}, {when}. The day is locked.",
+      "reopened": "This day was reopened: {reason}. The cashier counts again.",
+      "rejected": "The last count was sent back. The cashier counts again."
+    },
+    "reopen": {
+      "open": "Reopen day",
+      "reason": "Reason for reopening",
+      "note": "The day unlocks so late entries can be posted; the cashier then closes it again.",
+      "confirm": "Reopen",
+      "cancel": "Cancel"
+    },
+    "field": {
+      "heading": "Not in the drawer",
+      "with": "Field cash with {name}",
+      "detail": "{receipt}, {name}, {loan}. It counts once the cashier confirms the handover."
+    },
+    "movements": {
+      "heading": "Cash movements",
+      "empty": "No cash moved on this day.",
+      "columns": {
+        "time": "Time",
+        "reference": "Reference",
+        "description": "Description",
+        "in": "In",
+        "out": "Out"
+      }
     }
   }
 }

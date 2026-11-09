@@ -604,6 +604,93 @@ export type Database = {
           },
         ];
       };
+      day_closes: {
+        Row: {
+          approved_at: string | null;
+          approved_by: string | null;
+          branch_id: string;
+          cashier_id: string;
+          close_date: string;
+          counted_cash_cents: number;
+          expected_cash_cents: number;
+          id: string;
+          note: string | null;
+          opening_cash_cents: number;
+          reopen_reason: string | null;
+          reopened_at: string | null;
+          reopened_by: string | null;
+          status: string;
+          submitted_at: string;
+          variance_cents: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          branch_id: string;
+          cashier_id: string;
+          close_date: string;
+          counted_cash_cents: number;
+          expected_cash_cents: number;
+          id?: string;
+          note?: string | null;
+          opening_cash_cents: number;
+          reopen_reason?: string | null;
+          reopened_at?: string | null;
+          reopened_by?: string | null;
+          status?: string;
+          submitted_at?: string;
+          variance_cents: number;
+        };
+        Update: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          branch_id?: string;
+          cashier_id?: string;
+          close_date?: string;
+          counted_cash_cents?: number;
+          expected_cash_cents?: number;
+          id?: string;
+          note?: string | null;
+          opening_cash_cents?: number;
+          reopen_reason?: string | null;
+          reopened_at?: string | null;
+          reopened_by?: string | null;
+          status?: string;
+          submitted_at?: string;
+          variance_cents?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "day_closes_approved_by_fkey";
+            columns: ["approved_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "day_closes_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "day_closes_cashier_id_fkey";
+            columns: ["cashier_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "day_closes_reopened_by_fkey";
+            columns: ["reopened_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       document_sequences: {
         Row: {
           branch_id: string;
@@ -2035,6 +2122,16 @@ export type Database = {
         };
         Returns: Json;
       };
+      apply_day_close: {
+        Args: {
+          p_decision: string;
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
       apply_journal_reversal: {
         Args: {
           p_request: Omit<
@@ -2119,6 +2216,7 @@ export type Database = {
         Returns: string;
       };
       customer_editable_fields: { Args: Record<PropertyKey, never>; Returns: string[] };
+      day_close_summary: { Args: { p_branch_id: string; p_date: string }; Returns: Json };
       decide_approval: { Args: { p_decision: string; p_id: string; p_note: string }; Returns: Json };
       disburse_loan: {
         Args: { p_account_id?: string; p_disbursed_on?: string; p_loan_id: string; p_method: string };
@@ -2378,11 +2476,13 @@ export type Database = {
         };
       };
       recovery_stage_rank: { Args: { p_stage: string }; Returns: number };
+      refresh_period_lock: { Args: { p_branch_id: string; p_floor: string }; Returns: undefined };
       register_collateral: { Args: { p_item: Json }; Returns: string };
       release_collateral: {
         Args: { p_collateral_id: string; p_note: string; p_witness_name?: string };
         Returns: undefined;
       };
+      reopen_day_close: { Args: { p_id: string; p_reason: string }; Returns: undefined };
       request_capital_in: { Args: { p_request: Json }; Returns: string };
       request_customer_edit: {
         Args: { p_customer_id: string; p_patch: Json; p_reason: string };
@@ -2414,6 +2514,10 @@ export type Database = {
       setting_error: { Args: { p_key: string; p_problem: string }; Returns: undefined };
       settle_expense: { Args: { p_account: string; p_id: string }; Returns: string };
       store_guarantors: { Args: { p_guarantors: Json; p_loan_id: string }; Returns: number };
+      submit_day_close: {
+        Args: { p_branch_id: string; p_counted_cents: number; p_date: string; p_note: string };
+        Returns: string;
+      };
       submit_loan: { Args: { p_loan_id: string }; Returns: string };
       swapped_lines: { Args: { p_journal_id: string }; Returns: Json };
       take_payment: {

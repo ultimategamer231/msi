@@ -7,7 +7,7 @@ import { TopBar } from "@/components/layout/top-bar";
 import { buttonVariants } from "@/components/ui/button";
 import { StatusBadge, type BadgeTone } from "@/components/ui/status-badge";
 import { requirePageAccess } from "@/lib/auth/staff";
-import { formatDate, formatMoney } from "@/lib/format";
+import { formatDate, formatMoney, formatMoneySigned } from "@/lib/format";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { ageOf } from "@/lib/when";
@@ -253,6 +253,11 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                   loan: String(payload.loan_no ?? ""),
                   months: Number(payload.extra_months ?? 1),
                 });
+              } else if (row.type === "day_close") {
+                title = t("titles.dayClose", {
+                  branch: String(payload.branch ?? ""),
+                  date: typeof payload.close_date === "string" ? formatDate(payload.close_date) : "",
+                });
               } else if (row.type === "expense") {
                 title = t("titles.expense", {
                   number: String(payload.expense_no ?? ""),
@@ -452,6 +457,33 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                           {t(payload.override === true ? "writeOffOverride" : "writeOffNote", {
                             amount: formatMoney(String(payload.total_cents ?? "0")),
                           })}
+                        </p>
+                      </div>
+                    ) : null}
+                    {row.type === "day_close" ? (
+                      <div className="grid gap-3">
+                        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                          {(
+                            [
+                              ["dayExpected", formatMoney(String(payload.expected_cents ?? "0"))],
+                              ["dayCounted", formatMoney(String(payload.counted_cents ?? "0"))],
+                              ["dayVariance", formatMoneySigned(String(payload.variance_cents ?? "0"))],
+                            ] as const
+                          ).map(([key, value]) => (
+                            <div key={key}>
+                              <dt className="text-xs font-medium text-ink-muted">{t(key)}</dt>
+                              <dd className="tabular mt-0.5 font-semibold text-ink">{value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                        {row.reason !== null ? (
+                          <p className="text-sm text-ink">
+                            <span className="text-ink-muted">{t("reasonGiven")}: </span>
+                            {row.reason}
+                          </p>
+                        ) : null}
+                        <p className="rounded-control bg-warning-bg px-3 py-2 text-sm text-status-overdue-fg">
+                          {t("dayLockNote")}
                         </p>
                       </div>
                     ) : null}
