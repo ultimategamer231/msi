@@ -2,9 +2,11 @@
 -- M0 part: branches, company header and rule settings (SPEC 2.3, 11 Branding).
 -- The chart of accounts, loan product and document templates for legal texts join in later milestones.
 
--- Branch names and addresses are placeholders until MSI supplies them (QUESTIONS client item 9).
-insert into public.branches (code, name)
-values ('BR1', 'Main'), ('BR2', 'Branch 2'), ('BR3', 'Branch 3')
+-- Branch addresses from MSI (2026-11-09); names are placeholders until MSI gives them (QUESTIONS 9).
+insert into public.branches (code, name, address)
+values ('BR1', 'Main', 'Bypass, Jallah Town, Behind Conex Gas Station'),
+       ('BR2', 'Branch 2', 'Peace Community, Mamba District #2, Margibi County'),
+       ('BR3', 'Branch 3', 'Ganta City, Nimba County')
 on conflict (code) do nothing;
 
 insert into public.settings (key, value)
