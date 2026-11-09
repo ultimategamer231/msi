@@ -28,6 +28,7 @@ export const ROUTES = {
   "/api/health": "public",
   "/api/pdf/[kind]/[id]": "staff", // SPEC 10.1; each kind checks the record and role again
   "/api/reminder/[loanId]": "staff", // SPEC 10.3: logs the tap, then opens WhatsApp
+  "/api/reports/[report]": ["ceo", "manager", "accountant", "admin"], // SPEC 10.2: CSV export
 
   "/dashboard": "staff",
   "/customers": "staff",

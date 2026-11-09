@@ -21,6 +21,7 @@ const EXPECTED: Record<Exclude<RouteKey, "/login" | "/verify/[token]" | "/api/he
   "/dashboard": ALL,
   "/api/pdf/[kind]/[id]": ALL,
   "/api/reminder/[loanId]": ALL,
+  "/api/reports/[report]": ["ceo", "manager", "accountant", "admin"],
   "/customers": ALL,
   "/customers/new": ["loan_officer", "manager", "admin"],
   "/customers/[id]": ALL,
