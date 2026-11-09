@@ -1216,7 +1216,9 @@
         "receive": "Receive payment",
         "openRecovery": "Open recovery case",
         "recoveryFrom": "Recovery possible from {date}",
-        "viewCase": "Recovery case {case}"
+        "viewCase": "Recovery case {case}",
+        "chequeNumber": "Cheque number",
+        "chequeMissing": "Enter the cheque number (at least 4 characters)."
       },
       "documents": {
         "heading": "Documents",

@@ -1,7 +1,7 @@
 -- Client answers 2026-11-09: cheques, collateral types, head-office contact, standard wording.
 begin;
 \ir _helpers.psql
-select plan(8);
+select plan(10);
 
 insert into public.branches (code, name) values ('TQ', 'Test Cheques');
 select tests.create_staff('Officer TQ', 'loan_officer', 'TQ') as officer_id \gset
@@ -29,8 +29,12 @@ select public.decide_approval((select id from public.approval_requests where ent
 select tests.unbecome();
 
 select is((select type from public.collaterals where id = :'item_id'), 'gold', 'gold is a collateral type');
-select is(tests.try_as('authenticated', :'cashier_id', format($$select public.disburse_loan('%s', 'cheque', null, null)$$, :'loan_id')), null,
+select matches(tests.try_as('authenticated', :'cashier_id', format($$select public.disburse_loan('%s', 'cheque', null, null)$$, :'loan_id')),
+  '^REFERENCE_REQUIRED', 'a cheque payout needs the cheque number');
+select is(tests.try_as('authenticated', :'cashier_id', format($$select public.disburse_loan('%s', 'cheque', null, null, ' 004512 ')$$, :'loan_id')), null,
   'a loan can be paid out by cheque');
+select is((select memo from public.journals where source_type = 'disbursement' and source_id = :'loan_id'),
+  (select 'Loan ' || loan_no || ' paid out, cheque 004512' from public.loans where id = :'loan_id'), 'the cheque number is kept in the payout memo');
 select results_eq(format($$select a.code from public.journal_lines l join public.accounts a on a.id = l.account_id
                            join public.journals j on j.id = l.journal_id where j.source_type = 'disbursement' and j.source_id = '%s' and l.credit_cents > 0 and a.code like '10%%'$$, :'loan_id'),
   $$values ('1020'::text)$$, 'a cheque payout comes out of the bank (1020)');

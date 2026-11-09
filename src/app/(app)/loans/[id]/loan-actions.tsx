@@ -138,8 +138,14 @@ export function DisburseForm({
   const { pending, error, run } = useAction();
   const [method, setMethod] = useState<"cash" | "mobile_money" | "bank" | "cheque">("cash");
   const [confirming, setConfirming] = useState(false);
+  const [cheque, setCheque] = useState("");
+  const [chequeMissing, setChequeMissing] = useState(false);
   const accountLabel =
-    method === "cash" ? cashAccount : method === "bank" ? t("bankAccount") : t("momoAccount");
+    method === "cash"
+      ? cashAccount
+      : method === "bank" || method === "cheque"
+        ? t("bankAccount")
+        : t("momoAccount");
   return (
     <div className="grid gap-3 rounded-control border border-line p-4">
       <h3 className="text-sm font-bold text-ink">{t("disburseHeading")}</h3>
@@ -160,6 +166,26 @@ export function DisburseForm({
           <option value="bank">{t("methods.bank")}</option>
         </select>
       </Field>
+      {method === "cheque" ? (
+        <Field
+          id="disburse-cheque"
+          label={t("chequeNumber")}
+          error={chequeMissing ? t("chequeMissing") : undefined}
+        >
+          <input
+            id="disburse-cheque"
+            autoComplete="off"
+            maxLength={100}
+            value={cheque}
+            onChange={(event) => {
+              setCheque(event.target.value);
+              setChequeMissing(false);
+            }}
+            className={inputClass}
+            {...describedBy("disburse-cheque", undefined, chequeMissing ? t("chequeMissing") : undefined)}
+          />
+        </Field>
+      ) : null}
       {confirming ? (
         <div
           role="alertdialog"
@@ -175,7 +201,7 @@ export function DisburseForm({
               disabled={pending}
               onClick={() =>
                 run(
-                  () => disburseLoan(loanId, method),
+                  () => disburseLoan(loanId, method, method === "cheque" ? cheque.trim() : ""),
                   () => setConfirming(false),
                 )
               }
@@ -189,7 +215,16 @@ export function DisburseForm({
         </div>
       ) : (
         <div>
-          <Button type="button" onClick={() => setConfirming(true)}>
+          <Button
+            type="button"
+            onClick={() => {
+              if (method === "cheque" && cheque.trim().length < 4) {
+                setChequeMissing(true);
+                return;
+              }
+              setConfirming(true);
+            }}
+          >
             {t("disburse")}
           </Button>
         </div>

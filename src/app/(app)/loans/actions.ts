@@ -270,17 +270,26 @@ export async function cancelLoan(loanId: string, reason: string): Promise<LoanAc
   );
 }
 
-/* disburse_loan (cashier, R1): today's date; the account follows the method (B-10, SPEC 5.4.5). */
+/* disburse_loan (cashier, R1): today's date; the account follows the method (B-10, SPEC 5.4.5); a
+ * cheque payout needs the cheque number, kept in the payout journal's memo. */
 export async function disburseLoan(
   loanId: string,
   method: "cash" | "mobile_money" | "bank" | "cheque",
+  reference = "",
 ): Promise<LoanActionResult> {
-  if (!["cash", "mobile_money", "bank", "cheque"].includes(method))
+  const ref = reference.trim();
+  if (!["cash", "mobile_money", "bank", "cheque"].includes(method) || ref.length > 100)
     return { ok: false, code: "INVALID_INPUT" };
+  if (method === "cheque" && ref.length < 4) return { ok: false, code: "REFERENCE_REQUIRED" };
   return loanRpc(
     "loans.disburseLoan",
     ["cashier"],
-    (supabase) => supabase.rpc("disburse_loan", { p_loan_id: loanId, p_method: method }),
+    (supabase) =>
+      supabase.rpc("disburse_loan", {
+        p_loan_id: loanId,
+        p_method: method,
+        ...(ref === "" ? {} : { p_reference: ref }),
+      }),
     loanId,
   );
 }

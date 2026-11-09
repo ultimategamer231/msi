@@ -2251,7 +2251,13 @@ export type Database = {
       day_close_summary: { Args: { p_branch_id: string; p_date: string }; Returns: Json };
       decide_approval: { Args: { p_decision: string; p_id: string; p_note: string }; Returns: Json };
       disburse_loan: {
-        Args: { p_account_id?: string; p_disbursed_on?: string; p_loan_id: string; p_method: string };
+        Args: {
+          p_account_id?: string;
+          p_disbursed_on?: string;
+          p_loan_id: string;
+          p_method: string;
+          p_reference?: string;
+        };
         Returns: Json;
       };
       due_list_rows: {
