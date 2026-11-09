@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M8 Money-out, day close, reports (approved by Foday 2026-11-09) |
-| Current block | M8.1 Payees and expenses (SQL) |
+| Current block | M8.3 Day close |
 | Last approved block | M7 phase start (Foday 2026-11-08) |
 | State | Working on M8. Push works; the GitHub API still answers 404 (PR and CI not visible) |
-| Next step | M8.2 Expenses and payees screens |
+| Next step | M8.3 Day close (SQL and screen) |
 
 ## M8 plan (Money-out, day close, reports: FR-22, FR-23, FR-24; T-26, T-27, T-34)
 
@@ -164,3 +164,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-09 | M7.4 | Statement check on demo data (12/12 equal, $10,169.28), screenshots, M7 report |
 | 2026-11-09 | M8 | Phase approved; plan written |
 | 2026-11-09 | M8.1 | Payees, expenses, settlement, expense approvals; 546 database tests |
+| 2026-11-09 | M8.2 | /expenses, /payees, expense inbox card, accountant receipt uploads; e2e |

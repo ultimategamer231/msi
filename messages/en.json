@@ -734,7 +734,8 @@
       "reversal": "Reverse {journal}: {memo}, {amount}",
       "void": "{name}, receipt {receipt}, {amount}",
       "extension": "{name}, {loan}, {months, plural, one {# more month} other {# more months}}",
-      "writeOff": "Write off {name}, {loan}, {amount}"
+      "writeOff": "Write off {name}, {loan}, {amount}",
+      "expense": "{number}: {description}, {amount}"
     },
     "photo": "Photo",
     "none": "None",
@@ -805,7 +806,13 @@
       "judgment": "Judgment",
       "disposal": "Disposal",
       "closed": "Closed"
-    }
+    },
+    "expenseDate": "Date",
+    "expenseAccount": "Expense account",
+    "expensePayee": "Payee",
+    "expensePaidFrom": "Paid from",
+    "expenseNoPayee": "No payee",
+    "expenseOnCredit": "On credit (owed to the payee)"
   },
   "guarantors": {
     "heading": "Guarantors (optional)",
@@ -1863,6 +1870,125 @@
       "demand_notice": "Demand notice",
       "collateral_receipt": "Collateral receipt",
       "collateral_release": "Collateral release letter"
+    }
+  },
+  "expenses": {
+    "title": "Expenses",
+    "loading": "Loading expenses",
+    "intro": "Expenses above {limit} wait for a manager’s approval before they are paid.",
+    "payeesLink": "Payees",
+    "listHeading": "Recorded expenses",
+    "tabsLabel": "Expense status",
+    "tableLabel": "Expenses",
+    "pagination": "Pages",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {page} of {pages}",
+    "onCredit": "On credit",
+    "tabs": {
+      "all": "All",
+      "pending_approval": "Waiting for approval",
+      "approved": "Owed to payees",
+      "paid": "Paid",
+      "rejected": "Rejected"
+    },
+    "empty": {
+      "all": "No expenses yet.",
+      "pending_approval": "Nothing is waiting for approval.",
+      "approved": "Nothing is owed to payees.",
+      "paid": "No paid expenses yet.",
+      "rejected": "No rejected expenses."
+    },
+    "columns": {
+      "number": "Number",
+      "date": "Date",
+      "description": "Description",
+      "account": "Account",
+      "payee": "Payee",
+      "paidFrom": "Paid from",
+      "amount": "Amount",
+      "status": "Status"
+    },
+    "status": {
+      "pending_approval": "Waiting for approval",
+      "approved": "Owed",
+      "paid": "Paid",
+      "rejected": "Rejected"
+    },
+    "form": {
+      "heading": "New expense",
+      "date": "Date",
+      "account": "Expense account",
+      "chooseAccount": "Choose an account",
+      "amount": "Amount ($)",
+      "branch": "Branch",
+      "chooseBranch": "Choose a branch",
+      "description": "Description",
+      "howPaid": "How it is paid",
+      "paidNow": "Paid now",
+      "onCredit": "On credit (pay the payee later)",
+      "paidFrom": "Paid from",
+      "chooseFrom": "Choose cash, bank or mobile money",
+      "payee": "Payee",
+      "payeeOptional": "Payee (optional)",
+      "noPayee": "No payee",
+      "receipt": "Receipt (optional)",
+      "save": "Save expense",
+      "saving": "Saving…",
+      "saved": "{number} saved and posted.",
+      "sentForApproval": "{number} is above the limit and waits for a manager’s approval."
+    },
+    "settle": {
+      "from": "Pay {number} from",
+      "choose": "Pay from…",
+      "pay": "Pay payee"
+    },
+    "validation": {
+      "account": "Choose an expense account.",
+      "amount": "Enter an amount above $0.00, for example 45.00.",
+      "date": "Enter a valid date.",
+      "description": "Describe the expense in 3 to 300 characters.",
+      "paidFrom": "Choose where the money comes from.",
+      "payee": "An expense on credit needs a payee.",
+      "name": "Enter a name of 2 to 120 characters.",
+      "phone": "Use at most 30 characters.",
+      "notes": "Use at most 500 characters."
+    }
+  },
+  "payees": {
+    "title": "Payees",
+    "loading": "Loading payees",
+    "back": "Expenses",
+    "listHeading": "All payees",
+    "tableLabel": "Payees",
+    "empty": "No payees yet.",
+    "inactive": "Inactive",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "phone": "Phone",
+      "owed": "Owed",
+      "edit": "Edit"
+    },
+    "types": {
+      "supplier": "Supplier",
+      "landlord": "Landlord",
+      "utility": "Utility",
+      "other": "Other"
+    },
+    "form": {
+      "heading": "New payee",
+      "name": "Name",
+      "type": "Type",
+      "phone": "Phone (optional)",
+      "notes": "Notes (optional)",
+      "active": "Active (can be chosen on new expenses)",
+      "save": "Save payee",
+      "saving": "Saving…",
+      "saved": "Payee saved.",
+      "edit": "Edit",
+      "editLabel": "Edit {name}",
+      "cancel": "Cancel"
     }
   }
 }

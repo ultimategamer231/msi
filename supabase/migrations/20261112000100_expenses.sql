@@ -442,3 +442,12 @@ begin
   return v_result;
 end
 $$;
+
+-- The accountant records expenses (SPEC 4) and may upload their receipts to their own folder.
+drop policy documents_insert_own_folder on storage.objects;
+create policy documents_insert_own_folder on storage.objects
+  for insert to authenticated
+  with check (
+    bucket_id = 'documents'
+    and (select public.auth_role()) in ('loan_officer', 'cashier', 'manager', 'accountant', 'admin')
+    and (storage.foldername(name))[1] = (select auth.uid())::text);

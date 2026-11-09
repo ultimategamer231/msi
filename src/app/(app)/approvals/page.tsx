@@ -253,6 +253,12 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                   loan: String(payload.loan_no ?? ""),
                   months: Number(payload.extra_months ?? 1),
                 });
+              } else if (row.type === "expense") {
+                title = t("titles.expense", {
+                  number: String(payload.expense_no ?? ""),
+                  description: String(payload.description ?? ""),
+                  amount: formatMoney(String(payload.amount_cents ?? "0")),
+                });
               } else if (row.type === "loan_approval") {
                 title = t("titles.loan", {
                   name: String(payload.customer_name ?? ""),
@@ -448,6 +454,39 @@ async function ApprovalsContent({ searchParams }: { searchParams: PageProps<"/ap
                           })}
                         </p>
                       </div>
+                    ) : null}
+                    {row.type === "expense" ? (
+                      <dl className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+                        {(
+                          [
+                            [
+                              "expenseDate",
+                              typeof payload.expense_date === "string"
+                                ? formatDate(payload.expense_date)
+                                : "",
+                            ],
+                            [
+                              "expenseAccount",
+                              `${String(payload.account ?? "")} · ${String(payload.account_name ?? "")}`,
+                            ],
+                            [
+                              "expensePayee",
+                              typeof payload.payee === "string" ? payload.payee : t("expenseNoPayee"),
+                            ],
+                            [
+                              "expensePaidFrom",
+                              typeof payload.paid_from === "string"
+                                ? payload.paid_from
+                                : t("expenseOnCredit"),
+                            ],
+                          ] as const
+                        ).map(([key, value]) => (
+                          <div key={key}>
+                            <dt className="text-xs font-medium text-ink-muted">{t(key)}</dt>
+                            <dd className="mt-0.5 font-semibold break-words text-ink">{value}</dd>
+                          </div>
+                        ))}
+                      </dl>
                     ) : null}
                     {row.type === "loan_extension" ? (
                       <div className="grid gap-3">

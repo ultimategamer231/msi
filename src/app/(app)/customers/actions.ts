@@ -38,7 +38,7 @@ export type CreateCustomerResult =
   | { ok: false; code: ErrorCode };
 
 const CREATE_ROLES: readonly Role[] = ["loan_officer", "manager", "admin"];
-const UPLOAD_ROLES: readonly Role[] = ["loan_officer", "cashier", "manager", "admin"];
+const UPLOAD_ROLES: readonly Role[] = ["loan_officer", "cashier", "manager", "accountant", "admin"]; // accountant: expense receipts (M8)
 
 async function staffWith(roles: readonly Role[]) {
   const result = await getCurrentStaff();
