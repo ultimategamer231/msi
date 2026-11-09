@@ -2,11 +2,11 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M9 Migration, dashboards, hardening (approved by Foday 2026-11-09) |
-| Current block | M9.5 Demo check, screenshots, report |
+| Current phase | M9 complete; next: hosted setup and the client pilot gate (SPEC 13) |
+| Current block | M9.5 done (report `docs/reports/PHASE-M9.md`) |
 | Last approved block | M7 phase start (Foday 2026-11-08) |
-| State | Working on M9. Push works; the GitHub API still answers 404 (PR and CI not visible) |
-| Next step | M9.5 full checks, M9 report |
+| State | Stopped for approval. Push works; the GitHub API still answers 404 (PR and CI not visible) |
+| Next step | Hosted setup (needs Foday's Supabase and Vercel accounts), then the pilot gate |
 
 ## M9 plan (Migration, dashboards, hardening: FR-27, FR-29; T-30, T-31, SPEC 12.3)
 
@@ -186,3 +186,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-09 | M9.2 | Role dashboards (mock-up 05); 586 database tests; e2e |
 | 2026-11-09 | M9.3 | CSP and headers, sign-in lockout, /api/health, backup script, OPERATIONS.md; 592 database tests |
 | 2026-11-09 | M9.4 | SPEC 12.3 smoke (`pnpm test:smoke`, also in CI); Lighthouse accessibility 100 on /field |
+| 2026-11-09 | M9.5 | Full checks (592 database, 328 unit, 201 e2e, smoke, demo check), screenshots, M9 report |
