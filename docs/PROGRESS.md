@@ -2,11 +2,11 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M7 Statements and documents (approved by Foday 2026-11-08); M0–M6 committed; GitHub account suspended, work kept locally and in bundles |
-| Current block | M7.1 Statement and document functions |
+| Current phase | M7 Statements and documents complete; waiting for approval of M8 |
+| Current block | M7.4 done (report `docs/reports/PHASE-M7.md`) |
 | Last approved block | M7 phase start (Foday 2026-11-08) |
-| State | Working on M7 (cannot push: GitHub account suspended) |
-| Next step | M7.2 PDFs |
+| State | Stopped for approval. Push works again; the GitHub API still answers 404 (PR and CI not visible) |
+| Next step | M8 Money-out, day close, reports, once Foday approves |
 
 ## M7 plan (Statements and documents: FR-14, FR-25)
 
@@ -145,3 +145,7 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-08 | M6.6 | Demo custody log, releases, RC-000001; screenshots; M6 report; 514 database tests, 166 e2e (local) |
 | 2026-11-08 | M6 | M5 and M6 pushed at 02:44 UTC; the GitHub account was then suspended (Foday is appealing); full bundle sent |
 | 2026-11-08 | M7 | Phase approved; plan written |
+| 2026-11-08 | M7.1 | loan_statement, issue_document kinds, verify_document, demand notice template; 531 database tests |
+| 2026-11-09 | M7.2 | Statement, demand notice, collateral receipt and release letter PDFs |
+| 2026-11-09 | M7.3 | /verify/[token], document links; 172 e2e; M7.1–M7.3 pushed (GitHub API still 404) |
+| 2026-11-09 | M7.4 | Statement check on demo data (12/12 equal, $10,169.28), screenshots, M7 report |

@@ -2,6 +2,13 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
+## [M7 Statements and documents] 2026-11-09 (in review, PR #1)
+### Added
+- M7.1: Statements with running balance from the ledger, demand notices with a deadline, collateral receipt and release letter numbering, public document check.
+- M7.2: PDFs: statement of account (loan or customer, optional period), demand notice, collateral receipt with photos, release letter; each with a verification QR code.
+- M7.3: Public `/verify` page; document links on the loan, customer, collateral and recovery pages.
+- M7.4: Statement check over the demo data, screenshots, M7 report.
+
 ## [M6 Collateral and recovery] 2026-11-08 (in review, PR #1; push pending)
 ### Added
 - M6.1: Collateral register rules: duplicate identifiers flagged, photos and documents, custody log entries, return to the owner once loans have ended; recovery case numbers RC-000001 (T-24).

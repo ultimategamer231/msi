@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   company: { fontSize: 13, fontFamily: "Helvetica-Bold", color: colors.primary },
   muted: { color: colors.muted },
   strong: { fontFamily: "Helvetica-Bold" },
-  title: { fontSize: 16, fontFamily: "Helvetica-Bold", marginBottom: 2 },
+  title: { fontSize: 16, fontFamily: "Helvetica-Bold", lineHeight: 1.25, marginBottom: 4 },
   section: { marginTop: 12 },
   heading: { fontSize: 10.5, fontFamily: "Helvetica-Bold", color: colors.primary, marginBottom: 4 },
   grid: { flexDirection: "row", flexWrap: "wrap" },
