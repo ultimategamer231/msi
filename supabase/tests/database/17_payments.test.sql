@@ -115,7 +115,7 @@ select is(tests.try_as('authenticated', :'cashier_id', format(
   $$select public.receive_payment('%s', 4000, 'mobile_money', 'OM-7731904', null, 'key-momo-0002')$$, :'loan_id')), null,
   'mobile money with a reference is accepted');
 select is((select a.code from public.payments p join public.journal_lines l on l.journal_id = p.journal_id and l.debit_cents > 0
-             join public.accounts a on a.id = l.account_id where p.reference = 'OM-7731904'), '1030',
+             join public.accounts a on a.id = l.account_id where p.reference = 'OM-7731904' and p.loan_id = :'loan_id'), '1030',
   'mobile money is debited to 1030');
 select is(tests.try_as('authenticated', :'cashier_id', format(
   $$select public.receive_payment('%s', 90000, 'cash', null, null, 'key-final-001')$$, :'loan_id')), null,

@@ -2,6 +2,15 @@
 
 All notable changes, one section per phase. Format follows Keep a Changelog.
 
+## [M8 Money-out, day close, reports] 2026-11-09 (in review, PR #1)
+### Added
+- M8.1: Payees and expenses with the approval limit, payment now or on credit, settlement (R9, R9b, R9c).
+- M8.2: Expenses and payees screens; expense card in the approvals inbox.
+- M8.3: Day close per branch: expected cash from the ledger, count with variance reason, approval locks the day, reopen with reason (T-34).
+- M8.4: Report functions: collections, money out, overdue (PAR), profit and loss, balance sheet, trial balance, cash position (T-26, T-27).
+- M8.5: Reports screens with filters, CSV export and print view.
+- M8.6: Demo expenses and drawer openings matching DEMO_DATA; report check; screenshots; M8 report.
+
 ## [M7 Statements and documents] 2026-11-09 (in review, PR #1)
 ### Added
 - M7.1: Statements with running balance from the ledger, demand notices with a deadline, collateral receipt and release letter numbering, public document check.

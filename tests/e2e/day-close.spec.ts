@@ -10,14 +10,24 @@ function shift(date: string, days: number): string {
 }
 
 /*
- * The cashier closes a day long past, so the lock never touches the days other tests post to;
- * each viewport uses its own day. The payment-after-close rule (T-34) is covered in pgTAP.
+ * The cashier closes a day long past, so the lock never touches the days other tests post to. The payment-after-close rule (T-34) is covered in pgTAP.
  */
 test.describe("day close (SPEC 5.10; mock-up 14; FR-23)", () => {
   test("the cashier counts with a reason, the manager approves, then reopens", async ({ page }, testInfo) => {
     const manager = await userClient(fixtureUser("manager"));
     const { data: today } = await manager.rpc("business_today");
-    const day = shift(String(today), testInfo.project.name === "phone-390" ? -400 : -401);
+    const day = shift(String(today), -400);
+    if (testInfo.project.name === "phone-390") {
+      // One branch, one lock: the phone run only checks the screen; the desktop run closes the day.
+      await signInAs(page, fixtureUser("cashier"));
+      await page.goto(`/day-close?date=${day}`);
+      await expect(
+        page.getByRole("region", { name: "Count" }).getByLabel("Cash counted in drawer ($)"),
+      ).toBeVisible();
+      await expectNoSeriousA11yIssues(page);
+      await expectNoHorizontalScroll(page);
+      return;
+    }
 
     // A run that stopped half-way leaves its close behind: send it back first.
     const { data: branch } = await serviceClient().from("branches").select("id").eq("code", "BR2").single();
@@ -57,7 +67,6 @@ test.describe("day close (SPEC 5.10; mock-up 14; FR-23)", () => {
     await count.getByRole("button", { name: "Close day" }).click();
     await expect(page.getByText("Waiting for approval", { exact: true })).toBeVisible();
     await expectNoSeriousA11yIssues(page);
-    if (testInfo.project.name === "phone-390") await expectNoHorizontalScroll(page);
 
     await page.context().clearCookies();
     await signInAs(page, fixtureUser("manager"));

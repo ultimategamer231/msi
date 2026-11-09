@@ -35,6 +35,7 @@ test.describe("app shell (SPEC 9 layout, mock-ups 05-15 and 01-03)", () => {
       "Due and overdue",
       "Collateral",
       "Approvals",
+      "Day close",
     ]);
   });
 

@@ -189,8 +189,8 @@ as $$
 declare
   v_through date := (select max(close_date) from day_closes where branch_id = p_branch_id and status = 'approved');
 begin
-  if p_floor is not null then
-    v_through := least(coalesce(v_through, p_floor), p_floor);
+  if p_floor is not null and v_through is not null then
+    v_through := least(v_through, p_floor);              -- a later closed day no longer locks the reopened one
   end if;
   if v_through is null then
     delete from period_locks where branch_id = p_branch_id;

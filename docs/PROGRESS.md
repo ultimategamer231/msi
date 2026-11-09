@@ -2,11 +2,11 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M8 Money-out, day close, reports (approved by Foday 2026-11-09) |
-| Current block | M8.6 Demo seed, checks, report |
+| Current phase | M8 Money-out, day close, reports complete; waiting for approval of M9 |
+| Current block | M8.6 done (report `docs/reports/PHASE-M8.md`) |
 | Last approved block | M7 phase start (Foday 2026-11-08) |
-| State | Working on M8. Push works; the GitHub API still answers 404 (PR and CI not visible) |
-| Next step | M8.6 demo seed and report check against DEMO_DATA |
+| State | Stopped for approval. Push works; the GitHub API still answers 404 (PR and CI not visible) |
+| Next step | M9 Migration, dashboards, hardening, once Foday approves |
 
 ## M8 plan (Money-out, day close, reports: FR-22, FR-23, FR-24; T-26, T-27, T-34)
 
@@ -168,3 +168,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-09 | M8.3 | day_closes, summary, submit, approval lock, reopen; /day-close (mock-up 14); T-34; 561 database tests |
 | 2026-11-09 | M8.4 | Report functions; T-26, T-27; 573 database tests |
 | 2026-11-09 | M8.5 | /reports index and nine reports with filters, CSV export, print view; e2e |
+| 2026-11-09 | M8.6 | Demo expenses, drawer openings, report check against DEMO_DATA, screenshots, M8 report; 573 database tests, 181 e2e |

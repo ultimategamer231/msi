@@ -80,7 +80,7 @@ select is(tests.try_as('authenticated', :'manager_id', format($$select public.re
 select results_eq(format($$select (select status from public.day_closes where id = '%1$s'),
                                   (select locked_through from public.period_locks where branch_id = '%2$s'),
                                   (select count(*)::int from public.audit_log where action = 'day_close.reopened' and entity_id = '%1$s')$$, :'close1', :'branch_id'),
-  $$values ('rejected'::text, '2026-02-10'::date, 1)$$, 'T-34: the close is marked rejected, the lock moves back, and the reopen is audited');
+  $$values ('rejected'::text, null::date, 1)$$, 'T-34: the close is marked rejected, the lock is removed, and the reopen is audited');
 select is(tests.try_as('authenticated', :'cashier_id', format($$select public.receive_payment('%s', 20000, 'cash', null, null, 'close-key-0002')$$, :'loan_id')),
   null, 'T-34: the payment now succeeds');
 select is((tests.summary(:'cashier_id', :'branch_id', '2026-02-11') ->> 'expected_cents')::bigint, 165500::bigint,

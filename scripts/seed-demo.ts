@@ -181,9 +181,12 @@ const DEMO_CUSTOMERS: readonly DemoCustomer[] = [
 // Opening capital (R10) on 01 Nov 2025 = A-103 for the demo anchor. Placeholder amounts until the
 // M8 day-close reconciliation; every demo loan is paid out from Branch 2 cash by Grace Flomo (B-10).
 const DEMO_CAPITAL_DAYS_BEFORE = 103;
+// Chosen so the drawers open A−1 at DEMO_DATA's $5,000.00, $2,000.00 and $3,000.00. Grace Flomo is
+// the only cashier, so every payout and counter receipt before A−1 moved through the Branch 2 drawer
+// (net $6,125.00 out); Branch 1 and Branch 3 hold only their capital.
 const DEMO_CAPITAL: ReadonlyArray<[string, number]> = [
   ["1010-BR1", 500000],
-  ["1010-BR2", 1000000],
+  ["1010-BR2", 812500],
   ["1010-BR3", 300000],
 ];
 
@@ -729,7 +732,7 @@ async function main(): Promise<void> {
       await rpc(manager, "decide_approval", { p_id: request.id, p_decision: "approve", p_note: null });
     };
 
-    // Opening capital before the first loan (placeholder amounts; reconciled with the day close in M8).
+    // Opening capital before the first loan (amounts reconciled with the day close, see DEMO_CAPITAL).
     await at(DEMO_CAPITAL_DAYS_BEFORE, "08:30");
     for (const [account, cents] of DEMO_CAPITAL) {
       const memo = `Opening capital ${account}`;
@@ -776,6 +779,12 @@ async function main(): Promise<void> {
       collateralIds.set(item.loanNo, String(id));
     }
 
+    // The history is written loan by loan, then day by day, so payouts run ahead of the receipts
+    // dated before them; the drawer check is paused while back-filling and restored below.
+    const [{ value: checkFunds } = { value: true }] = ownerQuery<{ value: boolean }>(
+      "select value as value from public.settings where key = 'disbursement.check_funds'",
+    );
+    await rpc(client, "update_setting", { p_key: "disbursement.check_funds", p_value: false });
     // Loans in number order. LN-00001 was a paper loan before the system.
     await rpc(client, "set_sequence_start", { p_kind: "loan", p_branch_id: null, p_last_value: 1 });
     for (const loan of DEMO_LOANS) {
@@ -805,6 +814,7 @@ async function main(): Promise<void> {
       await at(loan.daysBefore, "14:00");
       await rpc(cashier, "disburse_loan", { p_loan_id: loanId, p_method: "cash" });
     }
+    await rpc(client, "update_setting", { p_key: "disbursement.check_funds", p_value: checkFunds });
   }
 
   // 4c. The days from the first payout to A, in order (M4, M5). Each day starts with the nightly
@@ -940,8 +950,49 @@ async function main(): Promise<void> {
     });
   }
 
+  // 4e. Expenses (M8; DEMO_DATA "Day close" and "Approvals waiting"): office supplies of $45.00 paid
+  //     from the Branch 2 drawer on A−1 at 13:40 (EXP-BR2-000031, below the $100 limit, posted at
+  //     once), and Peter Zayzay's court filing fee of $240.00 for LN-BR3-00004 on A at 08:15, above
+  //     the limit, waiting for a manager.
+  const [{ count: expenseCount } = { count: 0 }] = ownerQuery<{ count: number }>(
+    "select count(*)::int as count from public.expenses",
+  );
+  if (expenseCount === 0) {
+    const accountant = await signedIn("peter.zayzay@msi-demo.test");
+    await rpc(client, "set_sequence_start", {
+      p_kind: "expense",
+      p_branch_id: branchIds.get("BR2") ?? null,
+      p_last_value: 30,
+    });
+    await at(1, "13:40");
+    await rpc(accountant, "create_expense", {
+      p_expense: {
+        account: "5900",
+        amount_cents: 4500,
+        expense_date: addDays(anchor, -1),
+        description: "Office supplies",
+        branch_id: branchIds.get("BR2") ?? null,
+        paid_now: true,
+        paid_from: "1010-BR2",
+      },
+    });
+    await at(0, "08:15");
+    await rpc(accountant, "create_expense", {
+      p_expense: {
+        account: "5040",
+        amount_cents: 24000,
+        expense_date: anchor,
+        description: "Court filing fee, LN-BR3-00004",
+        branch_id: branchIds.get("BR3") ?? null,
+        paid_now: true,
+        paid_from: "1010-BR3",
+      },
+    });
+    await accountant.auth.signOut();
+  }
+
   // 5. Waiting on A (DEMO_DATA "Approvals waiting"): Emmanuel Tarpeh asks to change Mariama
-  //    Kollie's phone at about 07:10. The expense request arrives with M8.
+  //    Kollie's phone at about 07:10.
   const [mariama] = ownerQuery<{ id: string; phone: string; pending: number }>(
     `select c.id, c.phone, (select count(*)::int from public.approval_requests r
                              where r.entity_id = c.id and r.status = 'pending') as pending

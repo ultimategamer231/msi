@@ -104,7 +104,9 @@ async function main(): Promise<void> {
       }
     }
     for (const pair of values.compare) {
-      const [number, route] = pair.split("=");
+      const split = pair.indexOf("=");
+      const number = split > 0 ? pair.slice(0, split) : undefined;
+      const route = split > 0 ? pair.slice(split + 1) : undefined;
       if (number === undefined || route === undefined)
         throw new Error(`--compare expects nn=/route, got ${pair}`);
       const mockupPath = await mockupFile(number);
