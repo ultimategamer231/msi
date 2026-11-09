@@ -2,11 +2,24 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M7 Statements and documents complete; waiting for approval of M8 |
-| Current block | M7.4 done (report `docs/reports/PHASE-M7.md`) |
+| Current phase | M8 Money-out, day close, reports (approved by Foday 2026-11-09) |
+| Current block | M8.1 Payees and expenses (SQL) |
 | Last approved block | M7 phase start (Foday 2026-11-08) |
-| State | Stopped for approval. Push works again; the GitHub API still answers 404 (PR and CI not visible) |
-| Next step | M8 Money-out, day close, reports, once Foday approves |
+| State | Working on M8. Push works; the GitHub API still answers 404 (PR and CI not visible) |
+| Next step | M8.2 Expenses and payees screens |
+
+## M8 plan (Money-out, day close, reports: FR-22, FR-23, FR-24; T-26, T-27, T-34)
+
+| Block | Content | Done when |
+| --- | --- | --- |
+| M8.1 | `payees`, `expenses`, `payee_balances`, `save_payee`, `create_expense` (limit routing, R9/R9b), `settle_expense` (R9c), expense approval and rejection in `decide_approval` | pgTAP |
+| M8.2 | `/payees`, `/expenses` (list, create with receipt, settle), expense card in the inbox | e2e at 390 and 1280 |
+| M8.3 | `day_closes`, `day_close_summary`, `submit_day_close` (cashier), approval locks the day, `reopen_day_close`; `/day-close` (mock-up 14) | T-34; e2e |
+| M8.4 | Report functions: collections, money out, due, overdue (PAR), profit and loss, balance sheet, trial balance, cash position, collateral register | T-26, T-27 |
+| M8.5 | `/reports` index and pages (mock-up 15), filters, CSV export, print view | e2e |
+| M8.6 | Demo seed (EXP-BR2-000031 at A−1, the $240.00 court fee waiting), report check against DEMO_DATA with `--as-of 2026-02-12`, screenshots, M8 report | all checks green |
+
+Approved by Foday 2026-11-09 ("Let's start M8"; keep chat output short).
 
 ## M7 plan (Statements and documents: FR-14, FR-25)
 
@@ -149,3 +162,5 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-09 | M7.2 | Statement, demand notice, collateral receipt and release letter PDFs |
 | 2026-11-09 | M7.3 | /verify/[token], document links; 172 e2e; M7.1–M7.3 pushed (GitHub API still 404) |
 | 2026-11-09 | M7.4 | Statement check on demo data (12/12 equal, $10,169.28), screenshots, M7 report |
+| 2026-11-09 | M8 | Phase approved; plan written |
+| 2026-11-09 | M8.1 | Payees, expenses, settlement, expense approvals; 546 database tests |

@@ -623,6 +623,128 @@ export type Database = {
         };
         Relationships: [];
       };
+      expenses: {
+        Row: {
+          account_id: string;
+          amount_cents: number;
+          branch_id: string;
+          created_at: string;
+          created_by: string;
+          description: string;
+          expense_date: string;
+          expense_no: string;
+          id: string;
+          journal_id: string | null;
+          paid_from_account_id: string | null;
+          paid_now: boolean;
+          payee_id: string | null;
+          receipt_attachment_id: string | null;
+          settled_journal_id: string | null;
+          status: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          account_id: string;
+          amount_cents: number;
+          branch_id: string;
+          created_at?: string;
+          created_by: string;
+          description: string;
+          expense_date: string;
+          expense_no: string;
+          id?: string;
+          journal_id?: string | null;
+          paid_from_account_id?: string | null;
+          paid_now: boolean;
+          payee_id?: string | null;
+          receipt_attachment_id?: string | null;
+          settled_journal_id?: string | null;
+          status: string;
+        };
+        Update: {
+          account_id?: string;
+          amount_cents?: number;
+          branch_id?: string;
+          created_at?: string;
+          created_by?: string;
+          description?: string;
+          expense_date?: string;
+          expense_no?: string;
+          id?: string;
+          journal_id?: string | null;
+          paid_from_account_id?: string | null;
+          paid_now?: boolean;
+          payee_id?: string | null;
+          receipt_attachment_id?: string | null;
+          settled_journal_id?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "expenses_account_id_fkey";
+            columns: ["account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_paid_from_account_id_fkey";
+            columns: ["paid_from_account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_payee_id_fkey";
+            columns: ["payee_id"];
+            isOneToOne: false;
+            referencedRelation: "payee_balances";
+            referencedColumns: ["payee_id"];
+          },
+          {
+            foreignKeyName: "expenses_payee_id_fkey";
+            columns: ["payee_id"];
+            isOneToOne: false;
+            referencedRelation: "payees";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_receipt_attachment_id_fkey";
+            columns: ["receipt_attachment_id"];
+            isOneToOne: false;
+            referencedRelation: "attachments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_settled_journal_id_fkey";
+            columns: ["settled_journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       guarantors: {
         Row: {
           address: string | null;
@@ -835,6 +957,20 @@ export type Database = {
             columns: ["loan_id"];
             isOneToOne: false;
             referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_payee_fk";
+            columns: ["payee_id"];
+            isOneToOne: false;
+            referencedRelation: "payee_balances";
+            referencedColumns: ["payee_id"];
+          },
+          {
+            foreignKeyName: "journal_lines_payee_fk";
+            columns: ["payee_id"];
+            isOneToOne: false;
+            referencedRelation: "payees";
             referencedColumns: ["id"];
           },
           {
@@ -1342,6 +1478,48 @@ export type Database = {
           },
         ];
       };
+      payees: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          name: string;
+          notes: string | null;
+          phone: string | null;
+          type: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name: string;
+          notes?: string | null;
+          phone?: string | null;
+          type?: string;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name?: string;
+          notes?: string | null;
+          phone?: string | null;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payees_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       payment_allocations: {
         Row: {
           amount_cents: number;
@@ -1796,6 +1974,22 @@ export type Database = {
         ComputedFields: never;
         Relationships: [];
       };
+      payee_balances: {
+        Row: {
+          owed_cents: number | null;
+          payee_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          owed_cents?: never;
+          payee_id?: string | null;
+        };
+        Update: {
+          owed_cents?: never;
+          payee_id?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       account_balance: { Args: { p_account_id: string }; Returns: number };
@@ -1912,6 +2106,7 @@ export type Database = {
       clock_override_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
       confirm_remittance: { Args: { p_counted_total_cents: number; p_payment_ids: string[] }; Returns: Json };
       create_customer: { Args: { p_customer: Json }; Returns: string };
+      create_expense: { Args: { p_expense: Json }; Returns: Json };
       create_loan_draft: { Args: { p_loan: Json }; Returns: string };
       customer_clean: { Args: { p_input: Json }; Returns: Json };
       customer_display_name: {
@@ -1943,6 +2138,25 @@ export type Database = {
         }[];
       };
       environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
+      expense_pay_account: {
+        Args: { p_branch: string; p_code: string };
+        Returns: {
+          active: boolean;
+          branch_id: string | null;
+          code: string;
+          created_at: string;
+          id: string;
+          is_cash: boolean;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "accounts";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       extension_terms: {
         Args: {
           p_extra_months: number;
@@ -2065,6 +2279,7 @@ export type Database = {
       };
       pct: { Args: { p_amount_cents: number; p_bps: number }; Returns: number };
       phone_key: { Args: { p_phone: string }; Returns: string };
+      post_expense: { Args: { p_id: string }; Returns: Json };
       post_journal:
         | {
             Args: {
@@ -2189,6 +2404,7 @@ export type Database = {
       };
       round_half_up: { Args: { p_d: number; p_n: number }; Returns: number };
       run_daily_accruals: { Args: { p_as_of?: string }; Returns: Json };
+      save_payee: { Args: { p_id: string; p_payee: Json }; Returns: string };
       scheduled_daily_accruals: { Args: Record<PropertyKey, never>; Returns: Json };
       sequence_scope: { Args: { p_branch: string; p_kind: string }; Returns: string };
       set_sequence_start: {
@@ -2196,6 +2412,7 @@ export type Database = {
         Returns: undefined;
       };
       setting_error: { Args: { p_key: string; p_problem: string }; Returns: undefined };
+      settle_expense: { Args: { p_account: string; p_id: string }; Returns: string };
       store_guarantors: { Args: { p_guarantors: Json; p_loan_id: string }; Returns: number };
       submit_loan: { Args: { p_loan_id: string }; Returns: string };
       swapped_lines: { Args: { p_journal_id: string }; Returns: Json };

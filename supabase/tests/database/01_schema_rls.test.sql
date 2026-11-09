@@ -54,7 +54,7 @@ select set_eq(
         'due_list_rows', 'log_reminder_opened', 'request_extension', 'find_duplicate_collateral',
         'add_collateral_documents', 'log_collateral_event', 'release_collateral', 'preview_collateral_sale',
         'open_recovery_case', 'advance_recovery_stage', 'record_collateral_sale', 'loan_surplus_cents', 'pay_surplus',
-        'request_write_off', 'loan_statement', 'verify_document'],
+        'request_write_off', 'loan_statement', 'verify_document', 'save_payee', 'create_expense', 'settle_expense'],
   'clients can call exactly the released RPCs and helpers');
 
 -- A signed-in cashier trying a direct insert is refused (the T-30 pattern, on an M0 table).
