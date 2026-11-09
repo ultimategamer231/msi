@@ -26,6 +26,8 @@ export interface ReceiptFacts {
   receivedBy: string;
   branch: string;
   collectedInField: boolean;
+  /** "post_write_off_recovery" for money taken after a write-off (SPEC 5.8). */
+  source: string;
 }
 
 export type ReceiptResult = { ok: true; receipt: ReceiptFacts } | { ok: false; status: 404 | 403 | 500 };
@@ -36,7 +38,7 @@ export async function loadReceipt(paymentId: string): Promise<ReceiptResult> {
   const { data: payment, error } = await supabase
     .from("payments")
     .select(
-      "id, receipt_no, received_on, received_at, amount_cents, method, reference, received_by, collected_in_field, loan_id, loans!inner(loan_no), customers!inner(type, first_name, last_name, business_name), branches!inner(name)",
+      "id, receipt_no, received_on, received_at, amount_cents, method, reference, received_by, collected_in_field, source, loan_id, loans!inner(loan_no), customers!inner(type, first_name, last_name, business_name), branches!inner(name)",
     )
     .eq("id", paymentId)
     .maybeSingle();
@@ -80,6 +82,7 @@ export async function loadReceipt(paymentId: string): Promise<ReceiptResult> {
       receivedBy: receiverResult.data?.full_name ?? "",
       branch: payment.branches.name,
       collectedInField: payment.collected_in_field,
+      source: payment.source,
     },
   };
 }

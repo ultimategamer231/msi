@@ -187,3 +187,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-09 | M9.3 | CSP and headers, sign-in lockout, /api/health, backup script, OPERATIONS.md; 592 database tests |
 | 2026-11-09 | M9.4 | SPEC 12.3 smoke (`pnpm test:smoke`, also in CI); Lighthouse accessibility 100 on /field |
 | 2026-11-09 | M9.5 | Full checks (592 database, 328 unit, 201 e2e, smoke, demo check), screenshots, M9 report |
+| 2026-11-09 | Receipt | Amount in words, purpose, signature lines (from MSI's paper voucher); 337 unit tests |

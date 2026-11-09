@@ -4,6 +4,7 @@ All notable changes, one section per phase. Format follows Keep a Changelog.
 
 ## [M9 Migration, dashboards, hardening] 2026-11-09 (in review, PR #1)
 ### Added
+- Receipt: amount in words, purpose line and Received by / Authorized signature lines, as on MSI's paper voucher.
 - M9.1: Opening balances before go-live (Ledger → Opening balances), difference to opening balance equity.
 - M9.2: Dashboards for each role: officer, cashier, manager and CEO (mock-up 05), accountant, admin.
 - M9.3: Security headers and content policy, sign-in lockout after 5 failures, health check, weekly backup script, operations guide.

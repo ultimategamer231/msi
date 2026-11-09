@@ -1509,7 +1509,12 @@
     "print80": "Print 80 mm",
     "pdf": "PDF",
     "done": "Done",
-    "notFound": "This receipt does not exist."
+    "notFound": "This receipt does not exist.",
+    "sumOf": "The sum of",
+    "purpose": "Purpose",
+    "purposeRepayment": "Loan repayment, {loan}",
+    "purposeRecovery": "Recovery on written-off loan {loan}",
+    "authorized": "Authorized"
   },
   "field": {
     "loading": "Loading your list…",

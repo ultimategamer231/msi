@@ -6,7 +6,8 @@ import { Document, Image, Page, StyleSheet, Text, View, renderToBuffer } from "@
 
 /*
  * Payment receipt (SPEC 10.1; FR-25), A5 or an 80 mm roll: receipt no., date, customer, loan,
- * amount, method and reference, allocation, balance after, received by, branch, QR code to
+ * amount (also in words), purpose, method and reference, allocation, balance after, received by and
+ * authorized signature lines (as on MSI's paper voucher), branch, QR code to
  * /verify/<token>, and a VOID stamp when the payment was voided. All values arrive formatted.
  */
 export type ReceiptLabels = Record<
@@ -22,6 +23,9 @@ export type ReceiptLabels = Record<
   | "principal"
   | "balanceAfter"
   | "receivedBy"
+  | "authorized"
+  | "sumOf"
+  | "purpose"
   | "printed"
   | "scan"
   | "void",
@@ -37,6 +41,8 @@ export interface ReceiptPdfData {
   loanNo: string;
   method: string;
   amount: string;
+  amountWords: string;
+  purpose: string;
   allocation: { penalty: string; interest: string; principal: string };
   balanceAfter: string;
   receivedBy: string;
@@ -115,6 +121,9 @@ function sheetStyles(paper: ReceiptPdfData["paper"]) {
       marginTop: 12,
       gap: 8,
     },
+    words: { marginTop: 6 },
+    signatures: { flexDirection: "row", gap: narrow ? 8 : 16, marginTop: narrow ? 18 : 26 },
+    signature: { flex: 1, borderTopWidth: 1, borderColor: colors.ink, paddingTop: 3 },
     qr: { width: narrow ? 72 : 80, height: narrow ? 72 : 80 },
     stamp: {
       position: "absolute",
@@ -162,6 +171,16 @@ function ReceiptDocument({ data }: { data: ReceiptPdfData }) {
           <Text style={s.strong}>{l.amount}</Text>
           <Text style={s.amountValue}>{data.amount}</Text>
         </View>
+        <View style={s.words}>
+          <Text>
+            <Text style={s.muted}>{l.sumOf}: </Text>
+            <Text style={s.strong}>{data.amountWords}</Text>
+          </Text>
+          <Text>
+            <Text style={s.muted}>{l.purpose}: </Text>
+            {data.purpose}
+          </Text>
+        </View>
         <View style={s.split}>
           {(
             [
@@ -180,10 +199,17 @@ function ReceiptDocument({ data }: { data: ReceiptPdfData }) {
             <Text style={s.strong}>{data.balanceAfter}</Text>
           </View>
         </View>
+        <View style={s.signatures}>
+          <View style={s.signature}>
+            <Text>{l.receivedBy}</Text>
+            <Text style={s.strong}>{data.receivedBy}</Text>
+          </View>
+          <View style={s.signature}>
+            <Text>{l.authorized}</Text>
+          </View>
+        </View>
         <View style={s.footer}>
           <View>
-            <Text style={s.muted}>{l.receivedBy}</Text>
-            <Text style={s.strong}>{data.receivedBy}</Text>
             <Text style={s.muted}>{l.printed}</Text>
             {data.company.footer !== "" ? <Text style={s.muted}>{data.company.footer}</Text> : null}
           </View>

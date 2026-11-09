@@ -16,6 +16,7 @@ import { formatDate, formatDateTime, formatMoney } from "@/lib/format";
 import { loadReceipt } from "@/lib/receipts";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
+import { amountInWords } from "@/lib/amount-words";
 
 import { PrintButtons } from "./print-buttons";
 
@@ -127,6 +128,20 @@ async function ReceiptContent({ params }: PageProps<"/receipts/[id]">) {
             <span className="text-sm font-bold">{t("amount")}</span>
             <span className="tabular text-2xl font-extrabold">{formatMoney(receipt.amountCents)}</span>
           </div>
+          <dl className="mt-3 grid gap-2 text-sm">
+            <div>
+              <dt className="inline text-ink-muted">{t("sumOf")}: </dt>
+              <dd className="inline font-semibold">{amountInWords(receipt.amountCents)}</dd>
+            </div>
+            <div>
+              <dt className="inline text-ink-muted">{t("purpose")}: </dt>
+              <dd className="inline">
+                {receipt.source === "post_write_off_recovery"
+                  ? t("purposeRecovery", { loan: receipt.loanNo })
+                  : t("purposeRepayment", { loan: receipt.loanNo })}
+              </dd>
+            </div>
+          </dl>
 
           <dl className="mt-4 grid gap-2 border-t border-dashed border-line-input pt-4 text-sm">
             {(["penalty", "interest", "principal"] as const).map((component) => (
@@ -141,10 +156,18 @@ async function ReceiptContent({ params }: PageProps<"/receipts/[id]">) {
             </div>
           </dl>
 
+          <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
+            <div className="border-t border-ink pt-1">
+              <p>{t("receivedBy")}</p>
+              <p className="font-semibold">{receipt.receivedBy}</p>
+            </div>
+            <div className="border-t border-ink pt-1">
+              <p>{t("authorized")}</p>
+            </div>
+          </div>
+
           <footer className="mt-5 flex items-end justify-between gap-4">
             <div className="grid gap-0.5 text-sm">
-              <p className="text-ink-muted">{t("receivedBy")}</p>
-              <p className="font-semibold">{receipt.receivedBy}</p>
               {receipt.collectedInField ? <p className="text-ink-muted">{t("inField")}</p> : null}
               <p className="text-ink-muted">
                 {t("printed", { when: formatDateTime(now ?? receipt.receivedAt) })}

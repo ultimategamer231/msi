@@ -2,6 +2,7 @@ import QRCode from "qrcode";
 import { getTranslations } from "next-intl/server";
 import type { NextRequest } from "next/server";
 
+import { amountInWords } from "@/lib/amount-words";
 import { getCurrentStaff } from "@/lib/auth/staff";
 import { getCompany } from "@/lib/company";
 import { customerName } from "@/lib/customers";
@@ -235,6 +236,11 @@ async function receiptPdf(request: NextRequest, paymentId: string): Promise<Resp
         ? tMethods(receipt.method)
         : `${tMethods(receipt.method)} · ${receipt.reference}`,
     amount: formatMoney(receipt.amountCents),
+    amountWords: amountInWords(receipt.amountCents),
+    purpose:
+      receipt.source === "post_write_off_recovery"
+        ? t("purposeRecovery", { loan: receipt.loanNo })
+        : t("purposeRepayment", { loan: receipt.loanNo }),
     allocation: {
       penalty: formatMoney(receipt.allocation.penalty),
       interest: formatMoney(receipt.allocation.interest),
@@ -257,6 +263,9 @@ async function receiptPdf(request: NextRequest, paymentId: string): Promise<Resp
       principal: t("applied.principal"),
       balanceAfter: t("balanceAfter"),
       receivedBy: t("receivedBy"),
+      authorized: t("authorized"),
+      sumOf: t("sumOf"),
+      purpose: t("purpose"),
       printed: t("printed", { when: formatDateTime(now ?? receipt.receivedAt) }),
       scan: t("scan"),
       void: t("void"),
