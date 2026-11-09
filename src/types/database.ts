@@ -2226,6 +2226,9 @@ export type Database = {
         Returns: string;
       };
       customer_editable_fields: { Args: Record<PropertyKey, never>; Returns: string[] };
+      dashboard_attention: { Args: Record<PropertyKey, never>; Returns: Json };
+      dashboard_data: { Args: Record<PropertyKey, never>; Returns: Json };
+      dashboard_due_now: { Args: { p_limit?: number; p_officer?: string }; Returns: Json };
       day_close_summary: { Args: { p_branch_id: string; p_date: string }; Returns: Json };
       decide_approval: { Args: { p_decision: string; p_id: string; p_note: string }; Returns: Json };
       disburse_loan: {

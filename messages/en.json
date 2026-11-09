@@ -50,7 +50,90 @@
     "today": "{date} · {branch}",
     "forbidden": "You do not have access to that page. You have been brought back to the dashboard.",
     "loading": "Loading your dashboard",
-    "comingUp": "Your work summary appears here as each part of the system is switched on: due loans, collections, approvals and cash."
+    "error": "The figures could not be loaded. Refresh the page; if it keeps failing, tell the administrator.",
+    "loans": "{count, plural, one {# loan} other {# loans}}",
+    "receipts": "{count, plural, one {# receipt} other {# receipts}}",
+    "myDue": "My due and overdue loans",
+    "dueTable": "Due and overdue loans",
+    "dueEmpty": "Nothing is due or overdue.",
+    "openList": "Open full list",
+    "columns": {
+      "customer": "Customer",
+      "loan": "Loan",
+      "branch": "Branch",
+      "dueDate": "Due date",
+      "owes": "Owes",
+      "status": "Status"
+    },
+    "officer": {
+      "dueToday": "Due today",
+      "overdue": "Overdue",
+      "remittance": "Field cash to hand over"
+    },
+    "cashier": {
+      "collections": "Collected today",
+      "toClose": "Cash to close",
+      "toCloseNote": "Expected in the drawer now",
+      "field": "Field cash not confirmed",
+      "receive": "Receive payment",
+      "confirmField": "Confirm field cash",
+      "closeDay": "Day close",
+      "yesterdayOpen": "Yesterday has not been closed yet. Count the drawer and close it."
+    },
+    "manager": {
+      "outstanding": "Outstanding",
+      "openLoans": "{loans, plural, one {# open loan} other {# open loans}}, {branches, plural, one {# branch} other {# branches}}",
+      "overdue": "Overdue",
+      "share": "{share} of outstanding",
+      "collectedOn": "Collected on {date}",
+      "collectedNone": "Collected",
+      "collectedField": "{count, plural, one {# receipt} other {# receipts}}, {amount} still with officer",
+      "approvals": "Approvals waiting",
+      "oldest": "Oldest is {days, plural, =0 {from today} one {# day old} other {# days old}}",
+      "noneWaiting": "Nothing waiting",
+      "byAge": "Overdue by age",
+      "ages": {
+        "1_7": "1 to 7 days ({count, plural, one {# loan} other {# loans}})",
+        "8_30": "8 to 30 days ({count, plural, one {# loan} other {# loans}})",
+        "31_plus": "Over 30 days ({count, plural, one {# loan} other {# loans}})"
+      },
+      "ageNote": "Total overdue {amount} across {count, plural, one {# loan} other {# loans}}. Penalties stop after the 4th weekly charge.",
+      "dueNow": "Due and overdue now"
+    },
+    "attention": {
+      "heading": "Needs attention",
+      "none": "Nothing needs your attention.",
+      "recovery": "Recovery: {name}, {loan}",
+      "recoveryDetail": "{stage} {date}.",
+      "ceoLoan": "Waiting for the CEO: {name}, {amount}",
+      "ceoLoanDetail": "Above the {limit} manager limit. Requested by {name}.",
+      "dayClose": "Day close, {branch}, {date}",
+      "dayCloseShort": "Counted cash is {amount} short. Needs your review.",
+      "dayCloseOver": "Counted cash is {amount} over. Needs your review.",
+      "dayCloseExact": "Counted cash matches. Needs your review.",
+      "dayNotClosed": "Not closed yet. The cashier counts the drawer and closes it.",
+      "fieldCash": "Field cash not handed over: {amount}",
+      "fieldCashDetail": "{name}, collected {date}.",
+      "recoveryNext": "{next} is the next step."
+    },
+    "accountant": {
+      "cash": "Cash and equivalents",
+      "cashNote": "Drawers, field cash, bank and mobile money",
+      "income": "Income this month",
+      "net": "Net {amount}",
+      "expensesWaiting": "Expenses waiting",
+      "expensesCount": "{count, plural, one {# waiting for approval} other {# waiting for approval}}",
+      "payees": "Owed to payees",
+      "cashByBranch": "Cash by account"
+    },
+    "admin": {
+      "goLive": "Go-live date",
+      "notSet": "Not set",
+      "lastRun": "Last daily job",
+      "never": "Not run yet",
+      "users": "Active users",
+      "branches": "{count, plural, one {# branch} other {# branches}}"
+    }
   },
   "nav": {
     "label": "Main",
