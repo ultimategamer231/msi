@@ -162,6 +162,6 @@ test.describe("receive payment and the payments list (SPEC 9; mock-up 03; FR-10,
     await expect(
       page.getByText("This payment was voided and reversed. This receipt is no longer valid."),
     ).toBeVisible();
-    await expect(page.getByText("OFFICIAL RECEIPT · Branch 2 · VOID")).toBeVisible();
+    await expect(page.getByText("OFFICIAL RECEIPT · Margibi Branch · VOID")).toBeVisible();
   });
 });

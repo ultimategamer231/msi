@@ -42,7 +42,7 @@ test.describe("customers (SPEC 5.11, 9; FR-03)", () => {
     await page.goto("/customers");
     await page.getByRole("link", { name: "New customer" }).first().click();
     await expect(page.getByRole("heading", { name: "New customer", level: 1 })).toBeVisible();
-    await expect(page.getByText("Branch 2 · loan officer Test Officer")).toBeVisible();
+    await expect(page.getByText("Margibi Branch · loan officer Test Officer")).toBeVisible();
 
     await fillIndividual(page, person);
     await fillExactly(page.getByLabel("Occupation (optional)"), "Market trader");
@@ -118,7 +118,7 @@ test.describe("customers (SPEC 5.11, 9; FR-03)", () => {
     await page.context().clearCookies();
     await signInAs(page, fixtureUser("manager"));
     await page.goto("/customers/new");
-    await page.getByLabel("Branch", { exact: true }).selectOption({ label: "BR2 · Branch 2" });
+    await page.getByLabel("Branch", { exact: true }).selectOption({ label: "BR2 · Margibi Branch" });
     await fillIndividual(page, { ...second, phone: person.phone }, "Kofi");
     await page.getByRole("button", { name: "Save customer" }).click();
     await expect(
@@ -143,7 +143,7 @@ test.describe("customers (SPEC 5.11, 9; FR-03)", () => {
     await fillExactly(page.getByLabel("Registered business name"), `Test Trading ${person.lastName}`);
     await fillExactly(page.getByLabel("Contact person"), "J. Dolo");
     await fillExactly(page.getByLabel("Phone", { exact: true }), person.phone);
-    await page.getByLabel("Branch", { exact: true }).selectOption({ label: "BR2 · Branch 2" });
+    await page.getByLabel("Branch", { exact: true }).selectOption({ label: "BR2 · Margibi Branch" });
     await page.getByLabel("Loan officer").selectOption({ label: "Test Officer" });
     await page.getByRole("button", { name: "Save customer" }).click();
     await createdCode(page);

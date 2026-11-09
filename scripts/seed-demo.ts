@@ -50,11 +50,11 @@ const DEMO_USERS: readonly DemoUser[] = [
   { fullName: "Peter Zayzay", role: "accountant", branchCode: null, email: "peter.zayzay@msi-demo.test" },
 ];
 
-// docs/DEMO_DATA.md "Branches" (names are placeholders until MSI supplies them).
+// docs/DEMO_DATA.md "Branches" (MSI's branch names, 2026-11-09).
 const DEMO_BRANCHES = [
-  { code: "BR1", name: "Main" },
-  { code: "BR2", name: "Branch 2" },
-  { code: "BR3", name: "Branch 3" },
+  { code: "BR1", name: "Jallah Town Branch" },
+  { code: "BR2", name: "Margibi Branch" },
+  { code: "BR3", name: "Nimba Branch" },
 ] as const;
 
 interface DemoCustomer {

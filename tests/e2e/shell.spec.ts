@@ -20,7 +20,7 @@ test.describe("app shell (SPEC 9 layout, mock-ups 05-15 and 01-03)", () => {
     await expect(sidebar.getByText("Test Cashier")).toBeVisible();
     await expect(sidebar.getByText("Cashier", { exact: true })).toBeVisible();
     await expect(page.getByRole("navigation", { name: "Main" }).filter({ visible: true })).toHaveCount(1);
-    await expect(page.locator("header").getByText("Branch 2", { exact: true })).toBeVisible();
+    await expect(page.locator("header").getByText("Margibi Branch", { exact: true })).toBeVisible();
   });
 
   test("desktop: only pages that exist and the role may open are listed", async ({ page, isMobile }) => {
@@ -45,7 +45,7 @@ test.describe("app shell (SPEC 9 layout, mock-ups 05-15 and 01-03)", () => {
   }) => {
     test.skip(!isMobile, "phone layout");
     await expect(page.getByRole("complementary")).toBeHidden();
-    await expect(page.getByText("Test Cashier · Cashier · Branch 2")).toBeVisible();
+    await expect(page.getByText("Test Cashier · Cashier · Margibi Branch")).toBeVisible();
     const tabs = page.getByRole("navigation", { name: "Main" });
     await expect(tabs.getByRole("link", { name: "Dashboard" })).toHaveAttribute("aria-current", "page");
     const tabBox = await tabs.getByRole("link", { name: "Dashboard" }).boundingBox();
@@ -63,7 +63,7 @@ test.describe("app shell (SPEC 9 layout, mock-ups 05-15 and 01-03)", () => {
 
   test("the business date and branch are shown, with no horizontal scroll at 360px", async ({ page }) => {
     await expect(page.getByTestId("business-date")).toHaveText(
-      /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \d{2} [A-Z][a-z]{2} \d{4} · Branch 2$/,
+      /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) \d{2} [A-Z][a-z]{2} \d{4} · Margibi Branch$/,
     );
     await page.setViewportSize({ width: 360, height: 780 });
     await expectNoHorizontalScroll(page);

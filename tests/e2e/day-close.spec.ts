@@ -57,7 +57,7 @@ test.describe("day close (SPEC 5.10; mock-up 14; FR-23)", () => {
 
     await signInAs(page, fixtureUser("cashier"));
     await page.goto(`/day-close?date=${day}`);
-    await expect(page.getByRole("heading", { name: "Day close, Branch 2" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Day close, Margibi Branch" })).toBeVisible();
     const count = page.getByRole("region", { name: "Count" });
     await count.getByLabel("Cash counted in drawer ($)").fill("1.00");
     await expect(count.getByText("+$1.00")).toBeVisible();

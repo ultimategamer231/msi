@@ -123,7 +123,7 @@ test.describe("settings (FR-02; M0 acceptance: audit rows on settings change)", 
     await page.getByLabel("Role").selectOption("cashier");
     await page.getByRole("button", { name: "Create user" }).click();
     await expect(page.getByText("Cashiers and loan officers need a branch.")).toBeVisible();
-    await page.getByLabel("Branch").selectOption({ label: "BR2 · Branch 2" });
+    await page.getByLabel("Branch").selectOption({ label: "BR2 · Margibi Branch" });
     await page.getByRole("button", { name: "Create user" }).click();
     const password = (await page.getByTestId("one-time-password").textContent())?.trim() ?? "";
     expect(password).toMatch(/^[A-Za-z0-9]{14}$/);

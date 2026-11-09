@@ -8,6 +8,7 @@ Start with these:
 - `docs/SPEC.md`: the specification and single source of truth
 - `docs/PROGRESS.md`: where the build is now
 - `docs/mockups/README.md`: approved screens and design tokens
+- `docs/DEPLOY.md`: putting it online (GitHub, Supabase, Vercel); `docs/OPERATIONS.md`: running it
 
 ## Run locally
 
@@ -35,8 +36,6 @@ pnpm dev                     # http://localhost:3000
 | `pnpm db:start` / `db:stop` / `db:reset` | Local Supabase; reset re-applies migrations and seeds                         |
 | `pnpm test:db`                           | pgTAP database tests (RLS, grants, audit chain, RPCs)                         |
 | `pnpm types`                             | Regenerate `src/types/database.ts` from the local database                    |
-
-`pnpm seed:demo` arrives in M0.6.
 
 ## Money and dates
 

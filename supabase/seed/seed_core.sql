@@ -2,11 +2,11 @@
 -- M0 part: branches, company header and rule settings (SPEC 2.3, 11 Branding).
 -- The chart of accounts, loan product and document templates for legal texts join in later milestones.
 
--- Branch addresses from MSI (2026-11-09); names are placeholders until MSI gives them (QUESTIONS 9).
+-- Branch names and addresses from MSI (2026-11-09); BR1 Jallah Town is the main branch.
 insert into public.branches (code, name, address)
-values ('BR1', 'Main', 'Bypass, Jallah Town, Behind Conex Gas Station'),
-       ('BR2', 'Branch 2', 'Peace Community, Mamba District #2, Margibi County'),
-       ('BR3', 'Branch 3', 'Ganta City, Nimba County')
+values ('BR1', 'Jallah Town Branch', 'Bypass, Jallah Town, Behind Conex Gas Station'),
+       ('BR2', 'Margibi Branch', 'Peace Community, Mamba District #2, Margibi County'),
+       ('BR3', 'Nimba Branch', 'Ganta City, Nimba County')
 on conflict (code) do nothing;
 
 insert into public.settings (key, value)

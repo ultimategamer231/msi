@@ -191,3 +191,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-09 | Answers | Client answers applied: cheques, head-office contact, collateral types, standard legal wording, assumptions A-02/A-06/A-10/A-17 confirmed; 600 database tests |
 | 2026-11-09 | Answers | Cheque number on payouts, kept in the journal memo; 602 database tests |
 | 2026-11-09 | Answers | Branch addresses (BR1 Jallah Town, BR2 Mamba District #2, BR3 Ganta) |
+| 2026-11-09 | Answers | Branch names (Jallah Town, Margibi, Nimba); USD+LRD noted; A4 printer; docs/DEPLOY.md and the download package |

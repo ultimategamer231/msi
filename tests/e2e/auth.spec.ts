@@ -41,7 +41,7 @@ test.describe("sign-in (FR-01, M0 acceptance: login works per role)", () => {
           .first(),
       ).toBeVisible();
       await expect(page.getByTestId("business-date")).toContainText(
-        user.branchCode === null ? "All branches" : "Branch 2",
+        user.branchCode === null ? "All branches" : "Margibi Branch",
       );
     });
   }

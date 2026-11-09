@@ -4,7 +4,7 @@ Generated from SPEC section 2.3. Each row is a default the system implements unt
 
 | ID | Assumption (default implemented) | Setting key | Needs sign-off from | Client decision | Date |
 | --- | --- | --- | --- | --- | --- |
-| A-01 | Operating currency is USD (`$`). LRD not enabled in MVP | `currency.base`=`USD` | CEO |  |  |
+| A-01 | Operating currency is USD (`$`). LRD not enabled in MVP | `currency.base`=`USD` | CEO | MSI uses USD and LRD (answer 2026-11-09); LRD not built yet, design pending | 2026-11-09 |
 | A-02 | Default term is 1 month; `due_date = disbursed_on + term_months` calendar months, clamped to month end (31 Jan + 1 month = 28 Feb) | `product.default_term_months`=1 | Manager | Confirmed: 1 month is the standard term; longer terms only by special arrangement (product limit stays a setting) | 2026-11-09 |
 | A-03 | Interest = `principal × rate_bps/10000 × term_months`, flat, charged in full at disbursement and recognised as income then (accrual basis) | `product.interest_rate_bps`=2000 | Accountant |  |  |
 | A-04 | Repayment is flexible: any number of partial payments before or after due date; no instalment schedule | n/a | Manager |  |  |
@@ -21,6 +21,6 @@ Generated from SPEC section 2.3. Each row is a default the system implements unt
 | A-15 | Accounting basis: accrual (interest at disbursement, penalties when charged). Accountant to confirm vs cash basis | `accounting.basis`=`accrual` | Accountant |  |  |
 | A-16 | Receipt/document numbering is per branch and sequential, never reused | n/a | Manager |  |  |
 | A-17 | No loan fees in MVP (processing/application) | `product.fees`=[] | Manager | Confirmed: no loan fees | 2026-11-09 |
-| A-18 | Day close is mandatory per branch per day (submitted by the cashier); an approved close locks that date for the branch; a manager can reopen it with a reason | `daycloses.enforce`=true | Manager |  |  |
+| A-18 | Day close is mandatory per branch per day (submitted by the cashier); an approved close locks that date for the branch; a manager can reopen it with a reason | `daycloses.enforce`=true | Manager | Confirmed: the cashier counts and submits; a manager approves | 2026-11-09 |
 | A-19 | Back-dated entry allowed only for roles admin/accountant, only before `go_live_date`; after that all postings are dated today | `migration.go_live_date` | Accountant |  |  |
 | A-20 | Expenses above `$100` need manager approval; below, accountant records directly | `approvals.expense_limit_cents`=10000 | Manager |  |  |

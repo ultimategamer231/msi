@@ -61,7 +61,7 @@ test.describe("loans list and detail (SPEC 9; mock-ups 06, 07, 08; FR-07, FR-08)
     await expect(page.getByRole("button", { name: "Approve" })).toHaveCount(0);
     await page.getByLabel("Paid out by").selectOption("cash");
     await page.getByRole("button", { name: "Pay out" }).click();
-    await expect(page.getByText("Pay out $1,000.00 from Branch 2 cash?")).toBeVisible();
+    await expect(page.getByText("Pay out $1,000.00 from Margibi Branch cash?")).toBeVisible();
     await page.getByRole("button", { name: "Yes, pay out" }).click();
 
     await expect(page.getByText("Active", { exact: true }).first()).toBeVisible();

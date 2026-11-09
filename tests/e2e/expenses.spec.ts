@@ -23,7 +23,7 @@ test.describe("expenses and payees (SPEC 7.6, 9; FR-22)", () => {
     const form = page.getByRole("region", { name: "New expense" });
     await form.getByLabel("Expense account").selectOption("5900");
     await form.getByLabel("Amount ($)").fill("45.00");
-    await form.getByLabel("Branch").selectOption({ label: "Branch 2" });
+    await form.getByLabel("Branch").selectOption({ label: "Margibi Branch" });
     await form.getByLabel("Description").fill(`Office supplies ${tag}`);
     await form.getByLabel("Paid from").selectOption("1010-BR2");
     await form
@@ -81,7 +81,7 @@ test.describe("expenses and payees (SPEC 7.6, 9; FR-22)", () => {
     const form = page.getByRole("region", { name: "New expense" });
     await form.getByLabel("Expense account").selectOption("5020");
     await form.getByLabel("Amount ($)").fill("80.00");
-    await form.getByLabel("Branch").selectOption({ label: "Branch 2" });
+    await form.getByLabel("Branch").selectOption({ label: "Margibi Branch" });
     await form.getByLabel("Description").fill(`Internet for ${name}`);
     await form.getByLabel("On credit (pay the payee later)").check();
     await form.getByLabel("Payee", { exact: true }).selectOption({ label: name });
