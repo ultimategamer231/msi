@@ -9,13 +9,13 @@ on conflict (code) do nothing;
 
 insert into public.settings (key, value)
 values
-  -- SPEC 11 Branding. "[pending]" fields print blank until MSI supplies them.
+  -- SPEC 11 Branding; contact from MSI (2026-11-09). A "[pending]" field would print blank.
   ('company', jsonb_build_object(
       'name', 'Method Solutions Inc.',
       'short_name', 'MSI',
-      'address', '[pending]',
-      'phone', '[pending]',
-      'email', '[pending]',
+      'address', 'Peace Community, Mamba District #1, Margibi County, Liberia',
+      'phone', '+231 776 821 919 · WhatsApp +231 880 318 575',
+      'email', 'gbeimiem@gmail.com',
       'logo_path', 'branding/msi-logo.png',
       'receipt_footer', 'Thank you for your payment.')),
   -- SPEC 2.3 assumption register (defaults until MSI signs off; see docs/ASSUMPTIONS.md).
@@ -37,9 +37,18 @@ values
   ('templates', jsonb_build_object(
       'reminder', 'Dear {name}, your loan {loan_no} of {amount} is due on {due_date}. Outstanding: {outstanding}. Please pay at {branch} or call {branch_phone}. Thank you. – {company}',
       'reminder_overdue', 'Dear {name}, your loan {loan_no} was due on {due_date} and is {days_overdue} days overdue. Outstanding: {outstanding}, including penalties of {penalties}. Please pay at {branch} or call {branch_phone}. Thank you. – {company}',
-      -- SPEC 10.1: placeholder legal wording, visibly marked, for MSI's lawyer to replace.
-      'demand_notice', '[PLACEHOLDER: to be reviewed by MSI''s lawyer before use] Our records show that loan {loan_no} was due on {due_date} and is {days_overdue} days overdue. The amount now owed is {outstanding}, including penalties of {penalties}. Please pay the full amount at {branch} by {deadline}. If it is not paid by then, {company} may proceed under the loan agreement and its recovery policy, including the sale of the collateral listed below, and the costs of recovery may be added to what is owed.',
-      'loan_agreement', '[PLACEHOLDER: to be reviewed by MSI''s lawyer before use] The borrower agrees to repay the total amount shown by the due date. Interest is charged once, at payout. If any amount is still unpaid after the due date, a penalty of {penalty_rate} of the amount then owed is added every {penalty_days} days, up to {penalty_max} times. The collateral listed below is held by {company} until the loan is repaid in full and may be sold under the recovery policy if the loan is not repaid. Payments are applied first to penalties, then to interest, then to the amount lent.')),
+      -- SPEC 10.1: standard wording accepted by MSI (2026-11-09); an admin can change it in Settings.
+      'demand_notice', 'Our records show that loan {loan_no} was due for repayment on {due_date} and is now {days_overdue} days overdue. The total amount now owed is {outstanding}, including penalties of {penalties}.
+You are hereby required to pay the full amount at {branch} on or before {deadline}.
+If payment is not received by that date, {company} will take further steps under the loan agreement to recover the debt, which may include taking possession of and selling the collateral listed below and legal action, without further notice. The costs of recovery may be added to the amount owed.
+If you have already paid, please disregard this notice and bring your receipt to the branch.',
+      'loan_agreement', '1. Repayment. The borrower shall repay the total of {total} (the amount lent plus interest) to {company} on or before the due date shown above. Part payments may be made at any time and are applied first to penalties, then to interest, then to the amount lent.
+2. Interest and fees. Interest is charged once, when the loan is paid out, and is included in the total above. No other fee is charged.
+3. Late payment. If any amount remains unpaid after the due date, a penalty of {penalty_rate} of the amount then owed is added every {penalty_days} days, up to {penalty_max} times. After that, {company} may begin recovery.
+4. Collateral. The borrower pledges the collateral listed below as security for this loan. {company} holds it until the loan is repaid in full and then returns it to the borrower. If the loan is not repaid, {company} may, after written notice, recover the debt under its recovery procedure, including by selling the collateral. Any amount left after the debt and the costs of recovery are paid is returned to the borrower; any shortfall remains owed.
+5. Guarantors. Each guarantor named below agrees to pay what the borrower owes under this agreement if the borrower does not.
+6. Borrower''s statements. The borrower confirms that the information given is true, that the collateral is the borrower''s own property and free of other claims, and that the borrower will tell {company} of any change of address or phone number.
+7. Governing law. This agreement is governed by the laws of the Republic of Liberia. By signing below, the parties confirm that they have read and understood it.')),
   -- B-01 business clock: real time unless a demo or test environment moves it.
   ('clock.override_at', 'null')
 on conflict (key) do nothing;

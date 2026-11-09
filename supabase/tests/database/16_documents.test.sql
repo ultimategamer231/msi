@@ -40,8 +40,9 @@ select matches(tests.try_as('authenticated', :'cashier_id', format($$select publ
   '^INVALID_STATE', 'other kinds arrive with their milestones');
 select matches(tests.try_as('anon', null, format($$select public.issue_document('loan_agreement', '%s')$$, :'loan_id')),
   '^permission denied', 'anonymous users cannot issue documents');
-select ok((select value ? 'loan_agreement' and value ->> 'loan_agreement' like '[PLACEHOLDER%' from public.settings where key = 'templates'),
-  'the agreement wording is a visibly marked placeholder (SPEC 10.1)');
+select ok((select value ->> 'loan_agreement' like '%Republic of Liberia%' and value ->> 'loan_agreement' not like '%PLACEHOLDER%'
+             from public.settings where key = 'templates'),
+  'the agreement carries the standard wording MSI accepted (SPEC 10.1; client answer 2026-11-09)');
 
 select * from finish();
 rollback;

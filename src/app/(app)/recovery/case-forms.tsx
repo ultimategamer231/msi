@@ -336,7 +336,7 @@ export function SaleForm({
                 value={values.method}
                 onChange={(event) => set("method", event.target.value)}
               >
-                {(["cash", "bank", "mobile_money"] as const).map((method) => (
+                {(["cash", "bank", "mobile_money", "cheque"] as const).map((method) => (
                   <option key={method} value={method}>
                     {tMethods(method)}
                   </option>
@@ -445,7 +445,7 @@ export function SurplusForm({
           value={method}
           onChange={(event) => setMethod(event.target.value)}
         >
-          {(["cash", "bank", "mobile_money"] as const).map((option) => (
+          {(["cash", "bank", "mobile_money", "cheque"] as const).map((option) => (
             <option key={option} value={option}>
               {tMethods(option)}
             </option>

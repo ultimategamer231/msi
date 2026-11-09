@@ -7,7 +7,9 @@ import { parseDollarsToCents } from "@/lib/money-input";
  * (receive_payment: amount, method, reference, overpayment, date); these rules give early
  * feedback. Messages are keys under "payments.validation".
  */
-export const PAYMENT_METHODS = ["cash", "mobile_money", "bank"] as const;
+export const PAYMENT_METHODS = ["cash", "mobile_money", "bank", "cheque"] as const;
+/* Officers in the field take cash, mobile money or bank transfers; cheques are taken at the office. */
+export const FIELD_METHODS = ["cash", "mobile_money", "bank"] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
 
 export const paymentSchema = z

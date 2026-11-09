@@ -12,7 +12,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 const RECOVERY_ROLES: readonly Role[] = ["manager", "ceo"];
 const WRITE_OFF_ROLES: readonly Role[] = ["manager", "accountant"];
 const STAGES = ["notice_sent", "court_filed", "judgment", "disposal"] as const;
-const METHODS = ["cash", "mobile_money", "bank"] as const;
+const METHODS = ["cash", "mobile_money", "bank", "cheque"] as const;
 const uuid = /^[0-9a-f-]{36}$/;
 
 async function staffIn(roles: readonly Role[]): Promise<Staff | null> {

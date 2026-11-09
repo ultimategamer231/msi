@@ -136,7 +136,7 @@ export function DisburseForm({
 }) {
   const t = useTranslations("loans.detail.actions");
   const { pending, error, run } = useAction();
-  const [method, setMethod] = useState<"cash" | "mobile_money" | "bank">("cash");
+  const [method, setMethod] = useState<"cash" | "mobile_money" | "bank" | "cheque">("cash");
   const [confirming, setConfirming] = useState(false);
   const accountLabel =
     method === "cash" ? cashAccount : method === "bank" ? t("bankAccount") : t("momoAccount");
@@ -149,13 +149,14 @@ export function DisburseForm({
           className={inputClass}
           value={method}
           onChange={(event) => {
-            setMethod(event.target.value as "cash" | "mobile_money" | "bank");
+            setMethod(event.target.value as "cash" | "mobile_money" | "bank" | "cheque");
             setConfirming(false);
           }}
           {...describedBy("disburse-method", "help", undefined)}
         >
           <option value="cash">{t("methods.cash")}</option>
           <option value="mobile_money">{t("methods.mobile_money")}</option>
+          <option value="cheque">{t("methods.cheque")}</option>
           <option value="bank">{t("methods.bank")}</option>
         </select>
       </Field>

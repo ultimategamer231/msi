@@ -12,6 +12,14 @@
 9. Names and addresses of the 3 branches; MSI head-office address, phone and email for receipts and letters (logo received 03 Nov 2026).
 10. Budget, target start date, decision contact.
 
+## Client answers (Foday, 2026-11-09)
+- **Head office (item 9):** Peace Community, Mamba District #1, Margibi County, Liberia. Phone, WhatsApp and email taken from MSI's paper voucher (+231 776 821 919, WhatsApp +231 880 318 575, gbeimiem@gmail.com), confirmed by Foday. Branch names and addresses are still open.
+- **Payments and payouts (item 2):** cheque, cash and mobile transfers, in both directions. Cheque was added as a method (cheque number required, posts to Bank 1020); Orange Money and MTN MoMo are both "Mobile money" (1030).
+- **Collateral (item 4):** valuables, gold, cars, land deeds. "Gold" and "Valuables" were added as types; storage places are free text per item.
+- **Fees and terms (item 5):** no loan fee (A-17); 1 month standard, longer only by special arrangement (A-02).
+- **Penalty and CBL (item 8):** compounded weekly for 4 weeks, then recovery; confirmed as fitting the licence terms (A-06). The CBL report format is still open.
+- **Legal wording:** "any standard applicable wordings": standard wording for the loan agreement and the demand notice replaces the placeholders (editable in Settings). A lawyer's review is still advisable before go-live.
+
 ## Builder
 (Add questions here while building. Do not block on them; use the spec default.)
 

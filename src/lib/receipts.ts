@@ -18,7 +18,7 @@ export interface ReceiptFacts {
   customer: string;
   loanId: string;
   loanNo: string;
-  method: "cash" | "mobile_money" | "bank";
+  method: "cash" | "mobile_money" | "bank" | "cheque";
   reference: string | null;
   amountCents: string;
   allocation: { penalty: string; interest: string; principal: string };

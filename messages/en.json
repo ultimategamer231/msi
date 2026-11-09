@@ -880,7 +880,8 @@
     "methods": {
       "cash": "Cash",
       "mobile_money": "Mobile money",
-      "bank": "Bank"
+      "bank": "Bank",
+      "cheque": "Cheque"
     },
     "extensionDueNow": "Due date now",
     "extensionNewDue": "New due date",
@@ -1012,6 +1013,8 @@
       "types": {
         "vehicle": "Vehicle",
         "land_document": "Land document",
+        "gold": "Gold",
+        "valuables": "Valuables (jewellery and similar)",
         "electronics": "Electronics",
         "goods": "Goods",
         "savings_lien": "Savings lien",
@@ -1113,7 +1116,8 @@
       "methods": {
         "cash": "Cash",
         "mobile_money": "Mobile money",
-        "bank": "Bank"
+        "bank": "Bank",
+        "cheque": "Cheque"
       },
       "cards": {
         "lent": "Amount lent",
@@ -1206,7 +1210,8 @@
         "methods": {
           "cash": "Cash",
           "mobile_money": "Mobile money",
-          "bank": "Bank"
+          "bank": "Bank",
+          "cheque": "Cheque"
         },
         "receive": "Receive payment",
         "openRecovery": "Open recovery case",
@@ -1386,7 +1391,8 @@
     "methods": {
       "cash": "Cash",
       "mobile_money": "Mobile money",
-      "bank": "Bank"
+      "bank": "Bank",
+      "cheque": "Cheque"
     },
     "columns": {
       "receipt": "Receipt",
@@ -1460,7 +1466,9 @@
       "fieldPreview": "Where this payment goes",
       "fieldAfter": "Still owed after this",
       "fieldSubmit": "Save payment and issue receipt",
-      "fieldHandover": "The borrower gets a receipt now. The cash shows as \"with you\" until the cashier confirms the handover."
+      "fieldHandover": "The borrower gets a receipt now. The cash shows as \"with you\" until the cashier confirms the handover.",
+      "chequeNumber": "Cheque number (required)",
+      "referenceHelpCheque": "The number printed on the cheque. The money goes to the bank account."
     },
     "validation": {
       "amount": "Enter an amount more than zero, with at most 2 decimals.",
@@ -2293,7 +2301,8 @@
     "methods": {
       "cash": "Cash",
       "mobile_money": "Mobile money",
-      "bank": "Bank"
+      "bank": "Bank",
+      "cheque": "Cheque"
     },
     "handover": {
       "pending": "With the officer",

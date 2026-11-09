@@ -273,9 +273,10 @@ export async function cancelLoan(loanId: string, reason: string): Promise<LoanAc
 /* disburse_loan (cashier, R1): today's date; the account follows the method (B-10, SPEC 5.4.5). */
 export async function disburseLoan(
   loanId: string,
-  method: "cash" | "mobile_money" | "bank",
+  method: "cash" | "mobile_money" | "bank" | "cheque",
 ): Promise<LoanActionResult> {
-  if (!["cash", "mobile_money", "bank"].includes(method)) return { ok: false, code: "INVALID_INPUT" };
+  if (!["cash", "mobile_money", "bank", "cheque"].includes(method))
+    return { ok: false, code: "INVALID_INPUT" };
   return loanRpc(
     "loans.disburseLoan",
     ["cashier"],

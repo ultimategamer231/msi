@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@/lib/zod-resolver";
 
 import { previewPayment, receivePayment, recordFieldPayment, type PreviewResult } from "./actions";
-import { PAYMENT_METHODS, paymentSchema, type PaymentValues } from "./schemas";
+import { FIELD_METHODS, PAYMENT_METHODS, paymentSchema, type PaymentValues } from "./schemas";
 
 type Preview = Extract<PreviewResult, { ok: true }>;
 
@@ -137,8 +137,8 @@ export function PaymentForm({
         <legend className="mb-1.5 text-xs font-semibold text-ink-muted">
           {t(field ? "fieldMethod" : "method")}
         </legend>
-        <div className="grid grid-cols-3 gap-2">
-          {PAYMENT_METHODS.map((option) => (
+        <div className={cn("grid gap-2", field ? "grid-cols-3" : "grid-cols-2 sm:grid-cols-4")}>
+          {(field ? FIELD_METHODS : PAYMENT_METHODS).map((option) => (
             <label
               key={option}
               className={cn(
@@ -158,8 +158,14 @@ export function PaymentForm({
       {method !== "cash" ? (
         <Field
           id="payment-reference"
-          label={t("reference")}
-          help={t(method === "bank" ? "referenceHelpBank" : "referenceHelpMomo")}
+          label={t(method === "cheque" ? "chequeNumber" : "reference")}
+          help={t(
+            method === "cheque"
+              ? "referenceHelpCheque"
+              : method === "bank"
+                ? "referenceHelpBank"
+                : "referenceHelpMomo",
+          )}
           error={text(errors.reference?.message)}
         >
           <input

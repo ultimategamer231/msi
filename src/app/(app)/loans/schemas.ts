@@ -11,6 +11,8 @@ import { parseDollarsToCents } from "@/lib/money-input";
 export const COLLATERAL_TYPES = [
   "vehicle",
   "land_document",
+  "gold",
+  "valuables",
   "electronics",
   "goods",
   "savings_lien",
