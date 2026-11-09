@@ -22,7 +22,8 @@
     "env:local": "node scripts/write-env-local.mjs",
     "seed:demo": "tsx scripts/seed-demo.ts",
     "types": "supabase gen types typescript --local --schema public > src/types/database.ts && prettier --write --log-level warn src/types/database.ts",
-    "screenshots": "tsx scripts/screenshots.ts"
+    "screenshots": "tsx scripts/screenshots.ts",
+    "test:smoke": "playwright test -c playwright.smoke.config.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "4.9.0",

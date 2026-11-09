@@ -90,6 +90,10 @@ jobs:
       - run: pnpm test:e2e
         env:
           CI: "true"
+      - name: End-to-end smoke (SPEC 12.3; moves the business clock, so it runs alone)
+        run: pnpm test:smoke
+        env:
+          CI: "true"
       - if: failure()
         uses: actions/upload-artifact@v7
         with:
