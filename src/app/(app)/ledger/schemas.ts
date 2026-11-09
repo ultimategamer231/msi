@@ -33,6 +33,11 @@ export const manualJournalSchema = z.object({
 
 export type ManualJournalValues = z.infer<typeof manualJournalSchema>;
 
+/* Opening balances (R12, FR-27): one line is enough; the difference goes to 3900. */
+export const openingBalanceSchema = manualJournalSchema.extend({
+  lines: z.array(manualLineSchema).min(1, { message: "minLines" }).max(30),
+});
+
 /* Capital in (recipe R10, R-14): owner money into a branch cash, bank or mobile money account. */
 export const capitalInSchema = z.object({
   entryDate: z.iso.date({ message: "date" }),

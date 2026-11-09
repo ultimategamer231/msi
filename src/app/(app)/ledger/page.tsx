@@ -63,7 +63,22 @@ async function LedgerContent({ searchParams }: { searchParams: PageProps<"/ledge
   // SPEC 4: manual journals are requested by the accountant or the admin.
   const canRequest = staff.role === "accountant" || staff.role === "admin";
   const requested = single(params.tab);
-  const tab = requested === "trial" ? "trial" : requested === "manual" && canRequest ? "manual" : "journals";
+  // FR-27: opening balances, admin or accountant, until the go-live date.
+  const supabase = await createSupabaseServerClient();
+  const [{ data: goLive }, { data: today }] = await Promise.all([
+    supabase.from("settings").select("value").eq("key", "migration.go_live_date").maybeSingle(),
+    supabase.rpc("business_today"),
+  ]);
+  const goLiveDate = typeof goLive?.value === "string" ? goLive.value : null;
+  const canOpen = canRequest && (goLiveDate === null || String(today) < goLiveDate);
+  const tab =
+    requested === "trial"
+      ? "trial"
+      : requested === "manual" && canRequest
+        ? "manual"
+        : requested === "opening" && canOpen
+          ? "opening"
+          : "journals";
 
   return (
     <>
@@ -101,11 +116,23 @@ async function LedgerContent({ searchParams }: { searchParams: PageProps<"/ledge
                 </Link>
               </li>
             ) : null}
+            {canOpen ? (
+              <li>
+                <Link
+                  href="/ledger?tab=opening"
+                  aria-current={tab === "opening" ? "page" : undefined}
+                  className={linkClass(tab === "opening")}
+                >
+                  {t("tabs.opening")}
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </nav>
         {tab === "trial" ? <TrialBalance params={params} /> : null}
         {tab === "journals" ? <Journals params={params} /> : null}
         {tab === "manual" ? <ManualJournal staffId={staff.id} /> : null}
+        {tab === "opening" ? <OpeningBalances goLive={goLiveDate} today={String(today)} /> : null}
       </div>
     </>
   );
@@ -536,6 +563,33 @@ async function ManualJournal({ staffId }: { staffId: string }) {
           </ul>
         )}
       </section>
+    </>
+  );
+}
+
+/* Opening balances (FR-27, R12): balance-sheet accounts only; loans are entered as loans. */
+async function OpeningBalances({ goLive, today }: { goLive: string | null; today: string }) {
+  const t = await getTranslations("ledger.opening");
+  const supabase = await createSupabaseServerClient();
+  const { data: accounts, error } = await supabase
+    .from("accounts")
+    .select("code, name, type")
+    .eq("active", true)
+    .in("type", ["asset", "liability", "equity"])
+    .not("code", "in", "(1100,1110,1120,1015,3900)")
+    .order("code");
+  if (error !== null) throw new Error("Could not load the accounts");
+  return (
+    <>
+      <p className="text-sm text-ink-muted">
+        {goLive === null ? t("noGoLive") : t("untilGoLive", { date: formatDate(goLive) })}
+      </p>
+      <ManualJournalForm
+        mode="opening"
+        accounts={accounts.map(({ code, name }) => ({ code, name }))}
+        branches={[]}
+        today={today}
+      />
     </>
   );
 }

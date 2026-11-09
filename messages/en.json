@@ -341,7 +341,8 @@
       "label": "Ledger views",
       "journals": "Journals",
       "trial": "Trial balance",
-      "manual": "Manual journal"
+      "manual": "Manual journal",
+      "opening": "Opening balances"
     },
     "filters": {
       "label": "Filter journals",
@@ -440,6 +441,15 @@
       "amount": "Amount ($)",
       "memo": "Memo",
       "reference": "Deposit or transfer reference (optional)"
+    },
+    "opening": {
+      "heading": "Opening balances",
+      "intro": "Enter what the paper or Excel books held on the day before go-live: cash, bank, mobile money, amounts owed and capital. Loans are not entered here: record each loan with its back-dated payout and payments.",
+      "submit": "Post opening balances",
+      "posted": "Opening balances posted.",
+      "equity": "Opening balance equity (3900): {amount}",
+      "noGoLive": "No go-live date is set yet (Settings). Opening balances can be entered until it is.",
+      "untilGoLive": "Opening balances can be entered until go-live on {date}."
     }
   },
   "customers": {

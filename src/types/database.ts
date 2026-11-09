@@ -2312,6 +2312,7 @@ export type Database = {
         Returns: Json;
       };
       id_number_key: { Args: { p_id: string }; Returns: string };
+      import_opening_balance: { Args: { p_entry: Json }; Returns: Json };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
       issue_document:
         | { Args: { p_entity_id: string; p_kind: string }; Returns: Json }

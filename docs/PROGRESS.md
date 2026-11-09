@@ -2,11 +2,23 @@
 
 | Item | Value |
 | --- | --- |
-| Current phase | M8 Money-out, day close, reports complete; waiting for approval of M9 |
-| Current block | M8.6 done (report `docs/reports/PHASE-M8.md`) |
+| Current phase | M9 Migration, dashboards, hardening (approved by Foday 2026-11-09) |
+| Current block | M9.2 Role dashboards |
 | Last approved block | M7 phase start (Foday 2026-11-08) |
-| State | Stopped for approval. Push works; the GitHub API still answers 404 (PR and CI not visible) |
-| Next step | M9 Migration, dashboards, hardening, once Foday approves |
+| State | Working on M9. Push works; the GitHub API still answers 404 (PR and CI not visible) |
+| Next step | M9.2 Role dashboards (mock-up 05) |
+
+## M9 plan (Migration, dashboards, hardening: FR-27, FR-29; T-30, T-31, SPEC 12.3)
+
+| Block | Content | Done when |
+| --- | --- | --- |
+| M9.1 | `import_opening_balance` (R12, before go-live, balance-sheet accounts, difference to 3900); Opening balances tab on `/ledger` | pgTAP; e2e |
+| M9.2 | Role dashboards (SPEC 9; mock-up 05): officer, cashier, manager/CEO, accountant, admin | e2e at 390 and 1280 |
+| M9.3 | Hardening: CSP with nonces and the other headers, `/api/health`, RLS review (every table, T-30, T-31), login rate limit check, `scripts/backup.sh`, `docs/OPERATIONS.md` | tests; review notes |
+| M9.4 | End-to-end smoke (SPEC 12.3) and Lighthouse accessibility ≥ 90 on `/field` | smoke green; score |
+| M9.5 | Demo seed check, screenshots, M9 report | all checks green |
+
+Approved by Foday 2026-11-09 ("Start M9").
 
 ## M8 plan (Money-out, day close, reports: FR-22, FR-23, FR-24; T-26, T-27, T-34)
 
@@ -169,3 +181,5 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-09 | M8.4 | Report functions; T-26, T-27; 573 database tests |
 | 2026-11-09 | M8.5 | /reports index and nine reports with filters, CSV export, print view; e2e |
 | 2026-11-09 | M8.6 | Demo expenses, drawer openings, report check against DEMO_DATA, screenshots, M8 report; 573 database tests, 181 e2e |
+| 2026-11-09 | M9 | Phase approved; plan written |
+| 2026-11-09 | M9.1 | import_opening_balance (R12), Opening balances tab; 580 database tests |

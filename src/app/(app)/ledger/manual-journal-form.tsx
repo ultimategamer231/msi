@@ -12,8 +12,8 @@ import { parseDollarsToCents } from "@/lib/money-input";
 import type { ErrorCode } from "@/lib/rpc-errors";
 import { zodResolver } from "@/lib/zod-resolver";
 
-import { requestManualJournal } from "./actions";
-import { manualJournalSchema, type ManualJournalValues } from "./schemas";
+import { importOpeningBalance, requestManualJournal } from "./actions";
+import { manualJournalSchema, openingBalanceSchema, type ManualJournalValues } from "./schemas";
 
 export interface AccountOption {
   code: string;
@@ -35,16 +35,25 @@ function sumCents(values: string[]): bigint {
   );
 }
 
+/*
+ * A manual journal for approval (R11), or, with mode "opening", opening balances posted at once
+ * before go-live (R12): there one line is enough and the difference goes to 3900.
+ */
 export function ManualJournalForm({
   accounts,
   branches,
   today,
+  mode = "manual",
 }: {
   accounts: AccountOption[];
   branches: BranchOption[];
   today: string;
+  mode?: "manual" | "opening";
 }) {
   const t = useTranslations("ledger.manual");
+  const tOpening = useTranslations("ledger.opening");
+  const opening = mode === "opening";
+  const prefix = opening ? "opening" : "manual";
   const tValidation = useTranslations("settings.validation");
   const tErrors = useTranslations("errors");
   const [pending, startTransition] = useTransition();
@@ -54,10 +63,10 @@ export function ManualJournalForm({
     entryDate: today,
     memo: "",
     branchId: "",
-    lines: [EMPTY_LINE, EMPTY_LINE],
+    lines: opening ? [EMPTY_LINE] : [EMPTY_LINE, EMPTY_LINE],
   };
   const form = useForm<ManualJournalValues>({
-    resolver: zodResolver(manualJournalSchema),
+    resolver: zodResolver(opening ? openingBalanceSchema : manualJournalSchema),
     defaultValues: defaults,
   });
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "lines" });
@@ -74,14 +83,18 @@ export function ManualJournalForm({
   const errors = form.formState.errors;
 
   return (
-    <Panel id="manual-heading" title={t("heading")} intro={t("intro")}>
+    <Panel
+      id={`${prefix}-heading`}
+      title={opening ? tOpening("heading") : t("heading")}
+      intro={opening ? tOpening("intro") : t("intro")}
+    >
       <form
         noValidate
         className="grid gap-5"
         onSubmit={form.handleSubmit((values) => {
           setStatus(null);
           startTransition(async () => {
-            const result = await requestManualJournal(values);
+            const result = await (opening ? importOpeningBalance(values) : requestManualJournal(values));
             if (result.ok) {
               setStatus({ tone: "success" });
               form.reset(defaults);
@@ -92,32 +105,34 @@ export function ManualJournalForm({
         })}
       >
         <div className="grid gap-4 sm:grid-cols-[12rem_1fr]">
-          <Field id="manual-date" label={t("date")} error={text(errors.entryDate?.message)}>
+          <Field id={`${prefix}-date`} label={t("date")} error={text(errors.entryDate?.message)}>
             <input
-              id="manual-date"
+              id={`${prefix}-date`}
               type="date"
               max={today}
               className={inputClass}
               {...form.register("entryDate")}
             />
           </Field>
-          <Field id="manual-branch" label={t("branch")}>
-            <select id="manual-branch" className={inputClass} {...form.register("branchId")}>
-              <option value="">{t("noBranch")}</option>
-              {branches.map((branch) => (
-                <option key={branch.id} value={branch.id}>
-                  {branch.label}
-                </option>
-              ))}
-            </select>
-          </Field>
+          {opening ? null : (
+            <Field id="manual-branch" label={t("branch")}>
+              <select id="manual-branch" className={inputClass} {...form.register("branchId")}>
+                <option value="">{t("noBranch")}</option>
+                {branches.map((branch) => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
         </div>
-        <Field id="manual-memo" label={t("memo")} error={text(errors.memo?.message)}>
+        <Field id={`${prefix}-memo`} label={t("memo")} error={text(errors.memo?.message)}>
           <textarea
-            id="manual-memo"
+            id={`${prefix}-memo`}
             rows={2}
             className={`${inputClass} py-2 leading-6`}
-            {...describedBy("manual-memo", undefined, text(errors.memo?.message))}
+            {...describedBy(`${prefix}-memo`, undefined, text(errors.memo?.message))}
             {...form.register("memo")}
           />
         </Field>
@@ -133,11 +148,11 @@ export function ManualJournalForm({
                 className="grid gap-3 rounded-control border border-line p-3 sm:grid-cols-[1fr_8rem_8rem_auto] sm:items-end sm:border-0 sm:p-0"
               >
                 <Field
-                  id={`line-${index}-account`}
+                  id={`${prefix}-line-${index}-account`}
                   label={`${t("lineLabel", { number: index + 1 })}: ${t("account")}`}
                 >
                   <select
-                    id={`line-${index}-account`}
+                    id={`${prefix}-line-${index}-account`}
                     className={inputClass}
                     {...form.register(`lines.${index}.account`)}
                   >
@@ -149,18 +164,18 @@ export function ManualJournalForm({
                     ))}
                   </select>
                 </Field>
-                <Field id={`line-${index}-debit`} label={t("debit")}>
+                <Field id={`${prefix}-line-${index}-debit`} label={t("debit")}>
                   <input
-                    id={`line-${index}-debit`}
+                    id={`${prefix}-line-${index}-debit`}
                     inputMode="decimal"
                     autoComplete="off"
                     className={`${inputClass} tabular text-right`}
                     {...form.register(`lines.${index}.debit`)}
                   />
                 </Field>
-                <Field id={`line-${index}-credit`} label={t("credit")}>
+                <Field id={`${prefix}-line-${index}-credit`} label={t("credit")}>
                   <input
-                    id={`line-${index}-credit`}
+                    id={`${prefix}-line-${index}-credit`}
                     inputMode="decimal"
                     autoComplete="off"
                     className={`${inputClass} tabular text-right`}
@@ -171,7 +186,7 @@ export function ManualJournalForm({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  disabled={fields.length <= 2}
+                  disabled={fields.length <= (opening ? 1 : 2)}
                   onClick={() => remove(index)}
                   aria-label={t("removeLine", { number: index + 1 })}
                 >
@@ -194,7 +209,11 @@ export function ManualJournalForm({
             {debit === 0n && credit === 0n ? null : (
               <>
                 {" · "}
-                {difference === 0n ? (
+                {opening ? (
+                  <span className="font-semibold text-ink">
+                    {tOpening("equity", { amount: formatMoney(debit - credit) })}
+                  </span>
+                ) : difference === 0n ? (
                   <span className="font-semibold text-status-active-fg">{t("balanced")}</span>
                 ) : (
                   <span className="font-semibold text-status-overdue-strong">
@@ -206,11 +225,13 @@ export function ManualJournalForm({
           </p>
         </fieldset>
 
-        {status?.tone === "success" ? <FormMessage tone="success">{t("sent")}</FormMessage> : null}
+        {status?.tone === "success" ? (
+          <FormMessage tone="success">{opening ? tOpening("posted") : t("sent")}</FormMessage>
+        ) : null}
         {status?.tone === "error" ? <FormMessage tone="error">{tErrors(status.code)}</FormMessage> : null}
         <div>
           <Button type="submit" disabled={pending}>
-            {pending ? t("submitting") : t("submit")}
+            {pending ? t("submitting") : opening ? tOpening("submit") : t("submit")}
           </Button>
         </div>
       </form>
