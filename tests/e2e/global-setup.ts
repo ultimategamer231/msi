@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { runSupabase } from "../../scripts/supabase-cli";
 import { randomBytes } from "node:crypto";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -59,7 +59,7 @@ export default async function globalSetup(): Promise<void> {
   const upsert = `insert into public.profiles (id, full_name, role, branch_id, active) values ${rows.join(",\n")}
     on conflict (id) do update set full_name = excluded.full_name, role = excluded.role,
       branch_id = excluded.branch_id, active = excluded.active`;
-  execFileSync("pnpm", ["-s", "supabase", "db", "query", upsert], { stdio: ["ignore", "ignore", "inherit"] });
+  runSupabase(["db", "query", upsert], { stdio: ["ignore", "ignore", "inherit"] });
 
   mkdirSync(path.dirname(CREDENTIALS_FILE), { recursive: true });
   writeFileSync(

@@ -11,12 +11,12 @@
  *    morning of the anchor date A (09:10) when --as-of is given, or set back to real time.
  *  - Passwords are generated on every run and printed once. They are never written to disk.
  */
-import { execFileSync } from "node:child_process";
 import { randomInt } from "node:crypto";
 import { parseArgs } from "node:util";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
+import { runSupabase } from "./supabase-cli";
 import type { Database } from "../src/types/database";
 
 type Role = Database["public"]["Enums"]["app_role"];
@@ -522,10 +522,7 @@ const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
 const password = () => Array.from({ length: 14 }, () => ALPHABET[randomInt(ALPHABET.length)]).join("");
 
 function supabaseCli(args: string[]): string {
-  return execFileSync("pnpm", ["-s", "supabase", ...args], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  return runSupabase(args, { stdio: ["ignore", "pipe", "pipe"] });
 }
 
 /** Runs one SQL statement as the local database owner and returns the result rows. */

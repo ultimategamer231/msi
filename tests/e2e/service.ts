@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { runSupabase } from "../../scripts/supabase-cli";
 
 import { createClient } from "@supabase/supabase-js";
 
@@ -27,7 +27,7 @@ export async function latestAudit(action: string, entityId: string) {
 
 /** Runs one SQL statement as the LOCAL database owner (test setup only, e.g. posting a journal). */
 export function ownerSql(sql: string): void {
-  execFileSync("pnpm", ["-s", "supabase", "db", "query", sql], { stdio: ["ignore", "ignore", "inherit"] });
+  runSupabase(["db", "query", sql], { stdio: ["ignore", "ignore", "inherit"] });
 }
 
 /** A client signed in as a test user, for setting up data through the same RPCs the app uses. */

@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { runSupabase } from "../../scripts/supabase-cli";
 
 /*
  * Local Supabase connection details for e2e runs. Uses the environment when set (CI exports them),
@@ -24,7 +24,7 @@ export function localSupabaseEnv(): LocalSupabaseEnv {
     return cached;
   }
   const status = JSON.parse(
-    execFileSync("pnpm", ["-s", "supabase", "status", "-o", "json"], {
+    runSupabase(["status", "-o", "json"], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
     }),

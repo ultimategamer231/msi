@@ -1,12 +1,18 @@
 // Writes .env.local from the running local Supabase stack (`pnpm env:local`). Local development only.
 import { execFileSync } from "node:child_process";
+import { join } from "node:path";
 import { writeFileSync } from "node:fs";
 
 const status = JSON.parse(
-  execFileSync("pnpm", ["-s", "supabase", "status", "-o", "json"], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "ignore"],
-  }),
+  // The project's Supabase CLI run with Node itself, so this also works on Windows (see scripts/supabase-cli.ts).
+  execFileSync(
+    process.execPath,
+    [join(process.cwd(), "node_modules", "supabase", "dist", "supabase.js"), "status", "-o", "json"],
+    {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    },
+  ),
 );
 for (const key of ["API_URL", "ANON_KEY", "SERVICE_ROLE_KEY"]) {
   if (!status[key])
