@@ -2081,6 +2081,16 @@ export type Database = {
     Functions: {
       account_balance: { Args: { p_account_id: string }; Returns: number };
       account_component: { Args: { p_code: string }; Returns: string };
+      account_movements: {
+        Args: { p_branch_id?: string; p_from: string; p_to: string };
+        Returns: {
+          code: string;
+          credit_cents: number;
+          debit_cents: number;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        }[];
+      };
       accruals_run: { Args: { p_as_of: string; p_source: string; p_triggered_by: string }; Returns: Json };
       accrue_loan_penalties: {
         Args: { p_as_of: string; p_loan_id: string; p_run_id: string };
@@ -2483,6 +2493,13 @@ export type Database = {
         Returns: undefined;
       };
       reopen_day_close: { Args: { p_id: string; p_reason: string }; Returns: undefined };
+      report_balance_sheet: { Args: { p_as_of: string }; Returns: Json };
+      report_cash_position: { Args: { p_as_of: string }; Returns: Json };
+      report_collections: { Args: { p_branch_id?: string; p_from: string; p_to: string }; Returns: Json };
+      report_money_out: { Args: { p_branch_id?: string; p_from: string; p_to: string }; Returns: Json };
+      report_overdue: { Args: { p_branch_id?: string }; Returns: Json };
+      report_profit_loss: { Args: { p_branch_id?: string; p_from: string; p_to: string }; Returns: Json };
+      report_trial_balance: { Args: { p_as_of: string }; Returns: Json };
       request_capital_in: { Args: { p_request: Json }; Returns: string };
       request_customer_edit: {
         Args: { p_customer_id: string; p_patch: Json; p_reason: string };
@@ -2498,6 +2515,7 @@ export type Database = {
       request_write_off: { Args: { p_loan_id: string; p_reason: string }; Returns: string };
       require_entry_date: { Args: { p_date: string }; Returns: string };
       require_posting_date: { Args: { p_date: string }; Returns: undefined };
+      require_report_role: { Args: Record<PropertyKey, never>; Returns: undefined };
       require_role: {
         Args: { p_roles: Database["public"]["Enums"]["app_role"][] };
         Returns: Database["public"]["Enums"]["app_role"];
