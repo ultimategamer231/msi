@@ -3,10 +3,10 @@
 | Item | Value |
 | --- | --- |
 | Current phase | M9 Migration, dashboards, hardening (approved by Foday 2026-11-09) |
-| Current block | M9.3 Hardening |
+| Current block | M9.4 Smoke and Lighthouse |
 | Last approved block | M7 phase start (Foday 2026-11-08) |
 | State | Working on M9. Push works; the GitHub API still answers 404 (PR and CI not visible) |
-| Next step | M9.3 CSP, health, RLS review, backup, OPERATIONS.md |
+| Next step | M9.4 SPEC 12.3 smoke and Lighthouse on /field |
 
 ## M9 plan (Migration, dashboards, hardening: FR-27, FR-29; T-30, T-31, SPEC 12.3)
 
@@ -184,3 +184,4 @@ Loans, collateral and total owed on the profile arrive with M3 and M6; the panel
 | 2026-11-09 | M9 | Phase approved; plan written |
 | 2026-11-09 | M9.1 | import_opening_balance (R12), Opening balances tab; 580 database tests |
 | 2026-11-09 | M9.2 | Role dashboards (mock-up 05); 586 database tests; e2e |
+| 2026-11-09 | M9.3 | CSP and headers, sign-in lockout, /api/health, backup script, OPERATIONS.md; 592 database tests |

@@ -5,9 +5,10 @@ import { createClient } from "@supabase/supabase-js";
 import { supabasePublicEnv } from "@/lib/env";
 
 /*
- * Service-role client for Supabase Auth administration only (SPEC 8: admin_create_user and
- * password resets). It bypasses RLS, so callers must check that the signed-in user is an admin
- * first. It cannot write application tables (no table privileges, M0.2).
+ * Service-role client for Supabase Auth administration (SPEC 8: admin_create_user and password
+ * resets; callers check that the signed-in user is an admin first) and for the sign-in lockout
+ * (login_guard, SPEC 11), the only function granted to it. It bypasses RLS but has no table
+ * privileges (M0.2).
  */
 export function createSupabaseAdminClient() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

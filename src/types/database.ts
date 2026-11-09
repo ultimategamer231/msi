@@ -1565,6 +1565,25 @@ export type Database = {
           },
         ];
       };
+      login_failures: {
+        Row: {
+          email_hash: string;
+          failed_at: string;
+          id: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          email_hash: string;
+          failed_at?: string;
+          id?: never;
+        };
+        Update: {
+          email_hash?: string;
+          failed_at?: string;
+          id?: never;
+        };
+        Relationships: [];
+      };
       payees: {
         Row: {
           active: boolean;
@@ -2314,6 +2333,7 @@ export type Database = {
         };
         Returns: Json;
       };
+      health_check: { Args: Record<PropertyKey, never>; Returns: Json };
       id_number_key: { Args: { p_id: string }; Returns: string };
       import_opening_balance: { Args: { p_entry: Json }; Returns: Json };
       is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
@@ -2382,6 +2402,8 @@ export type Database = {
       loan_surplus_cents: { Args: { p_loan_id: string }; Returns: number };
       log_collateral_event: { Args: { p_collateral_id: string; p_event: Json }; Returns: string };
       log_reminder_opened: { Args: { p_kind: string; p_loan_id: string }; Returns: undefined };
+      login_email_hash: { Args: { p_email: string }; Returns: string };
+      login_guard: { Args: { p_email: string; p_event: string }; Returns: string };
       mask_name: { Args: { p_name: string }; Returns: string };
       next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
       open_recovery_case: { Args: { p_loan_id: string; p_note: string }; Returns: string };
