@@ -14,11 +14,11 @@ This is the hand-checked dataset behind every mock-up and the M8 report acceptan
 
 | Code | Name | Opening cash on A−1 |
 | --- | --- | --- |
-| BR1 | Main | $5,000.00 |
-| BR2 | Branch 2 | $2,000.00 |
-| BR3 | Branch 3 | $3,000.00 |
+| BR1 | Jallah Town Branch (main) | $5,000.00 |
+| BR2 | Margibi Branch | $2,000.00 |
+| BR3 | Nimba Branch | $3,000.00 |
 
-Branch names and addresses are placeholders until MSI supplies them.
+Names and addresses from MSI (09 Nov 2026). The mock-ups were drawn with the earlier placeholder names ("Main", "Branch 2", "Branch 3"); screens now show MSI's names.
 
 ## Users
 

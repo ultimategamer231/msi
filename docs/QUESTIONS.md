@@ -12,6 +12,19 @@
 9. Names and addresses of the 3 branches; MSI head-office address, phone and email for receipts and letters (logo received 03 Nov 2026).
 10. Budget, target start date, decision contact.
 
+## Client answers (Foday, 2026-11-09)
+- **Head office (item 9):** Peace Community, Mamba District #1, Margibi County, Liberia. Phone, WhatsApp and email taken from MSI's paper voucher (+231 776 821 919, WhatsApp +231 880 318 575, gbeimiem@gmail.com), confirmed by Foday.
+- **Branch addresses (item 9):** BR1 Main: Bypass, Jallah Town, Behind Conex Gas Station; BR2: Peace Community, Mamba District #2, Margibi County; BR3: Ganta City, Nimba County (taken in that order).
+- **Branch names:** BR1 Jallah Town Branch (main), BR2 Margibi Branch, BR3 Nimba Branch. Branch phones are still open.
+- **Currencies (item 1):** MSI uses both USD and LRD. LoanDesk is USD only today (A-01); LRD needs a design decision (see the next agenda) before it is built.
+- **Printers (item 7):** A4 printer. Documents are A4; receipts print as A5 (half a sheet) on it.
+- **Decisions:** accountants may upload expense receipts (M8); the cashier fills in the day-close count (M8, mock-up 14 differs).
+- **Payments and payouts (item 2):** cheque, cash and mobile transfers, in both directions. Cheque was added as a method (cheque number required, posts to Bank 1020); Orange Money and MTN MoMo are both "Mobile money" (1030).
+- **Collateral (item 4):** valuables, gold, cars, land deeds. "Gold" and "Valuables" were added as types; storage places are free text per item.
+- **Fees and terms (item 5):** no loan fee (A-17); 1 month standard, longer only by special arrangement (A-02).
+- **Penalty and CBL (item 8):** compounded weekly for 4 weeks, then recovery; confirmed as fitting the licence terms (A-06). The CBL report format is still open.
+- **Legal wording:** "any standard applicable wordings": standard wording for the loan agreement and the demand notice replaces the placeholders (editable in Settings). A lawyer's review is still advisable before go-live.
+
 ## Builder
 (Add questions here while building. Do not block on them; use the spec default.)
 
@@ -40,3 +53,23 @@ Raised in Phase 0 (2026-11-03). "Blocks" says which milestone needs the answer. 
 | B-19 | Receipt "Share on WhatsApp" (mock-up 04) is not in SPEC (WhatsApp is specified for reminders only). | mock-up 04 vs SPEC 10.3 | Build it as a `wa.me` link with receipt number, amount, balance and the `/verify` link (no PII beyond what the borrower already has). Needs your approval as a small scope addition. | M4 |
 | B-20 | Process: CLAUDE.md says "do not push until the milestone is approved"; the master prompt asks for one branch per phase (`phase/m0-foundation` …) with a PR per phase; this cloud session is bound to branch `claude/new-session-6ictcc`. | CLAUDE.md vs master prompt vs session | Phase 0 docs go to `claude/new-session-6ictcc` with a draft PR. From M0 on I use `phase/<milestone>` branches and push only for the phase PR, once you confirm I may push to those branch names. | M0 |
 | B-21 | SPEC 16 references `tools/audit.py`; it is not in the kit. DEMO_DATA names `e2e/demo-payment.spec.ts`; SPEC 3.3 puts e2e in `tests/e2e/`. | kit | Not needed to build. E2E files live in `tests/e2e/` (so `tests/e2e/demo-payment.spec.ts`). Send `audit.py` if you want it in the repo. | none |
+| B-22 | **Logo on public pages.** The sign-in page (and later `/verify/[token]` and printed documents) is shown to people who are not signed in, but SPEC 6.4 says storage buckets are private with signed URLs after a role check. The logo lives in the private `branding` bucket. | SPEC 6.4 vs 10.1, 11 Branding | Make only the `branding` bucket public-read (it holds nothing but the logo, which already appears on every receipt). Until you decide, the sign-in page shows the company name from `settings.company` without the logo; signed-in screens will use signed URLs. | M0.4 (header), M7 (verify page) |
+| B-23 | T-21 says an update or delete of a posted journal, line or audit row gives `IMMUTABLE_RECORD` "as any role, including service role". The service role and staff roles have no UPDATE/DELETE privilege at all (M0.2), so they are refused earlier with `permission denied`; only the database owner reaches the trigger and gets `IMMUTABLE_RECORD`. | SPEC 12.2 T-21 vs SPEC 6.4 (no write privileges) | Keep both layers: the tests assert `IMMUTABLE_RECORD` for the owner and a refusal for every other role. Granting UPDATE to the service role only to see the trigger's message would weaken the defence. | M1 (no change needed unless you prefer the literal message) |
+| B-24 | Adding a document (ID scan, proof of address) to an existing customer: SPEC 5.11 puts edits through approval but does not say whether a new attachment is an edit. | SPEC 5.11, 7.2 | Allow without approval for officer, cashier, manager and admin: attachments are append-only and change no customer data; every addition is audited. A new photo replaces the shown photo, so it goes through an approved edit. Built this way in M2.1; easy to switch to approval. | M2 |
+| B-25 | Who sees that a customer change is waiting? `approval_requests` is readable by managers, the CEO and the requester (M1.4 policy), so another officer or cashier opening the profile does not see the notice, and their own edit request is refused with "already waiting". | SPEC 9 (mock-up 08 notice), SPEC 6.4 | Keep the current policy (requests can hold personal data). If you prefer every staff member to see the notice, I would expose only the summary (fields changed, requester, time) through a read function. | M2 |
+
+### Answers from Foday (2026-11-04)
+
+| ID | Decision |
+| --- | --- |
+| B-01 | **Approved as proposed.** `app_now()` / `business_today()` read setting `clock.override_at`; allowed only in demo/test environments, refused in production. Built in M0.2. |
+| B-02 | **Approved as proposed.** Global loan counter with branch prefix; admin `set_sequence_start` before go-live; seed fills remaining gaps with real records. Built in M1.2. |
+| B-03 | **Approved:** `EXP` numbers use 6 digits (`EXP-BR2-000031`). Built in M1.2. |
+| B-11 | **Approved:** managers may have `branch_id` null; branch-scoped manager writes use the loan's branch. Built in M0.2. |
+| B-20 | Repository confirmed (`ultimategamer231/msi`); the Phase 0 branch was renamed to `main` and is the default. **Push rule (2026-11-04):** push whenever a block or phase is done; wait for approval only before starting the next one (`CLAUDE.md` updated). Work continues on `claude/new-session-6ictcc` with a draft PR into `main` until told otherwise. |
+| B-22 | **Approved (2026-11-04):** the logo may appear on public pages. Only the `branding` bucket is public-read (it holds nothing but the logo); every other bucket stays private with signed URLs. The sign-in page shows the logo; `public_branding()` returns `logo_path`. Built in M1 follow-up (migration `20261105000500`). |
+| B-23 | **Recommended default applied:** keep both layers. The owner gets `IMMUTABLE_RECORD` from the trigger; every other role is refused earlier by missing privileges. No grant added. |
+| R-12 | **Approved:** CI database job runs `supabase db advisors` (security and performance) and fails on warnings. Four missing foreign-key indexes it found were added. |
+| R-14 | **Approved:** an RPC for recipe R10 (capital in), requested and approved like a manual journal. Scheduled in M2 with the `decide_approval` dispatcher. |
+| PR #1 | **Recommended default applied:** M0 and M1 stay together in PR #1. |
+| Others | Not yet answered; the proposed defaults apply when their milestone arrives, and I will ask again where a default changes money, security or schema. |

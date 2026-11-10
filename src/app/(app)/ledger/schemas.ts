@@ -1,0 +1,59 @@
+import { z } from "zod";
+
+import { parseDollarsToCents } from "@/lib/money-input";
+
+/* Manual journal request form (R11). Messages are keys under "ledger.manual" or "settings.validation". */
+const amount = z.string().trim();
+
+export const manualLineSchema = z
+  .object({
+    account: z.string().regex(/^[0-9]{4}(-[A-Z][A-Z0-9]{1,9})?$/, { message: "accountRequired" }),
+    debit: amount,
+    credit: amount,
+  })
+  .refine(
+    (line) => {
+      const debit = line.debit === "" ? null : parseDollarsToCents(line.debit);
+      const credit = line.credit === "" ? null : parseDollarsToCents(line.credit);
+      const debitSet = debit !== null && debit > 0n;
+      const creditSet = credit !== null && credit > 0n;
+      const debitValid = line.debit === "" || debit !== null;
+      const creditValid = line.credit === "" || credit !== null;
+      return debitValid && creditValid && debitSet !== creditSet;
+    },
+    { message: "lineError", path: ["debit"] },
+  );
+
+export const manualJournalSchema = z.object({
+  entryDate: z.iso.date({ message: "date" }),
+  memo: z.string().trim().min(1, { message: "required" }).max(500, { message: "tooLong" }),
+  branchId: z.union([z.literal(""), z.uuid()]),
+  lines: z.array(manualLineSchema).min(2, { message: "minLines" }).max(30),
+});
+
+export type ManualJournalValues = z.infer<typeof manualJournalSchema>;
+
+/* Opening balances (R12, FR-27): one line is enough; the difference goes to 3900. */
+export const openingBalanceSchema = manualJournalSchema.extend({
+  lines: z.array(manualLineSchema).min(1, { message: "minLines" }).max(30),
+});
+
+/* Capital in (recipe R10, R-14): owner money into a branch cash, bank or mobile money account. */
+export const capitalInSchema = z.object({
+  entryDate: z.iso.date({ message: "date" }),
+  account: z.string().regex(/^[0-9]{4}(-[A-Z][A-Z0-9]{1,9})?$/, { message: "accountRequired" }),
+  amount: z
+    .string()
+    .trim()
+    .refine(
+      (value) => {
+        const cents = parseDollarsToCents(value);
+        return cents !== null && cents > 0n;
+      },
+      { message: "amount" },
+    ),
+  memo: z.string().trim().min(1, { message: "required" }).max(500, { message: "tooLong" }),
+  reference: z.string().trim().max(100, { message: "tooLong" }),
+});
+
+export type CapitalInValues = z.infer<typeof capitalInSchema>;

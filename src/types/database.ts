@@ -1,0 +1,2746 @@
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+
+export type Database = {
+  public: {
+    Tables: {
+      accounts: {
+        Row: {
+          active: boolean;
+          branch_id: string | null;
+          code: string;
+          created_at: string;
+          id: string;
+          is_cash: boolean;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          branch_id?: string | null;
+          code: string;
+          created_at?: string;
+          id?: string;
+          is_cash?: boolean;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        };
+        Update: {
+          active?: boolean;
+          branch_id?: string | null;
+          code?: string;
+          created_at?: string;
+          id?: string;
+          is_cash?: boolean;
+          name?: string;
+          type?: Database["public"]["Enums"]["account_type"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "accounts_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      accrual_runs: {
+        Row: {
+          finished_at: string;
+          id: string;
+          overdue_marked: number;
+          penalties_posted: number;
+          penalty_cents: number;
+          recovery_flagged: number;
+          run_date: string;
+          source: string;
+          started_at: string;
+          triggered_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          finished_at: string;
+          id?: string;
+          overdue_marked?: number;
+          penalties_posted?: number;
+          penalty_cents?: number;
+          recovery_flagged?: number;
+          run_date: string;
+          source: string;
+          started_at: string;
+          triggered_by?: string | null;
+        };
+        Update: {
+          finished_at?: string;
+          id?: string;
+          overdue_marked?: number;
+          penalties_posted?: number;
+          penalty_cents?: number;
+          recovery_flagged?: number;
+          run_date?: string;
+          source?: string;
+          started_at?: string;
+          triggered_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "accrual_runs_triggered_by_fkey";
+            columns: ["triggered_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      app_environment: {
+        Row: {
+          id: boolean;
+          kind: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          id?: boolean;
+          kind?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: boolean;
+          kind?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      approval_requests: {
+        Row: {
+          decided_at: string | null;
+          decided_by: string | null;
+          decision_note: string | null;
+          entity_id: string | null;
+          entity_type: string;
+          id: string;
+          payload: NonNullable<Json>;
+          reason: string | null;
+          requested_at: string;
+          requested_by: string;
+          required_role: Database["public"]["Enums"]["app_role"];
+          status: string;
+          type: string;
+          apply_customer_edit: Json | null;
+          apply_journal_reversal: Json | null;
+          apply_loan_extension: Json | null;
+          apply_payment_void: Json | null;
+        };
+        ComputedFields:
+          "apply_customer_edit" | "apply_journal_reversal" | "apply_loan_extension" | "apply_payment_void";
+        Insert: {
+          decided_at?: string | null;
+          decided_by?: string | null;
+          decision_note?: string | null;
+          entity_id?: string | null;
+          entity_type: string;
+          id?: string;
+          payload: NonNullable<Json>;
+          reason?: string | null;
+          requested_at?: string;
+          requested_by: string;
+          required_role: Database["public"]["Enums"]["app_role"];
+          status?: string;
+          type: string;
+        };
+        Update: {
+          decided_at?: string | null;
+          decided_by?: string | null;
+          decision_note?: string | null;
+          entity_id?: string | null;
+          entity_type?: string;
+          id?: string;
+          payload?: NonNullable<Json>;
+          reason?: string | null;
+          requested_at?: string;
+          requested_by?: string;
+          required_role?: Database["public"]["Enums"]["app_role"];
+          status?: string;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "approval_requests_decided_by_fkey";
+            columns: ["decided_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "approval_requests_requested_by_fkey";
+            columns: ["requested_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      attachments: {
+        Row: {
+          created_at: string;
+          created_by: string;
+          entity_id: string;
+          entity_type: string;
+          file_name: string;
+          id: string;
+          kind: string;
+          mime: string;
+          size_bytes: number;
+          storage_path: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          created_by: string;
+          entity_id: string;
+          entity_type: string;
+          file_name: string;
+          id?: string;
+          kind: string;
+          mime: string;
+          size_bytes: number;
+          storage_path: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string;
+          entity_id?: string;
+          entity_type?: string;
+          file_name?: string;
+          id?: string;
+          kind?: string;
+          mime?: string;
+          size_bytes?: number;
+          storage_path?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "attachments_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      audit_log: {
+        Row: {
+          action: string;
+          actor_id: string | null;
+          actor_role: Database["public"]["Enums"]["app_role"] | null;
+          after: Json | null;
+          at: string;
+          before: Json | null;
+          chain_no: number;
+          entity_id: string | null;
+          entity_type: string;
+          hash: string;
+          id: string;
+          ip: unknown;
+          prev_hash: string;
+          audit_row_digest: string | null;
+        };
+        ComputedFields: "audit_row_digest";
+        Insert: {
+          action: string;
+          actor_id?: string | null;
+          actor_role?: Database["public"]["Enums"]["app_role"] | null;
+          after?: Json | null;
+          at?: string;
+          before?: Json | null;
+          chain_no: number;
+          entity_id?: string | null;
+          entity_type: string;
+          hash: string;
+          id?: string;
+          ip?: unknown;
+          prev_hash: string;
+        };
+        Update: {
+          action?: string;
+          actor_id?: string | null;
+          actor_role?: Database["public"]["Enums"]["app_role"] | null;
+          after?: Json | null;
+          at?: string;
+          before?: Json | null;
+          chain_no?: number;
+          entity_id?: string | null;
+          entity_type?: string;
+          hash?: string;
+          id?: string;
+          ip?: unknown;
+          prev_hash?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "audit_log_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      branches: {
+        Row: {
+          active: boolean;
+          address: string | null;
+          code: string;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          name: string;
+          phone: string | null;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          address?: string | null;
+          code: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name: string;
+          phone?: string | null;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          active?: boolean;
+          address?: string | null;
+          code?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name?: string;
+          phone?: string | null;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "branches_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "branches_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      collateral_events: {
+        Row: {
+          actor_id: string;
+          at: string;
+          collateral_id: string;
+          event_type: string;
+          from_location: string | null;
+          id: string;
+          note: string | null;
+          photo_path: string | null;
+          to_location: string | null;
+          witness_name: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          actor_id: string;
+          at?: string;
+          collateral_id: string;
+          event_type: string;
+          from_location?: string | null;
+          id?: string;
+          note?: string | null;
+          photo_path?: string | null;
+          to_location?: string | null;
+          witness_name?: string | null;
+        };
+        Update: {
+          actor_id?: string;
+          at?: string;
+          collateral_id?: string;
+          event_type?: string;
+          from_location?: string | null;
+          id?: string;
+          note?: string | null;
+          photo_path?: string | null;
+          to_location?: string | null;
+          witness_name?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "collateral_events_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "collateral_events_collateral_id_fkey";
+            columns: ["collateral_id"];
+            isOneToOne: false;
+            referencedRelation: "collaterals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      collaterals: {
+        Row: {
+          branch_id: string;
+          chassis_no: string | null;
+          code: string;
+          created_at: string;
+          created_by: string;
+          currency: string;
+          description: string;
+          document_no: string | null;
+          estimated_value_cents: number;
+          id: string;
+          location_note: string | null;
+          owner_customer_id: string;
+          plate_no: string | null;
+          serial_no: string | null;
+          status: string;
+          type: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          branch_id: string;
+          chassis_no?: string | null;
+          code: string;
+          created_at?: string;
+          created_by: string;
+          currency?: string;
+          description: string;
+          document_no?: string | null;
+          estimated_value_cents: number;
+          id?: string;
+          location_note?: string | null;
+          owner_customer_id: string;
+          plate_no?: string | null;
+          serial_no?: string | null;
+          status?: string;
+          type: string;
+        };
+        Update: {
+          branch_id?: string;
+          chassis_no?: string | null;
+          code?: string;
+          created_at?: string;
+          created_by?: string;
+          currency?: string;
+          description?: string;
+          document_no?: string | null;
+          estimated_value_cents?: number;
+          id?: string;
+          location_note?: string | null;
+          owner_customer_id?: string;
+          plate_no?: string | null;
+          serial_no?: string | null;
+          status?: string;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "collaterals_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "collaterals_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "collaterals_owner_customer_id_fkey";
+            columns: ["owner_customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      customers: {
+        Row: {
+          address: string | null;
+          assigned_officer_id: string | null;
+          branch_id: string;
+          business_name: string | null;
+          city: string | null;
+          code: string;
+          contact_person: string | null;
+          created_at: string;
+          created_by: string;
+          date_of_birth: string | null;
+          employer_or_business: string | null;
+          first_name: string | null;
+          id: string;
+          id_number: string | null;
+          id_number_key: string | null;
+          id_type: string | null;
+          last_name: string | null;
+          next_of_kin_name: string | null;
+          next_of_kin_phone: string | null;
+          next_of_kin_relation: string | null;
+          notes: string | null;
+          occupation: string | null;
+          phone: string;
+          phone_alt: string | null;
+          phone_alt_key: string | null;
+          phone_key: string | null;
+          photo_path: string | null;
+          registration_no: string | null;
+          search_text: string | null;
+          status: string;
+          type: string;
+          customer_display_name: string | null;
+          validate_customer: undefined | null;
+        };
+        ComputedFields: "customer_display_name" | "validate_customer";
+        Insert: {
+          address?: string | null;
+          assigned_officer_id?: string | null;
+          branch_id: string;
+          business_name?: string | null;
+          city?: string | null;
+          code: string;
+          contact_person?: string | null;
+          created_at?: string;
+          created_by: string;
+          date_of_birth?: string | null;
+          employer_or_business?: string | null;
+          first_name?: string | null;
+          id?: string;
+          id_number?: string | null;
+          id_number_key?: never;
+          id_type?: string | null;
+          last_name?: string | null;
+          next_of_kin_name?: string | null;
+          next_of_kin_phone?: string | null;
+          next_of_kin_relation?: string | null;
+          notes?: string | null;
+          occupation?: string | null;
+          phone: string;
+          phone_alt?: string | null;
+          phone_alt_key?: never;
+          phone_key?: never;
+          photo_path?: string | null;
+          registration_no?: string | null;
+          search_text?: never;
+          status?: string;
+          type: string;
+        };
+        Update: {
+          address?: string | null;
+          assigned_officer_id?: string | null;
+          branch_id?: string;
+          business_name?: string | null;
+          city?: string | null;
+          code?: string;
+          contact_person?: string | null;
+          created_at?: string;
+          created_by?: string;
+          date_of_birth?: string | null;
+          employer_or_business?: string | null;
+          first_name?: string | null;
+          id?: string;
+          id_number?: string | null;
+          id_number_key?: never;
+          id_type?: string | null;
+          last_name?: string | null;
+          next_of_kin_name?: string | null;
+          next_of_kin_phone?: string | null;
+          next_of_kin_relation?: string | null;
+          notes?: string | null;
+          occupation?: string | null;
+          phone?: string;
+          phone_alt?: string | null;
+          phone_alt_key?: never;
+          phone_key?: never;
+          photo_path?: string | null;
+          registration_no?: string | null;
+          search_text?: never;
+          status?: string;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "customers_assigned_officer_id_fkey";
+            columns: ["assigned_officer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customers_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "customers_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      day_closes: {
+        Row: {
+          approved_at: string | null;
+          approved_by: string | null;
+          branch_id: string;
+          cashier_id: string;
+          close_date: string;
+          counted_cash_cents: number;
+          expected_cash_cents: number;
+          id: string;
+          note: string | null;
+          opening_cash_cents: number;
+          reopen_reason: string | null;
+          reopened_at: string | null;
+          reopened_by: string | null;
+          status: string;
+          submitted_at: string;
+          variance_cents: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          branch_id: string;
+          cashier_id: string;
+          close_date: string;
+          counted_cash_cents: number;
+          expected_cash_cents: number;
+          id?: string;
+          note?: string | null;
+          opening_cash_cents: number;
+          reopen_reason?: string | null;
+          reopened_at?: string | null;
+          reopened_by?: string | null;
+          status?: string;
+          submitted_at?: string;
+          variance_cents: number;
+        };
+        Update: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          branch_id?: string;
+          cashier_id?: string;
+          close_date?: string;
+          counted_cash_cents?: number;
+          expected_cash_cents?: number;
+          id?: string;
+          note?: string | null;
+          opening_cash_cents?: number;
+          reopen_reason?: string | null;
+          reopened_at?: string | null;
+          reopened_by?: string | null;
+          status?: string;
+          submitted_at?: string;
+          variance_cents?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "day_closes_approved_by_fkey";
+            columns: ["approved_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "day_closes_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "day_closes_cashier_id_fkey";
+            columns: ["cashier_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "day_closes_reopened_by_fkey";
+            columns: ["reopened_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      document_sequences: {
+        Row: {
+          branch_id: string;
+          kind: string;
+          last_value: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          branch_id: string;
+          kind: string;
+          last_value?: number;
+        };
+        Update: {
+          branch_id?: string;
+          kind?: string;
+          last_value?: number;
+        };
+        Relationships: [];
+      };
+      expenses: {
+        Row: {
+          account_id: string;
+          amount_cents: number;
+          branch_id: string;
+          created_at: string;
+          created_by: string;
+          description: string;
+          expense_date: string;
+          expense_no: string;
+          id: string;
+          journal_id: string | null;
+          paid_from_account_id: string | null;
+          paid_now: boolean;
+          payee_id: string | null;
+          receipt_attachment_id: string | null;
+          settled_journal_id: string | null;
+          status: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          account_id: string;
+          amount_cents: number;
+          branch_id: string;
+          created_at?: string;
+          created_by: string;
+          description: string;
+          expense_date: string;
+          expense_no: string;
+          id?: string;
+          journal_id?: string | null;
+          paid_from_account_id?: string | null;
+          paid_now: boolean;
+          payee_id?: string | null;
+          receipt_attachment_id?: string | null;
+          settled_journal_id?: string | null;
+          status: string;
+        };
+        Update: {
+          account_id?: string;
+          amount_cents?: number;
+          branch_id?: string;
+          created_at?: string;
+          created_by?: string;
+          description?: string;
+          expense_date?: string;
+          expense_no?: string;
+          id?: string;
+          journal_id?: string | null;
+          paid_from_account_id?: string | null;
+          paid_now?: boolean;
+          payee_id?: string | null;
+          receipt_attachment_id?: string | null;
+          settled_journal_id?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "expenses_account_id_fkey";
+            columns: ["account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_paid_from_account_id_fkey";
+            columns: ["paid_from_account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_payee_id_fkey";
+            columns: ["payee_id"];
+            isOneToOne: false;
+            referencedRelation: "payee_balances";
+            referencedColumns: ["payee_id"];
+          },
+          {
+            foreignKeyName: "expenses_payee_id_fkey";
+            columns: ["payee_id"];
+            isOneToOne: false;
+            referencedRelation: "payees";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_receipt_attachment_id_fkey";
+            columns: ["receipt_attachment_id"];
+            isOneToOne: false;
+            referencedRelation: "attachments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "expenses_settled_journal_id_fkey";
+            columns: ["settled_journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      guarantors: {
+        Row: {
+          address: string | null;
+          created_at: string;
+          created_by: string;
+          doc_path: string | null;
+          full_name: string;
+          id: string;
+          id_number: string | null;
+          id_type: string | null;
+          loan_id: string;
+          phone: string;
+          relationship: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          address?: string | null;
+          created_at?: string;
+          created_by: string;
+          doc_path?: string | null;
+          full_name: string;
+          id?: string;
+          id_number?: string | null;
+          id_type?: string | null;
+          loan_id: string;
+          phone: string;
+          relationship?: string | null;
+        };
+        Update: {
+          address?: string | null;
+          created_at?: string;
+          created_by?: string;
+          doc_path?: string | null;
+          full_name?: string;
+          id?: string;
+          id_number?: string | null;
+          id_type?: string | null;
+          loan_id?: string;
+          phone?: string;
+          relationship?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "guarantors_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "guarantors_loan_fk";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      hash_chains: {
+        Row: {
+          chain: string;
+          last_hash: string;
+          last_no: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          chain: string;
+          last_hash: string;
+          last_no: number;
+        };
+        Update: {
+          chain?: string;
+          last_hash?: string;
+          last_no?: number;
+        };
+        Relationships: [];
+      };
+      issued_documents: {
+        Row: {
+          amount_cents: number | null;
+          customer_id: string | null;
+          details: Json | null;
+          doc_date: string | null;
+          entity_id: string;
+          generated_at: string;
+          generated_by: string;
+          id: string;
+          is_void: boolean;
+          kind: string;
+          number: string;
+          token: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_cents?: number | null;
+          customer_id?: string | null;
+          details?: Json | null;
+          doc_date?: string | null;
+          entity_id: string;
+          generated_at?: string;
+          generated_by: string;
+          id?: string;
+          is_void?: boolean;
+          kind: string;
+          number: string;
+          token: string;
+        };
+        Update: {
+          amount_cents?: number | null;
+          customer_id?: string | null;
+          details?: Json | null;
+          doc_date?: string | null;
+          entity_id?: string;
+          generated_at?: string;
+          generated_by?: string;
+          id?: string;
+          is_void?: boolean;
+          kind?: string;
+          number?: string;
+          token?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "issued_documents_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "issued_documents_generated_by_fkey";
+            columns: ["generated_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      journal_lines: {
+        Row: {
+          account_id: string;
+          component: string | null;
+          credit_cents: number;
+          currency: string;
+          customer_id: string | null;
+          debit_cents: number;
+          fx_rate_micros: number;
+          id: string;
+          journal_id: string;
+          line_no: number;
+          loan_id: string | null;
+          payee_id: string | null;
+          staff_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          account_id: string;
+          component?: string | null;
+          credit_cents?: number;
+          currency?: string;
+          customer_id?: string | null;
+          debit_cents?: number;
+          fx_rate_micros?: number;
+          id?: string;
+          journal_id: string;
+          line_no: number;
+          loan_id?: string | null;
+          payee_id?: string | null;
+          staff_id?: string | null;
+        };
+        Update: {
+          account_id?: string;
+          component?: string | null;
+          credit_cents?: number;
+          currency?: string;
+          customer_id?: string | null;
+          debit_cents?: number;
+          fx_rate_micros?: number;
+          id?: string;
+          journal_id?: string;
+          line_no?: number;
+          loan_id?: string | null;
+          payee_id?: string | null;
+          staff_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "journal_lines_account_id_fkey";
+            columns: ["account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_customer_fk";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_loan_fk";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_payee_fk";
+            columns: ["payee_id"];
+            isOneToOne: false;
+            referencedRelation: "payee_balances";
+            referencedColumns: ["payee_id"];
+          },
+          {
+            foreignKeyName: "journal_lines_payee_fk";
+            columns: ["payee_id"];
+            isOneToOne: false;
+            referencedRelation: "payees";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journal_lines_staff_id_fkey";
+            columns: ["staff_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      journals: {
+        Row: {
+          branch_id: string | null;
+          chain_no: number;
+          content_hash: string;
+          entry_date: string;
+          hash: string;
+          id: string;
+          journal_no: string;
+          memo: string;
+          posted_at: string;
+          posted_by: string | null;
+          posted_txid: number;
+          prev_hash: string;
+          reversal_of: string | null;
+          source_id: string | null;
+          source_type: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          branch_id?: string | null;
+          chain_no: number;
+          content_hash: string;
+          entry_date: string;
+          hash: string;
+          id?: string;
+          journal_no: string;
+          memo: string;
+          posted_at?: string;
+          posted_by?: string | null;
+          posted_txid?: number;
+          prev_hash: string;
+          reversal_of?: string | null;
+          source_id?: string | null;
+          source_type: string;
+        };
+        Update: {
+          branch_id?: string | null;
+          chain_no?: number;
+          content_hash?: string;
+          entry_date?: string;
+          hash?: string;
+          id?: string;
+          journal_no?: string;
+          memo?: string;
+          posted_at?: string;
+          posted_by?: string | null;
+          posted_txid?: number;
+          prev_hash?: string;
+          reversal_of?: string | null;
+          source_id?: string | null;
+          source_type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "journals_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journals_posted_by_fkey";
+            columns: ["posted_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "journals_reversal_of_fkey";
+            columns: ["reversal_of"];
+            isOneToOne: true;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      loan_collaterals: {
+        Row: {
+          collateral_id: string;
+          created_at: string;
+          created_by: string;
+          id: string;
+          loan_id: string;
+          pledged_on: string;
+          released_on: string | null;
+          status: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          collateral_id: string;
+          created_at?: string;
+          created_by: string;
+          id?: string;
+          loan_id: string;
+          pledged_on: string;
+          released_on?: string | null;
+          status?: string;
+        };
+        Update: {
+          collateral_id?: string;
+          created_at?: string;
+          created_by?: string;
+          id?: string;
+          loan_id?: string;
+          pledged_on?: string;
+          released_on?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loan_collaterals_collateral_id_fkey";
+            columns: ["collateral_id"];
+            isOneToOne: false;
+            referencedRelation: "collaterals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_collaterals_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_collaterals_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      loan_extensions: {
+        Row: {
+          approval_id: string;
+          created_at: string;
+          extra_interest_cents: number;
+          extra_months: number;
+          id: string;
+          journal_id: string | null;
+          loan_id: string;
+          new_due_date: string;
+          old_due_date: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          approval_id: string;
+          created_at?: string;
+          extra_interest_cents: number;
+          extra_months: number;
+          id?: string;
+          journal_id?: string | null;
+          loan_id: string;
+          new_due_date: string;
+          old_due_date: string;
+        };
+        Update: {
+          approval_id?: string;
+          created_at?: string;
+          extra_interest_cents?: number;
+          extra_months?: number;
+          id?: string;
+          journal_id?: string | null;
+          loan_id?: string;
+          new_due_date?: string;
+          old_due_date?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loan_extensions_approval_id_fkey";
+            columns: ["approval_id"];
+            isOneToOne: false;
+            referencedRelation: "approval_requests";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_extensions_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_extensions_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      loan_penalty_events: {
+        Row: {
+          base_cents: number;
+          charged_on: string;
+          created_at: string;
+          due_date_version: number;
+          id: string;
+          journal_id: string;
+          loan_id: string;
+          penalty_cents: number;
+          period_no: number;
+          run_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          base_cents: number;
+          charged_on: string;
+          created_at?: string;
+          due_date_version: number;
+          id?: string;
+          journal_id: string;
+          loan_id: string;
+          penalty_cents: number;
+          period_no: number;
+          run_id?: string | null;
+        };
+        Update: {
+          base_cents?: number;
+          charged_on?: string;
+          created_at?: string;
+          due_date_version?: number;
+          id?: string;
+          journal_id?: string;
+          loan_id?: string;
+          penalty_cents?: number;
+          period_no?: number;
+          run_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loan_penalty_events_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_penalty_events_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loan_penalty_events_run_fk";
+            columns: ["run_id"];
+            isOneToOne: false;
+            referencedRelation: "accrual_runs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      loan_products: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          default_term_months: number;
+          id: string;
+          interest_method: string;
+          interest_rate_bps: number;
+          max_term_months: number;
+          name: string;
+          penalty_base: string;
+          penalty_max_periods: number;
+          penalty_period_days: number;
+          penalty_rate_bps: number;
+          rate_period: string;
+          recovery_after_days: number;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          default_term_months: number;
+          id?: string;
+          interest_method?: string;
+          interest_rate_bps: number;
+          max_term_months: number;
+          name: string;
+          penalty_base?: string;
+          penalty_max_periods: number;
+          penalty_period_days: number;
+          penalty_rate_bps: number;
+          rate_period?: string;
+          recovery_after_days: number;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          default_term_months?: number;
+          id?: string;
+          interest_method?: string;
+          interest_rate_bps?: number;
+          max_term_months?: number;
+          name?: string;
+          penalty_base?: string;
+          penalty_max_periods?: number;
+          penalty_period_days?: number;
+          penalty_rate_bps?: number;
+          rate_period?: string;
+          recovery_after_days?: number;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loan_products_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      loans: {
+        Row: {
+          approved_at: string | null;
+          approved_by: string | null;
+          branch_id: string;
+          closed_on: string | null;
+          collateral_required: boolean | null;
+          created_at: string;
+          created_by: string;
+          currency: string;
+          customer_id: string;
+          disbursed_by: string | null;
+          disbursed_on: string | null;
+          disbursement_account_id: string | null;
+          disbursement_method: string | null;
+          due_date: string | null;
+          due_date_version: number;
+          id: string;
+          interest_cents: number | null;
+          interest_rate_bps: number | null;
+          loan_no: string;
+          officer_id: string | null;
+          parent_loan_id: string | null;
+          penalty_base: string | null;
+          penalty_max_periods: number | null;
+          penalty_period_days: number | null;
+          penalty_rate_bps: number | null;
+          principal_cents: number;
+          product_id: string;
+          purpose: string | null;
+          recovery_after_days: number | null;
+          recovery_eligible: boolean;
+          status: string;
+          submitted_at: string | null;
+          term_months: number;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          branch_id: string;
+          closed_on?: string | null;
+          collateral_required?: boolean | null;
+          created_at?: string;
+          created_by: string;
+          currency?: string;
+          customer_id: string;
+          disbursed_by?: string | null;
+          disbursed_on?: string | null;
+          disbursement_account_id?: string | null;
+          disbursement_method?: string | null;
+          due_date?: string | null;
+          due_date_version?: number;
+          id?: string;
+          interest_cents?: number | null;
+          interest_rate_bps?: number | null;
+          loan_no: string;
+          officer_id?: string | null;
+          parent_loan_id?: string | null;
+          penalty_base?: string | null;
+          penalty_max_periods?: number | null;
+          penalty_period_days?: number | null;
+          penalty_rate_bps?: number | null;
+          principal_cents: number;
+          product_id: string;
+          purpose?: string | null;
+          recovery_after_days?: number | null;
+          recovery_eligible?: boolean;
+          status?: string;
+          submitted_at?: string | null;
+          term_months: number;
+          updated_at?: string;
+        };
+        Update: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          branch_id?: string;
+          closed_on?: string | null;
+          collateral_required?: boolean | null;
+          created_at?: string;
+          created_by?: string;
+          currency?: string;
+          customer_id?: string;
+          disbursed_by?: string | null;
+          disbursed_on?: string | null;
+          disbursement_account_id?: string | null;
+          disbursement_method?: string | null;
+          due_date?: string | null;
+          due_date_version?: number;
+          id?: string;
+          interest_cents?: number | null;
+          interest_rate_bps?: number | null;
+          loan_no?: string;
+          officer_id?: string | null;
+          parent_loan_id?: string | null;
+          penalty_base?: string | null;
+          penalty_max_periods?: number | null;
+          penalty_period_days?: number | null;
+          penalty_rate_bps?: number | null;
+          principal_cents?: number;
+          product_id?: string;
+          purpose?: string | null;
+          recovery_after_days?: number | null;
+          recovery_eligible?: boolean;
+          status?: string;
+          submitted_at?: string | null;
+          term_months?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "loans_approved_by_fkey";
+            columns: ["approved_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_disbursed_by_fkey";
+            columns: ["disbursed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_disbursement_account_id_fkey";
+            columns: ["disbursement_account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_officer_id_fkey";
+            columns: ["officer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_parent_loan_id_fkey";
+            columns: ["parent_loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "loans_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "loan_products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      login_failures: {
+        Row: {
+          email_hash: string;
+          failed_at: string;
+          id: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          email_hash: string;
+          failed_at?: string;
+          id?: never;
+        };
+        Update: {
+          email_hash?: string;
+          failed_at?: string;
+          id?: never;
+        };
+        Relationships: [];
+      };
+      payees: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          name: string;
+          notes: string | null;
+          phone: string | null;
+          type: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name: string;
+          notes?: string | null;
+          phone?: string | null;
+          type?: string;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name?: string;
+          notes?: string | null;
+          phone?: string | null;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payees_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      payment_allocations: {
+        Row: {
+          amount_cents: number;
+          component: string;
+          id: string;
+          payment_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_cents: number;
+          component: string;
+          id?: string;
+          payment_id: string;
+        };
+        Update: {
+          amount_cents?: number;
+          component?: string;
+          id?: string;
+          payment_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payment_allocations_payment_id_fkey";
+            columns: ["payment_id"];
+            isOneToOne: false;
+            referencedRelation: "payments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      payments: {
+        Row: {
+          amount_cents: number;
+          branch_id: string;
+          collected_in_field: boolean;
+          customer_id: string;
+          id: string;
+          idempotency_key: string;
+          journal_id: string;
+          loan_id: string;
+          method: string;
+          receipt_no: string;
+          received_at: string;
+          received_by: string;
+          received_on: string;
+          reference: string | null;
+          remittance_confirmed_at: string | null;
+          remittance_confirmed_by: string | null;
+          remittance_journal_id: string | null;
+          remittance_status: string;
+          source: string;
+          status: string;
+          void_journal_id: string | null;
+          voided_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          amount_cents: number;
+          branch_id: string;
+          collected_in_field?: boolean;
+          customer_id: string;
+          id?: string;
+          idempotency_key: string;
+          journal_id: string;
+          loan_id: string;
+          method: string;
+          receipt_no: string;
+          received_at?: string;
+          received_by: string;
+          received_on: string;
+          reference?: string | null;
+          remittance_confirmed_at?: string | null;
+          remittance_confirmed_by?: string | null;
+          remittance_journal_id?: string | null;
+          remittance_status?: string;
+          source?: string;
+          status?: string;
+          void_journal_id?: string | null;
+          voided_at?: string | null;
+        };
+        Update: {
+          amount_cents?: number;
+          branch_id?: string;
+          collected_in_field?: boolean;
+          customer_id?: string;
+          id?: string;
+          idempotency_key?: string;
+          journal_id?: string;
+          loan_id?: string;
+          method?: string;
+          receipt_no?: string;
+          received_at?: string;
+          received_by?: string;
+          received_on?: string;
+          reference?: string | null;
+          remittance_confirmed_at?: string | null;
+          remittance_confirmed_by?: string | null;
+          remittance_journal_id?: string | null;
+          remittance_status?: string;
+          source?: string;
+          status?: string;
+          void_journal_id?: string | null;
+          voided_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payments_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_journal_id_fkey";
+            columns: ["journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_received_by_fkey";
+            columns: ["received_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_remittance_confirmed_by_fkey";
+            columns: ["remittance_confirmed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_remittance_journal_id_fkey";
+            columns: ["remittance_journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payments_void_journal_id_fkey";
+            columns: ["void_journal_id"];
+            isOneToOne: false;
+            referencedRelation: "journals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      period_locks: {
+        Row: {
+          branch_id: string;
+          locked_at: string;
+          locked_by: string | null;
+          locked_through: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          branch_id: string;
+          locked_at?: string;
+          locked_by?: string | null;
+          locked_through: string;
+        };
+        Update: {
+          branch_id?: string;
+          locked_at?: string;
+          locked_by?: string | null;
+          locked_through?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "period_locks_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: true;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "period_locks_locked_by_fkey";
+            columns: ["locked_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      profiles: {
+        Row: {
+          active: boolean;
+          branch_id: string | null;
+          created_at: string;
+          created_by: string | null;
+          full_name: string;
+          id: string;
+          phone: string | null;
+          role: Database["public"]["Enums"]["app_role"];
+          updated_at: string;
+          updated_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          active?: boolean;
+          branch_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          full_name: string;
+          id: string;
+          phone?: string | null;
+          role: Database["public"]["Enums"]["app_role"];
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          active?: boolean;
+          branch_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          full_name?: string;
+          id?: string;
+          phone?: string | null;
+          role?: Database["public"]["Enums"]["app_role"];
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "profiles_branch_id_fkey";
+            columns: ["branch_id"];
+            isOneToOne: false;
+            referencedRelation: "branches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "profiles_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "profiles_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      recovery_actions: {
+        Row: {
+          action_date: string;
+          actor_id: string | null;
+          attachment_id: string | null;
+          case_id: string;
+          court_ref: string | null;
+          created_at: string;
+          id: string;
+          note: string | null;
+          stage: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          action_date: string;
+          actor_id?: string | null;
+          attachment_id?: string | null;
+          case_id: string;
+          court_ref?: string | null;
+          created_at?: string;
+          id?: string;
+          note?: string | null;
+          stage: string;
+        };
+        Update: {
+          action_date?: string;
+          actor_id?: string | null;
+          attachment_id?: string | null;
+          case_id?: string;
+          court_ref?: string | null;
+          created_at?: string;
+          id?: string;
+          note?: string | null;
+          stage?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "recovery_actions_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recovery_actions_attachment_id_fkey";
+            columns: ["attachment_id"];
+            isOneToOne: false;
+            referencedRelation: "attachments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recovery_actions_case_id_fkey";
+            columns: ["case_id"];
+            isOneToOne: false;
+            referencedRelation: "recovery_cases";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      recovery_cases: {
+        Row: {
+          case_no: string;
+          closed_on: string | null;
+          court_ref: string | null;
+          created_at: string;
+          id: string;
+          loan_id: string;
+          opened_by: string;
+          opened_on: string;
+          stage: string;
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          case_no: string;
+          closed_on?: string | null;
+          court_ref?: string | null;
+          created_at?: string;
+          id?: string;
+          loan_id: string;
+          opened_by: string;
+          opened_on: string;
+          stage?: string;
+          updated_at?: string;
+        };
+        Update: {
+          case_no?: string;
+          closed_on?: string | null;
+          court_ref?: string | null;
+          created_at?: string;
+          id?: string;
+          loan_id?: string;
+          opened_by?: string;
+          opened_on?: string;
+          stage?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "recovery_cases_loan_id_fkey";
+            columns: ["loan_id"];
+            isOneToOne: false;
+            referencedRelation: "loans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "recovery_cases_opened_by_fkey";
+            columns: ["opened_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      settings: {
+        Row: {
+          key: string;
+          updated_at: string;
+          updated_by: string | null;
+          value: NonNullable<Json>;
+        };
+        ComputedFields: never;
+        Insert: {
+          key: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value: NonNullable<Json>;
+        };
+        Update: {
+          key?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value?: NonNullable<Json>;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "settings_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+    };
+    Views: {
+      customer_balances: {
+        Row: {
+          customer_id: string;
+          loans_active: number | null;
+          loans_overdue: number | null;
+          total_out: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "loans_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      due_list: {
+        Row: {
+          bucket: string | null;
+          days: number | null;
+          due_date: string | null;
+          last_penalty: boolean | null;
+          loan_id: string | null;
+          next_penalty_on: string | null;
+          penalty_out: number | null;
+          total_out: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      loan_balances: {
+        Row: {
+          days_overdue: number | null;
+          interest_out: number | null;
+          last_payment_on: string | null;
+          loan_id: string | null;
+          next_penalty_on: string | null;
+          penalty_out: number | null;
+          principal_out: number | null;
+          total_out: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      payee_balances: {
+        Row: {
+          owed_cents: number | null;
+          payee_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          owed_cents?: never;
+          payee_id?: string | null;
+        };
+        Update: {
+          owed_cents?: never;
+          payee_id?: string | null;
+        };
+        Relationships: [];
+      };
+    };
+    Functions: {
+      account_balance: { Args: { p_account_id: string }; Returns: number };
+      account_component: { Args: { p_code: string }; Returns: string };
+      account_movements: {
+        Args: { p_branch_id?: string; p_from: string; p_to: string };
+        Returns: {
+          code: string;
+          credit_cents: number;
+          debit_cents: number;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        }[];
+      };
+      accruals_run: { Args: { p_as_of: string; p_source: string; p_triggered_by: string }; Returns: Json };
+      accrue_loan_penalties: {
+        Args: { p_as_of: string; p_loan_id: string; p_run_id: string };
+        Returns: {
+          posted: number;
+          posted_cents: number;
+        }[];
+      };
+      add_collateral_documents: { Args: { p_collateral_id: string; p_files: Json }; Returns: Json };
+      add_customer_documents: { Args: { p_customer_id: string; p_files: Json }; Returns: undefined };
+      add_months_clamped: { Args: { p_date: string; p_months: number }; Returns: string };
+      admin_record_password_reset: { Args: { p_user_id: string }; Returns: undefined };
+      admin_set_profile: {
+        Args: {
+          p_active: boolean;
+          p_branch_id: string;
+          p_full_name: string;
+          p_phone: string;
+          p_role: Database["public"]["Enums"]["app_role"];
+          p_user_id: string;
+        };
+        Returns: undefined;
+      };
+      advance_recovery_stage: {
+        Args: { p_case_id: string; p_court_ref?: string; p_files?: Json; p_note: string; p_stage: string };
+        Returns: string;
+      };
+      allocate_amount: {
+        Args: { p_amount: number; p_interest: number; p_penalty: number; p_principal: number };
+        Returns: Json;
+      };
+      app_now: { Args: Record<PropertyKey, never>; Returns: string };
+      apply_customer_edit: {
+        Args: {
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      apply_day_close: {
+        Args: {
+          p_decision: string;
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      apply_journal_reversal: {
+        Args: {
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      apply_loan_decision: {
+        Args: {
+          p_decision: string;
+          p_note: string;
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      apply_loan_extension: {
+        Args: {
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      apply_payment_void: {
+        Args: {
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      apply_write_off: {
+        Args: {
+          p_board_reference: string;
+          p_request: Omit<
+            Database["public"]["Tables"]["approval_requests"]["Row"],
+            Database["public"]["Tables"]["approval_requests"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      audit_row_digest: {
+        Args: {
+          p: Omit<
+            Database["public"]["Tables"]["audit_log"]["Row"],
+            Database["public"]["Tables"]["audit_log"]["ComputedFields"]
+          >;
+        };
+        Returns: string;
+      };
+      auth_branch: { Args: Record<PropertyKey, never>; Returns: string };
+      auth_role: { Args: Record<PropertyKey, never>; Returns: Database["public"]["Enums"]["app_role"] };
+      business_today: { Args: Record<PropertyKey, never>; Returns: string };
+      cancel_loan: { Args: { p_loan_id: string; p_reason: string }; Returns: undefined };
+      chain_genesis: { Args: { p_chain: string }; Returns: string };
+      check_loan_application: {
+        Args: { p_loan: Json; p_role: Database["public"]["Enums"]["app_role"] };
+        Returns: Json;
+      };
+      claim_upload: { Args: { p_images_only?: boolean; p_path: string }; Returns: Json };
+      clean_guarantors: { Args: { p_guarantors: Json }; Returns: Json };
+      clock_override_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
+      confirm_remittance: { Args: { p_counted_total_cents: number; p_payment_ids: string[] }; Returns: Json };
+      create_customer: { Args: { p_customer: Json }; Returns: string };
+      create_expense: { Args: { p_expense: Json }; Returns: Json };
+      create_loan_draft: { Args: { p_loan: Json }; Returns: string };
+      customer_clean: { Args: { p_input: Json }; Returns: Json };
+      customer_display_name: {
+        Args: {
+          p_customer: Omit<
+            Database["public"]["Tables"]["customers"]["Row"],
+            Database["public"]["Tables"]["customers"]["ComputedFields"]
+          >;
+        };
+        Returns: string;
+      };
+      customer_editable_fields: { Args: Record<PropertyKey, never>; Returns: string[] };
+      dashboard_attention: { Args: Record<PropertyKey, never>; Returns: Json };
+      dashboard_data: { Args: Record<PropertyKey, never>; Returns: Json };
+      dashboard_due_now: { Args: { p_limit?: number; p_officer?: string }; Returns: Json };
+      day_close_summary: { Args: { p_branch_id: string; p_date: string }; Returns: Json };
+      decide_approval: { Args: { p_decision: string; p_id: string; p_note: string }; Returns: Json };
+      disburse_loan: {
+        Args: {
+          p_account_id?: string;
+          p_disbursed_on?: string;
+          p_loan_id: string;
+          p_method: string;
+          p_reference?: string;
+        };
+        Returns: Json;
+      };
+      due_list_rows: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          bucket: string;
+          days: number;
+          due_date: string;
+          last_penalty: boolean;
+          loan_id: string;
+          next_penalty_on: string;
+          penalty_out: number;
+          total_out: number;
+        }[];
+      };
+      environment_kind: { Args: Record<PropertyKey, never>; Returns: string };
+      expense_pay_account: {
+        Args: { p_branch: string; p_code: string };
+        Returns: {
+          active: boolean;
+          branch_id: string | null;
+          code: string;
+          created_at: string;
+          id: string;
+          is_cash: boolean;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "accounts";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      extension_terms: {
+        Args: {
+          p_extra_months: number;
+          p_loan: Omit<
+            Database["public"]["Tables"]["loans"]["Row"],
+            Database["public"]["Tables"]["loans"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      find_duplicate_collateral: {
+        Args: {
+          p_chassis_no: string;
+          p_document_no: string;
+          p_exclude?: string;
+          p_plate_no: string;
+          p_serial_no: string;
+        };
+        Returns: {
+          code: string;
+          description: string;
+          id: string;
+          matched: string;
+          status: string;
+        }[];
+      };
+      find_duplicate_customers: {
+        Args: { p_exclude?: string; p_id_number: string; p_phone: string; p_phone_alt: string };
+        Returns: Json;
+      };
+      flat_interest: {
+        Args: { p_principal_cents: number; p_rate_bps: number; p_term_months: number };
+        Returns: number;
+      };
+      global_sequence_branch: { Args: Record<PropertyKey, never>; Returns: string };
+      guard_duplicate_customer: {
+        Args: {
+          p_override: boolean;
+          p_override_reason: string;
+          p_row: Omit<
+            Database["public"]["Tables"]["customers"]["Row"],
+            Database["public"]["Tables"]["customers"]["ComputedFields"]
+          >;
+        };
+        Returns: Json;
+      };
+      health_check: { Args: Record<PropertyKey, never>; Returns: Json };
+      id_number_key: { Args: { p_id: string }; Returns: string };
+      import_opening_balance: { Args: { p_entry: Json }; Returns: Json };
+      is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
+      issue_document:
+        | { Args: { p_entity_id: string; p_kind: string }; Returns: Json }
+        | { Args: { p_entity_id: string; p_kind: string; p_options: Json }; Returns: Json };
+      journal_content_digest: {
+        Args: {
+          p_branch_id: string;
+          p_entry_date: string;
+          p_journal_no: string;
+          p_lines: Json;
+          p_memo: string;
+          p_reversal_of: string;
+          p_source_id: string;
+          p_source_type: string;
+        };
+        Returns: string;
+      };
+      journal_lines_canonical: { Args: { p_journal_id: string }; Returns: Json };
+      jsonb_is_short_text: { Args: { p: Json; p_max: number }; Returns: boolean };
+      jsonb_is_whole_number: { Args: { p: Json }; Returns: boolean };
+      link_attachments: {
+        Args: { p_entity_id: string; p_entity_type: string; p_files: Json };
+        Returns: Json;
+      };
+      link_collateral: { Args: { p_collateral_id: string; p_loan_id: string }; Returns: undefined };
+      loan_activity: {
+        Args: { p_loan_id: string };
+        Returns: {
+          amount_cents: number;
+          component: string;
+          entry_date: string;
+          journal_id: string;
+          journal_no: string;
+          posted_at: string;
+          posted_by: string;
+          reversal_of: string;
+          source_type: string;
+        }[];
+      };
+      loan_balance_rows: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          days_overdue: number;
+          interest_out: number;
+          last_payment_on: string;
+          loan_id: string;
+          next_penalty_on: string;
+          penalty_out: number;
+          principal_out: number;
+          total_out: number;
+        }[];
+      };
+      loan_next_penalty: { Args: { p_loan_id: string }; Returns: Json };
+      loan_outstanding_as_of: { Args: { p_date: string; p_loan_id: string }; Returns: number };
+      loan_owed: {
+        Args: { p_loan_id: string };
+        Returns: {
+          interest_cents: number;
+          penalty_cents: number;
+          principal_cents: number;
+        }[];
+      };
+      loan_statement: { Args: { p_from?: string; p_loan_id: string; p_to?: string }; Returns: Json };
+      loan_surplus_cents: { Args: { p_loan_id: string }; Returns: number };
+      log_collateral_event: { Args: { p_collateral_id: string; p_event: Json }; Returns: string };
+      log_reminder_opened: { Args: { p_kind: string; p_loan_id: string }; Returns: undefined };
+      login_email_hash: { Args: { p_email: string }; Returns: string };
+      login_guard: { Args: { p_email: string; p_event: string }; Returns: string };
+      mask_name: { Args: { p_name: string }; Returns: string };
+      next_number: { Args: { p_branch?: string; p_kind: string }; Returns: string };
+      open_recovery_case: { Args: { p_loan_id: string; p_note: string }; Returns: string };
+      pay_surplus: {
+        Args: { p_amount_cents: number; p_loan_id: string; p_method?: string };
+        Returns: string;
+      };
+      pct: { Args: { p_amount_cents: number; p_bps: number }; Returns: number };
+      phone_key: { Args: { p_phone: string }; Returns: string };
+      post_expense: { Args: { p_id: string }; Returns: Json };
+      post_journal:
+        | {
+            Args: {
+              p_branch: string;
+              p_date: string;
+              p_lines: Json;
+              p_memo: string;
+              p_source_id: string;
+              p_source_type: string;
+            };
+            Returns: string;
+          }
+        | {
+            Args: {
+              p_branch: string;
+              p_date: string;
+              p_lines: Json;
+              p_memo: string;
+              p_reversal_of: string;
+              p_source_id: string;
+              p_source_type: string;
+            };
+            Returns: string;
+          };
+      preview_collateral_sale: { Args: { p_amount_cents: number; p_case_id: string }; Returns: Json };
+      preview_loan_terms: {
+        Args: {
+          p_disbursed_on?: string;
+          p_principal_cents: number;
+          p_product_id: string;
+          p_term_months: number;
+        };
+        Returns: Json;
+      };
+      preview_payment: { Args: { p_amount_cents: number; p_loan_id: string }; Returns: Json };
+      public_branding: { Args: Record<PropertyKey, never>; Returns: Json };
+      receipt_balance_after: { Args: { p_payment_id: string }; Returns: number };
+      receipt_facts: { Args: { p_payment_id: string }; Returns: Json };
+      receive_payment: {
+        Args: {
+          p_amount_cents: number;
+          p_idempotency_key: string;
+          p_loan_id: string;
+          p_method: string;
+          p_received_on: string;
+          p_reference: string;
+        };
+        Returns: Json;
+      };
+      record_collateral_sale: {
+        Args: {
+          p_buyer_name: string;
+          p_case_id: string;
+          p_collateral_id: string;
+          p_court_ref?: string;
+          p_method: string;
+          p_sale_amount_cents: number;
+          p_sold_on?: string;
+        };
+        Returns: Json;
+      };
+      record_field_payment: {
+        Args: {
+          p_amount_cents: number;
+          p_idempotency_key: string;
+          p_loan_id: string;
+          p_method: string;
+          p_received_on: string;
+          p_reference: string;
+        };
+        Returns: Json;
+      };
+      recovery_account: {
+        Args: {
+          p_loan: Omit<
+            Database["public"]["Tables"]["loans"]["Row"],
+            Database["public"]["Tables"]["loans"]["ComputedFields"]
+          >;
+          p_method: string;
+        };
+        Returns: {
+          active: boolean;
+          branch_id: string | null;
+          code: string;
+          created_at: string;
+          id: string;
+          is_cash: boolean;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "accounts";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      recovery_stage_rank: { Args: { p_stage: string }; Returns: number };
+      refresh_period_lock: { Args: { p_branch_id: string; p_floor: string }; Returns: undefined };
+      register_collateral: { Args: { p_item: Json }; Returns: string };
+      release_collateral: {
+        Args: { p_collateral_id: string; p_note: string; p_witness_name?: string };
+        Returns: undefined;
+      };
+      reopen_day_close: { Args: { p_id: string; p_reason: string }; Returns: undefined };
+      report_balance_sheet: { Args: { p_as_of: string }; Returns: Json };
+      report_cash_position: { Args: { p_as_of: string }; Returns: Json };
+      report_collections: { Args: { p_branch_id?: string; p_from: string; p_to: string }; Returns: Json };
+      report_money_out: { Args: { p_branch_id?: string; p_from: string; p_to: string }; Returns: Json };
+      report_overdue: { Args: { p_branch_id?: string }; Returns: Json };
+      report_profit_loss: { Args: { p_branch_id?: string; p_from: string; p_to: string }; Returns: Json };
+      report_trial_balance: { Args: { p_as_of: string }; Returns: Json };
+      request_capital_in: { Args: { p_request: Json }; Returns: string };
+      request_customer_edit: {
+        Args: { p_customer_id: string; p_patch: Json; p_reason: string };
+        Returns: string;
+      };
+      request_extension: {
+        Args: { p_extra_months: number; p_loan_id: string; p_reason: string };
+        Returns: string;
+      };
+      request_journal_reversal: { Args: { p_journal_id: string; p_reason: string }; Returns: string };
+      request_manual_journal: { Args: { p_request: Json }; Returns: string };
+      request_void_payment: { Args: { p_payment_id: string; p_reason: string }; Returns: string };
+      request_write_off: { Args: { p_loan_id: string; p_reason: string }; Returns: string };
+      require_entry_date: { Args: { p_date: string }; Returns: string };
+      require_posting_date: { Args: { p_date: string }; Returns: undefined };
+      require_report_role: { Args: Record<PropertyKey, never>; Returns: undefined };
+      require_role: {
+        Args: { p_roles: Database["public"]["Enums"]["app_role"][] };
+        Returns: Database["public"]["Enums"]["app_role"];
+      };
+      round_half_up: { Args: { p_d: number; p_n: number }; Returns: number };
+      run_daily_accruals: { Args: { p_as_of?: string }; Returns: Json };
+      save_payee: { Args: { p_id: string; p_payee: Json }; Returns: string };
+      scheduled_daily_accruals: { Args: Record<PropertyKey, never>; Returns: Json };
+      sequence_scope: { Args: { p_branch: string; p_kind: string }; Returns: string };
+      set_sequence_start: {
+        Args: { p_branch_id: string; p_kind: string; p_last_value: number };
+        Returns: undefined;
+      };
+      setting_error: { Args: { p_key: string; p_problem: string }; Returns: undefined };
+      settle_expense: { Args: { p_account: string; p_id: string }; Returns: string };
+      store_guarantors: { Args: { p_guarantors: Json; p_loan_id: string }; Returns: number };
+      submit_day_close: {
+        Args: { p_branch_id: string; p_counted_cents: number; p_date: string; p_note: string };
+        Returns: string;
+      };
+      submit_loan: { Args: { p_loan_id: string }; Returns: string };
+      swapped_lines: { Args: { p_journal_id: string }; Returns: Json };
+      take_payment: {
+        Args: {
+          p_amount_cents: number;
+          p_field: boolean;
+          p_idempotency_key: string;
+          p_loan_id: string;
+          p_method: string;
+          p_received_on: string;
+          p_reference: string;
+        };
+        Returns: Json;
+      };
+      take_recovery_payment: {
+        Args: {
+          p_amount_cents: number;
+          p_idempotency_key: string;
+          p_loan_id: string;
+          p_method: string;
+          p_received_on: string;
+          p_reference: string;
+        };
+        Returns: Json;
+      };
+      trial_balance: {
+        Args: { p_as_of: string };
+        Returns: {
+          account_id: string;
+          code: string;
+          credit_cents: number;
+          debit_cents: number;
+          name: string;
+          type: Database["public"]["Enums"]["account_type"];
+        }[];
+      };
+      update_loan_draft: { Args: { p_loan: Json; p_loan_id: string }; Returns: undefined };
+      update_setting: { Args: { p_key: string; p_value: Json }; Returns: Json };
+      upsert_branch: { Args: { p_branch: Json }; Returns: string };
+      upsert_loan_product: { Args: { p_product: Json }; Returns: string };
+      validate_customer: {
+        Args: {
+          p_row: Omit<
+            Database["public"]["Tables"]["customers"]["Row"],
+            Database["public"]["Tables"]["customers"]["ComputedFields"]
+          >;
+        };
+        Returns: undefined;
+      };
+      validate_setting: { Args: { p_key: string; p_value: Json }; Returns: undefined };
+      verify_audit_chain: { Args: Record<PropertyKey, never>; Returns: number };
+      verify_document: { Args: { p_token: string }; Returns: Json };
+      verify_journal_chain: { Args: Record<PropertyKey, never>; Returns: number };
+      write_audit: {
+        Args: { p_action: string; p_after: Json; p_before: Json; p_entity_id: string; p_entity_type: string };
+        Returns: undefined;
+      };
+    };
+    Enums: {
+      account_type: "asset" | "liability" | "equity" | "income" | "expense";
+      app_role: "admin" | "ceo" | "manager" | "accountant" | "cashier" | "loan_officer";
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
+};
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    keyof (DefaultSchema["Tables"] & DefaultSchema["Views"]) | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R;
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
+      }
+      ? R
+      : never
+    : never;
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I;
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I;
+      }
+      ? I
+      : never
+    : never;
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U;
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U;
+      }
+      ? U
+      : never
+    : never;
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never) = never,
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never;
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never;
+
+export const Constants = {
+  public: {
+    Enums: {
+      account_type: ["asset", "liability", "equity", "income", "expense"],
+      app_role: ["admin", "ceo", "manager", "accountant", "cashier", "loan_officer"],
+    },
+  },
+} as const;

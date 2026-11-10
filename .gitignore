@@ -29,3 +29,4 @@ blob-report/
 *.log
 .vscode/
 .idea/
+tests/e2e/.auth/
