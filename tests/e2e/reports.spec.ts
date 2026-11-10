@@ -3,6 +3,11 @@ import { expect, test } from "@playwright/test";
 import { fixtureUser } from "./fixtures";
 import { expectNoHorizontalScroll, expectNoSeriousA11yIssues, signInAs } from "./helpers";
 
+/** Escapes every RegExp metacharacter, backslash included (CodeQL js/incomplete-sanitization). */
+function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 const REPORTS = [
   ["collections", "Daily collections"],
   ["money-out", "Daily payments (money out)"],
@@ -20,9 +25,10 @@ test.describe("reports (SPEC 10.2; mock-up 15; FR-24)", () => {
     await signInAs(page, fixtureUser("accountant"));
     await page.goto("/reports");
     for (const [key, title] of REPORTS) {
-      await expect(
-        page.getByRole("link", { name: new RegExp(`^${title.replace(/[()]/g, "\\$&")}`) }),
-      ).toHaveAttribute("href", `/reports/${key}`);
+      await expect(page.getByRole("link", { name: new RegExp(`^${escapeRegExp(title)}`) })).toHaveAttribute(
+        "href",
+        `/reports/${key}`,
+      );
     }
     await expectNoSeriousA11yIssues(page);
 
